@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI Art & Imagination Quiz</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+
+<style>
+:root{
+  --bg:#f4f4f9;
+  --surface:#ffffff;
+  --surface-soft:#fff3eb;
+  --text:#2a2725;
+  --muted:#6d6660;
+  --line:#e0e0e0;
+  --header:#1f1b18;
+  --headerText:#f6f3f1;
+  --accent:#ef7d55;
+  --accent-deep:#d8663f;
+  --correct:#16a34a; --correct-soft:#dcfce7;
+  --wrong:#dc2626; --wrong-soft:#fee2e2;
+  --context:#0ea5e9; --context-soft:#f0f9ff;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%; margin:0}
+body{
+  font-family:'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background:var(--bg); color:var(--text);
+  min-height:100vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    height: 95vh;
+    margin: 1rem;
+}
+
+.start-screen {
+    background: var(--surface);
+    padding: 2rem 3rem;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .1);
+    text-align: center;
+}
+.start-screen h1 { color: var(--accent-deep); font-size: 2.2rem; }
+.start-screen p { color: var(--muted); font-size: 1.1rem; }
+.start-instructions {
+    text-align: left;
+    background: #fffbf8;
+    border-left: 4px solid var(--accent);
+    padding: 1.5rem;
+    margin: 2rem 0;
+    border-radius: 8px;
+}
+.start-instructions ul { list-style-position: inside; margin-top: 1rem; }
+
+.app{
+  width:100%;
+  height:100%;
+  background:var(--surface);
+  border-radius:clamp(10px, 2vw, 16px);
+  box-shadow:0 10px 28px rgba(0,0,0,.08);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.hidden { display: none; }
+
+.app__header{
+  background:var(--header);
+  color:var(--headerText);
+  padding:clamp(0.6rem, 2vw, 1rem);
+}
+.app__title{
+  font-size:clamp(0.95rem, 3vw, 1.15rem);
+  font-weight:800;
+  letter-spacing:0.3px;
+  margin:0 0 0.2rem;
+}
+.app__subtitle{
+  font-size:clamp(0.75rem, 2vw, 0.85rem);
+  opacity:0.9;
+  margin:0 0 clamp(0.3rem, 1vw, 0.5rem);
+}
+.progress{
+  width:100%;
+  height:clamp(4px, 1vw, 7px);
+  background:rgba(255,255,255,.25);
+  border-radius:9999px;
+  overflow:hidden;
+}
+.progress__bar{
+  height:100%;
+  width:0%;
+  background:var(--accent);
+  border-radius:9999px;
+  transition:width 0.3s ease;
+}
+.meta{
+  display:flex;
+  gap:clamp(0.3rem, 1vw, 0.5rem);
+  margin-top:clamp(0.3rem, 1vw, 0.5rem);
+  flex-wrap:wrap;
+  font-size:clamp(0.65rem, 2vw, 0.75rem);
+}
+.badge{
+  background:rgba(255,255,255,.12);
+  color:#fff;
+  padding:clamp(0.1rem, 0.5vw, 0.2rem) clamp(0.4rem, 1vw, 0.6rem);
+  border-radius:999px;
+  font-weight:600;
+}
+
+.main{
+  flex:1;
+  overflow:auto;
+  padding:clamp(0.5rem, 2vw, 1.2rem) clamp(0.8rem, 2vw, 1.2rem) clamp(0.4rem, 1vw, 0.8rem);
+}
+.card{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:clamp(8px, 2vw, 14px);
+  padding:clamp(0.8rem, 2vw, 1.2rem);
+}
+
+.q-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:clamp(0.5rem, 2vw, 1rem);
+  margin-bottom:clamp(0.5rem, 1vw, 0.8rem);
+}
+.q-index{
+  font-weight:800;
+  color:var(--accent);
+  font-size:clamp(0.85rem, 2vw, 1rem);
+}
+.q-category{
+  font-size:clamp(0.65rem, 2vw, 0.75rem);
+  padding:clamp(0.15rem, 0.5vw, 0.25rem) clamp(0.4rem, 1vw, 0.6rem);
+  border-radius:999px;
+  background:var(--surface-soft);
+  border:1px solid var(--line);
+  color:var(--muted);
+  font-weight:700;
+  text-transform:capitalize;
+}
+.q-text{
+  margin:clamp(0.4rem, 1vw, 0.7rem) 0 clamp(0.6rem, 1vw, 0.9rem);
+  line-height:1.5;
+  font-weight:600;
+  font-size:clamp(0.9rem, 2.5vw, 1.05rem);
+}
+
+.rtc{
+  border-left:4px solid var(--context);
+  background:var(--context-soft);
+  padding:clamp(0.6rem, 2vw, 1rem);
+  border-radius:clamp(6px, 1vw, 10px);
+  margin-bottom:clamp(0.6rem, 1vw, 1rem);
+  line-height:1.5;
+  color:#0c4a6e;
+  font-size:clamp(0.85rem, 2vw, 0.95rem);
+}
+.sub-question{
+  background:rgba(255,255,255,0.7);
+  border:1px solid rgba(14,165,233,0.2);
+  border-radius:clamp(6px, 1vw, 10px);
+  padding:clamp(0.6rem, 1vw, 0.9rem);
+  margin:clamp(0.5rem, 1vw, 0.8rem) 0;
+}
+.sub-question .sub-index{
+  font-weight:700;
+  color:var(--context);
+  font-size:clamp(0.8rem, 2vw, 0.9rem);
+  margin-bottom:0.4rem;
+}
+.sub-question .sub-text{
+  font-weight:600;
+  margin-bottom:clamp(0.4rem, 1vw, 0.7rem);
+  font-size:clamp(0.85rem, 2vw, 0.95rem);
+}
+.sub-model{ margin-top:0.35rem; font-weight:600; color:var(--muted); }
+
+.options{ display:flex; flex-direction:column; gap:clamp(0.3rem, 1vw, 0.5rem); }
+.option{
+  border:1px solid var(--line);
+  border-radius:clamp(6px, 1vw, 12px);
+  padding:clamp(0.5rem, 1.5vw, 0.8rem);
+  cursor:pointer;
+  transition:all 0.2s ease;
+  background:#fff;
+  position:relative;
+  font-size:clamp(0.85rem, 2vw, 0.95rem);
+}
+.option:hover{ border-color:var(--accent); background:var(--surface-soft); }
+.option.is-selected{ border-color:var(--accent); background:var(--surface-soft); }
+.option.is-correct{ border-color:var(--correct); background:var(--correct-soft); color:var(--correct); font-weight:700; }
+.option.is-wrong{ border-color:var(--wrong); background:var(--wrong-soft); color:var(--wrong); font-weight:700; }
+.option[disabled]{opacity:0.75; pointer-events:none}
+
+.ftb input{
+  width:100%;
+  padding:clamp(0.5rem, 1.5vw, 0.8rem);
+  border:2px solid var(--line);
+  border-radius:clamp(6px, 1vw, 12px);
+  font-size:clamp(0.85rem, 2vw, 1rem);
+  transition:all 0.2s ease;
+}
+.ftb input:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(239,125,85,.15); }
+.ftb input[disabled]{ background:var(--surface-soft); color:var(--muted); }
+
+.expl{
+  margin-top:clamp(0.6rem, 1vw, 1rem);
+  border-left:4px solid;
+  padding:clamp(0.6rem, 1.5vw, 1rem);
+  border-radius:clamp(6px, 1vw, 10px);
+  line-height:1.55;
+  display:none;
+  font-size:clamp(0.85rem, 2vw, 0.95rem);
+}
+.expl--ok{ border-color:var(--correct); background:var(--correct-soft); color:var(--correct); }
+.expl--no{ border-color:var(--wrong); background:var(--wrong-soft); color:var(--wrong); }
+.expl .model{ margin-top:clamp(0.4rem, 1vw, 0.6rem); font-weight:600; }
+
+.match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: center; }
+.match-stems, .match-responses { display: flex; flex-direction: column; gap: 0.5rem; }
+.match-item { border: 1px solid var(--line); border-radius: 10px; padding: 0.8rem 1rem; cursor: grab; background: white; user-select: none; }
+.match-item.dragging { opacity: 0.5; }
+.match-target { border: 2px dashed var(--line); border-radius: 10px; padding: 0.8rem 1rem; min-height: 50px; background: var(--bg); transition: background 0.2s ease; }
+.match-target.over { background: var(--accent-deep); }
+.match-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: center; }
+.match-row span { font-weight: bold; }
+
+.nav{
+  border-top:1px solid var(--line);
+  padding:clamp(0.5rem, 1vw, 0.8rem) clamp(0.8rem, 2vw, 1.2rem);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:clamp(0.4rem, 1vw, 0.8rem);
+  background:var(--surface);
+}
+.btn{
+  border:none;
+  border-radius:clamp(6px, 1vw, 10px);
+  padding:clamp(0.4rem, 1vw, 0.6rem) clamp(0.7rem, 1.5vw, 1.2rem);
+  font-weight:800;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  font-size:clamp(0.8rem, 2vw, 0.95rem);
+}
+.btn--pri{ background:var(--accent); color:#fff; }
+.btn--pri:hover{ background:var(--accent-deep); }
+.btn[disabled]{ opacity:0.6; cursor:not-allowed; }
+.score{ font-weight:800; color:var(--accent); font-size:clamp(0.85rem, 2vw, 1rem); }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div id="startScreen" class="start-screen">
+        <h1>Learn by exploring</h1>
+        <p>AI Art & Imagination Training</p>
+        <div class="start-instructions">
+            <h3>Instructions</h3>
+            <ul>
+                <li>This quiz has 20 questions to gauge your current knowledge.</li>
+                <li>This is not graded; it is a tool to help the trainers understand the room.</li>
+                <li>Answer each question to the best of your ability.</li>
+                <li>There is no time limit. Focus on what you know.</li>
+            </ul>
+        </div>
+        <button class="btn btn--pri" id="startBtn">Begin Assessment</button>
+    </div>
+
+    <div class="app hidden" id="app">
+      <header class="app__header">
+        <h1 class="app__title">AI Art & Imagination Training</h1>
+        <p class="app__subtitle">Pre-Assessment Quiz</p>
+        <div class="progress"><div class="progress__bar" id="progressBar"></div></div>
+        <div class="meta">
+          <span class="badge" id="badgeIndex">Q 1 / 20</span>
+          <span class="badge" id="badgeType">MCQ</span>
+        </div>
+      </header>
+
+      <main class="main">
+        <div class="card" id="qCard"></div>
+      </main>
+
+      <footer class="nav">
+        <div class="score" id="scoreMini">Score: 0</div>
+        <div>
+          <button class="btn btn--pri" id="btnSubmit">Submit</button>
+          <button class="btn btn--pri" id="btnNext" style="display:none">Next →</button>
+          <button class="btn btn--pri" id="btnFinish" style="display:none">Finish</button>
+        </div>
+      </footer>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const startScreen = document.getElementById('startScreen');
+    const startBtn = document.getElementById('startBtn');
+    const app = document.getElementById('app');
+
+    // Debug: Check if elements exist
+    if (!startScreen) {
+        console.error('startScreen element not found');
+        return;
+    }
+    if (!startBtn) {
+        console.error('startBtn element not found');
+        return;
+    }
+    if (!app) {
+        console.error('app element not found');
+        return;
+    }
+
+    console.log('Elements found, adding event listener');
+    
+    startBtn.addEventListener('click', (e) => {
+        console.log('Start button clicked');
+        e.preventDefault();
+        
+        startScreen.classList.add('hidden');
+        app.classList.remove('hidden');
+        
+        // Use setTimeout to ensure DOM is ready after the class changes
+        setTimeout(() => {
+            console.log('About to call render()');
+            render(); // Initial render of the first question
+        }, 100);
+    });
+    
+    console.log('Event listener added successfully');
+});
+
+const QUIZ = {
+  subject: "AI Art & Imagination",
+  total: 20,
+  questions: [
+    {
+      type: "MCQ",
+      category: "Core Concepts",
+      text: "The training opens by establishing a core metaphor for Day 1's learning environment. What is this 'sandbox spirit' designed to encourage?",
+      options: ["Strict adherence to brand guidelines from the start.", "Prioritizing technical rules over creative exploration.", "Free imagination and experimentation before formal rules are introduced.", "Focusing only on tools that guarantee enterprise-ready results."],
+      correct: 2,
+      hint: "The mantra for Day 1 is 'PLAY first, RULES later'.",
+      explain: "The 'sandbox spirit' is central to Day 1. It's designed to create a safe space for participants to play, break things, and imagine freely without immediately worrying about approvals or compliance."
+    },
+    {
+      type: "MCQ",
+      category: "Tools & Workflow",
+      text: "When the goal is to generate cinematic moods and build entire worlds for initial ideation, which tool is positioned as the 'Environment & Mood Artist'?",
+      options: ["Adobe Firefly", "Canva", "MidJourney", "Photoshop"],
+      correct: 2,
+      hint: "This tool is noted for its strengths in creating 'fantasy arenas' and 'storyboards'.",
+      explain: "MidJourney is specifically identified as the 'Environment & Mood Artist,' best used for creating rich, cinematic backgrounds and worlds that serve as game-ready inspiration."
+    },
+    {
+      type: "MCQ",
+      category: "Tools & Workflow",
+      text: "Within the Aristocrat workflow, Adobe Firefly serves as the 'compliance anchor'. What is its most critical function in this role?",
+      options: ["To generate the most unpredictable and experimental art styles.", "To ensure generated assets are safe, consistent, and protect against IP infringement.", "To rapidly create mockups and pitch decks for directors.", "To replace the need for human artists in the pipeline."],
+      correct: 1,
+      hint: "This tool is described as 'Aristocrat's safe zone'.",
+      explain: "Firefly is the 'compliance anchor' because it is trained on licensed data, provides IP indemnification, and ensures consistency. Its primary role is to generate safe, brand-aligned assets without the risk of copyright issues."
+    },
+    {
+      type: "FTB",
+      category: "Core Concepts",
+      text: "The training frames compliance not as a cage, but as the ______ that guide the 'roaring engine' of imagination.",
+      answer: "tracks",
+      hint: "The full metaphor involves a train.",
+      explain: "The core metaphor is 'Compliance = rail tracks. Imagination = the roaring engine.' This powerfully frames rules as something that enables and directs creativity, rather than limiting it."
+    },
+    {
+      type: "TF",
+      category: "Tools & Workflow",
+      text: "True or False: The training suggests that a polished, detailed illustration is required to 'feed the machine,' as a rough sketch provides a poor foundation for AI generation.",
+      correct: false,
+      hint: "The training refers to a rough sketch as a 'seed'.",
+      explain: "This is false. The training explicitly states that a rough sketch is 'gold' because the AI respects its structure, pose, and silhouette. It's the 'seed for an entire character pipeline,' proving you don't need to be a professional illustrator to start."
+    },
+    {
+      type: "MATCH",
+      category: "Tools & Workflow",
+      text: "In the 'Toolbox of Imagination,' each tool has a specific job in the game asset pipeline. Match the tool to its designated role.",
+      stems: ["Adobe Firefly", "MidJourney", "DALL·E", "Photoshop"],
+      responses: ["Cinematic worlds and mood inspiration", "Final enterprise polish and refinement", "Safe assets and compliance-first variations", "Quick prototyping and quirky ideas"],
+      correct: [{s: 0, r: 2}, {s: 1, r: 0}, {s: 2, r: 3}, {s: 3, r: 1}],
+      hint: "Think: Safe Asset, Wild World, Quick Idea, Final Polish.",
+      explain: "The workflow is clear: **Firefly** is the 'Asset Refiner' for safe symbols. **MidJourney** is the 'World Builder' for inspiration. **DALL·E** is the 'Concept Sketchpad' for rapid prototyping. **Photoshop** provides the 'Final Touch' for enterprise readiness."
+    },
+    {
+        type: "MCQ",
+        category: "Prompt Engineering",
+        text: "To 'tame randomness' and sharpen design intent, what is the primary function of adding an exclusion like '–no weapons' to a prompt?",
+        options: ["It forces the AI to produce a more abstract, artistic image.", "It adds complexity by making the AI find creative replacements for the excluded item.", "It acts as a 'focus lens' by removing clutter and preventing unwanted elements.", "It is a command to change the lighting of the scene."],
+        correct: 2,
+        hint: "This technique is about subtraction, not addition.",
+        explain: "Exclusions are presented as a 'focus lens'. Their function is to remove clutter and prevent unwanted elements, thereby sharpening the AI's focus on the core subject and producing a cleaner, more intentional result."
+    },
+    {
+        type: "FTB",
+        category: "Core Concepts",
+        text: "The training describes a three-layer model for storytelling, moving from a single asset (object), to a scene (context), and finally to a(n) _______ (progression).",
+        answer: "arc",
+        hint: "This term is used in narrative to describe the trajectory of a story.",
+        explain: "The training defines the layers of storytelling as moving from an Asset (object), to a Scene (context), to an Arc (progression). The arc represents change over time, which is the heart of a narrative."
+    },
+    {
+        type: "MCQ",
+        category: "Enterprise Workflow",
+        text: "When art is handed off in a real production pipeline, what common pitfall is described as the 'V1_final_FINAL nightmare'?",
+        options: ["Creative burnout", "Palette inconsistency", "Version drift and file chaos", "Forgetting to add style words"],
+        correct: 2,
+        hint: "This problem relates to poor file management.",
+        explain: "The training explicitly identifies 'Version drift' and 'File chaos' as major enterprise pain points that derail workflows. Poor naming conventions lead to confusion about which file is the correct one to use."
+    },
+    {
+        type: "TF",
+        category: "Core Concepts",
+        text: "True or False: The training's core message is that compliance inevitably stifles creativity, forcing designers to produce boring, lifeless art.",
+        correct: false,
+        hint: "Consider the quote: 'Rules don't limit art. They amplify it.'",
+        explain: "This is false. A central theme is that compliance is an 'ally,' not an enemy. The training argues that rules 'amplify' creativity by providing focus and that flair can be added back safely using tools like lighting and mood words."
+    },
+    {
+      type: "RTC",
+      category: "Prompt Engineering",
+      text: "Analyze the following weak prompt and answer the questions about how to improve it based on the training principles.",
+      context: "<strong>Weak Prompt:</strong> \"Cool crown, realistic, neon, watercolor, detailed, cinematic, fantasy, real photo\"",
+      subs: [
+        {
+          stype: "MCQ",
+          text: "What is the primary flaw that makes this prompt 'weak'?",
+          options: ["It is too short and lacks detail.", "It contains too many contradictory and cluttered style words.", "It fails to specify a subject.", "It is not written in a complete sentence."],
+          correct: 1
+        },
+        {
+          stype: "MCQ",
+          text: "The training provides a five-part 'Prompt Skeleton' for building precise, layered prompts. Which of the following is NOT part of that skeleton?",
+          options: ["[Asset]", "[Style]", "[Camera Lens]", "[Lighting]"],
+          correct: 2
+        },
+        {
+          stype: "FTB",
+          text: "After fixing the prompt and generating a great asset, which tool is used for the final 'enterprise polish' to ensure it's shippable?",
+          answer: "Photoshop"
+        }
+      ],
+      hint: "A prompt can't be both 'realistic' and 'watercolor' at the same time.",
+      explain: "This prompt is weak because it's 'stuffed with adjectives, half-contradictory,' which confuses the AI. A strong prompt uses a clear skeleton: [Asset] + [Style] + [Lighting] + [Mood] + [Exclusions]. Finally, **Photoshop** is the essential tool for the final refinement and polish to make any AI asset enterprise-ready."
+    },
+    {
+      type: "MCQ",
+      category: "Enterprise Workflow",
+      text: "The training outlines '3 Pillars of Compliance' that are essential for Aristocrat's work. Which of these is a pillar?",
+      options: ["Speed of Generation", "Public Popularity", "Brand Consistency", "Artistic Uniqueness"],
+      correct: 2,
+      hint: "The pillars relate to safety, brand identity, and approval.",
+      explain: "The three pillars that hold up the enterprise workflow are: Legal Safety, Brand Consistency, and Enterprise Approval. Brand consistency is crucial for maintaining a cohesive visual identity in all products."
+    },
+    {
+      type: "MCQ",
+      category: "Enterprise Workflow",
+      text: "A 'shippable' or 'production-ready' asset has four key qualities. Three of them are Safe, Consistent, and Scalable. What is the fourth?",
+      options: ["Complex", "Photorealistic", "Playable", "Trendy"],
+      correct: 2,
+      hint: "This quality concerns the asset's function from the player's perspective.",
+      explain: "A 'production-ready' asset must be: Safe (compliant), Consistent (on-brand), Scalable (extendable into sets), and Playable (clear and readable for players on-screen)."
+    },
+    {
+        type: "FTB",
+        category: "Tools & Workflow",
+        text: "Firefly provides invisible, blockchain-based metadata that serves as proof of origin, a key feature for brand trust. This is called Content ________.",
+        answer: "Credentials",
+        hint: "It's what you might show to prove your identity or qualifications.",
+        explain: "This feature is named Content Credentials. It acts as a verifiable, blockchain-powered proof of origin, assuring teams that the asset was generated through a safe, enterprise-ready workflow."
+    },
+    {
+        type: "MCQ",
+        category: "Core Concepts",
+        text: "In the context of the training, what is the purpose of a 'storyboard'?",
+        options: ["To generate a single, highly-polished final image for marketing.", "To function as a legal document outlining the project scope.", "To map out a narrative progression through a sequence of visual frames.", "To create a collage of all the assets that have been generated."],
+        correct: 2,
+        hint: "The storyboard is described as a 'visual roadmap'.",
+        explain: "A storyboard is a 'visual roadmap' used to plan the flow of a narrative. It is a sequence of frames that shows progression, reveals mood shifts, and helps imagine how game features will evolve."
+    },
+    {
+        type: "MCQ",
+        category: "Tools & Workflow",
+        text: "Why is a character's silhouette described as a 'secret weapon' in the initial sketch phase?",
+        options: ["A complex silhouette is more difficult for competitors to copy.", "The silhouette is the only element that can be colored in Photoshop.", "It provides a strong, recognizable structure that controls AI consistency.", "It is automatically copyrighted upon creation."],
+        correct: 2,
+        hint: "A good silhouette is identifiable even as a shadow.",
+        explain: "The silhouette is crucial because it defines the character's identity and provides a 'contract' for the AI to follow. It controls the consistency of the generated variations and ensures the character is instantly recognizable to players."
+    },
+    {
+        type: "TF",
+        category: "Core Concepts",
+        text: "True or False: The training is structured as a passive 'sit-and-listen' experience with the trainer as the sole expert.",
+        correct: false,
+        hint: "Consider the emphasis on sharing, team exercises, and prizes.",
+        explain: "This is false. The training is explicitly framed as a 'game' and a 'sandbox,' not a lecture. The learning model is active, requiring participants to 'Try, Break, Reflect, Share' through hands-on challenges and team collaboration."
+    },
+    {
+      type: "MCQ",
+      category: "Core Concepts",
+      text: "The training's learning rhythm is a four-step loop designed to turn experience into growth. What is the correct sequence of this loop?",
+      options: ["Reflect → Share → Try → Break", "Try → Break → Reflect → Share", "Share → Try → Break → Reflect", "Break → Reflect → Share → Try"],
+      correct: 1,
+      hint: "The process begins with action and experimentation.",
+      explain: "The daily learning rhythm is a core methodology of the training, defined as a circular process: 1. Try → 2. Break → 3. Reflect → 4. Share."
+    },
+    {
+      type: "FTB",
+      category: "Core Concepts",
+      text: "The grand title awarded on Day 5, recognizing the participant who best balances fearless creativity with enterprise discipline, is the 'Imagination → Compliance ________'.",
+      answer: "Champion",
+      hint: "This is the title for the ultimate winner of the training 'game'.",
+      explain: "The ultimate prize is the Day 5 Grand Title: 'IMAGINATION → COMPLIANCE CHAMPION'. This reinforces the training's central goal of bridging creativity with enterprise needs."
+    },
+    {
+      type: "MCQ",
+      category: "Tools & Workflow",
+      text: "Adobe offers IP indemnification for Firefly, which is a critical enterprise-safe feature. What does this mean?",
+      options: ["Adobe guarantees that every generated image will be a commercial success.", "Adobe will legally defend a business if it faces a copyright claim over a Firefly output.", "Adobe will provide free software licenses to any company that uses Firefly.", "Adobe promises to buy back any unused assets generated with Firefly."],
+      correct: 1,
+      hint: "This is a form of legal and financial protection offered by Adobe.",
+      explain: "IP indemnification means that if a business using Firefly is sued for copyright infringement based on a generated asset, 'Adobe steps in legally. They defend you and cover costs.' This is a unique and powerful guarantee of enterprise safety."
+    }
+  ]
+};
+
+// --- App Logic (mirrors your light_quiz_xl.html) ---
+let idx = 0;
+let score = 0;
+const answers = new Array(QUIZ.questions.length).fill(null);
+
+const el = sel => document.querySelector(sel);
+const qCard = el('#qCard');
+const progressBar = el('#progressBar');
+const badgeIndex = el('#badgeIndex');
+const badgeType = el('#badgeType');
+const btnNext = el('#btnNext');
+const btnSubmit = el('#btnSubmit');
+const btnFinish = el('#btnFinish');
+const scoreMini = el('#scoreMini');
+
+let soundReady = false;
+const correctSynth = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 1 } }).toDestination();
+const wrongSynth = new Tone.Synth({ oscillator: { type: "square" }, envelope: { attack: 0.01, decay: 0.4, sustain: 0.1, release: 1 } }).toDestination();
+
+document.body.addEventListener('click', async () => {
+    if (!soundReady) { await Tone.start(); soundReady = true; }
+}, { once: true });
+
+function updateHeader() {
+  const q = QUIZ.questions[idx];
+  badgeIndex.textContent = `Q ${idx + 1} / ${QUIZ.questions.length}`;
+  badgeType.textContent = q.type;
+  progressBar.style.width = `${((idx + 1) / QUIZ.questions.length) * 100}%`;
+}
+
+function setButtonsState(afterSubmit = false) {
+  btnNext.style.display = afterSubmit && idx < QUIZ.questions.length - 1 ? 'inline-block' : 'none';
+  btnSubmit.style.display = afterSubmit ? 'none' : 'inline-block';
+  btnFinish.style.display = afterSubmit && idx === QUIZ.questions.length - 1 ? 'inline-block' : 'none';
+}
+
+function render() {
+  console.log('render() called, idx:', idx);
+  updateHeader();
+  qCard.innerHTML = '';
+  const q = QUIZ.questions[idx];
+  console.log('Current question:', q);
+
+  const head = document.createElement('div');
+  head.className = 'q-head';
+  head.innerHTML = `<div class="q-index">Question ${idx + 1}</div><div class="q-category">${q.category}</div>`;
+  qCard.appendChild(head);
+
+  if(q.type === 'RTC' && q.context){
+    const ctx = document.createElement('div');
+    ctx.className = 'rtc';
+    ctx.innerHTML = q.context;
+    qCard.appendChild(ctx);
+  }
+
+  const qtext = document.createElement('div');
+  qtext.className = 'q-text';
+  qtext.innerHTML = q.text || '';
+  qCard.appendChild(qtext);
+
+  if (q.type === 'MCQ' || q.type === 'TF') {
+    const opts = (q.type === 'TF') ? ['True', 'False'] : q.options;
+    const optionsWrap = document.createElement('div');
+    optionsWrap.className = 'options';
+    opts.forEach((opt, i) => {
+      const div = document.createElement('div');
+      div.className = 'option';
+      div.dataset.index = i;
+      div.innerHTML = opt;
+      div.addEventListener('click', () => selectOption(div, i));
+      optionsWrap.appendChild(div);
+    });
+    qCard.appendChild(optionsWrap);
+  } else if (q.type === 'FTB') {
+    qCard.innerHTML += `<div class="ftb"><input id="ftb" placeholder="Type your answer..." autocomplete="off"></div>`;
+  } else if (q.type === 'MATCH') {
+      const matchHtml = `
+          <div class="match-grid">
+              <div class="match-stems">${q.stems.map((s, i) => `<div class="match-item" draggable="true" data-stem-index="${i}">${s}</div>`).join('')}</div>
+              <div class="match-responses">${q.responses.map((r, i) => `<div class="match-target" data-response-index="${i}">${r}</div>`).join('')}</div>
+          </div>`;
+      qCard.innerHTML += matchHtml;
+      setupDragDrop();
+  } else if(q.type === 'RTC'){
+    q.subs.forEach((sub, si) => {
+        const box = document.createElement('div');
+        box.className = 'sub-question';
+        box.innerHTML = `<div class="sub-index">${si + 1}.</div><div class="sub-text">${sub.text}</div>`;
+        if(sub.stype === 'MCQ'){
+            const optsWrap = document.createElement('div');
+            optsWrap.className = 'options';
+            sub.options.forEach((o, i) => {
+                const optDiv = document.createElement('div');
+                optDiv.className = 'option';
+                optDiv.dataset.si = si;
+                optDiv.dataset.index = i;
+                optDiv.innerHTML = o;
+                optDiv.addEventListener('click', () => selectRTCOption(optDiv, si, i));
+                optsWrap.appendChild(optDiv);
+            });
+            box.appendChild(optsWrap);
+        } else if(sub.stype === 'FTB'){
+            box.innerHTML += `<div class="ftb"><input data-si="${si}" class="rtc-ftb" placeholder="Type answer..."></div>`;
+        }
+        qCard.appendChild(box);
+    });
+  }
+
+  const expl = document.createElement('div');
+  expl.className = 'expl';
+  expl.id = 'expl';
+  qCard.appendChild(expl);
+  setButtonsState(false);
+}
+
+function selectOption(div, i) {
+  qCard.querySelectorAll('.option:not([data-si])').forEach(o => o.classList.remove('is-selected'));
+  div.classList.add('is-selected');
+  answers[idx] = i;
+}
+function selectRTCOption(div, si, i) {
+  const q = QUIZ.questions[idx];
+  if (!answers[idx]) answers[idx] = { subs: new Array(q.subs.length).fill(null) };
+  qCard.querySelectorAll(`.option[data-si="${si}"]`).forEach(o => o.classList.remove('is-selected'));
+  div.classList.add('is-selected');
+  answers[idx].subs[si] = i;
+}
+
+function setupDragDrop() {
+    const stems = document.querySelectorAll('.match-item');
+    const targets = document.querySelectorAll('.match-target');
+    let draggedItem = null;
+    answers[idx] = { matches: new Array(stems.length).fill(null) };
+
+    stems.forEach(item => {
+        item.addEventListener('dragstart', () => {
+            draggedItem = item;
+            setTimeout(() => item.style.display = 'none', 0);
+        });
+        item.addEventListener('dragend', () => {
+            setTimeout(() => {
+                draggedItem.style.display = 'block';
+                draggedItem = null;
+            }, 0);
+        });
+    });
+
+    targets.forEach(target => {
+        target.addEventListener('dragover', e => e.preventDefault());
+        target.addEventListener('dragenter', e => { e.preventDefault(); target.classList.add('over'); });
+        target.addEventListener('dragleave', () => target.classList.remove('over'));
+        target.addEventListener('drop', () => {
+            target.classList.remove('over');
+            if (draggedItem) {
+                const stemIndex = parseInt(draggedItem.dataset.stemIndex);
+                const responseIndex = parseInt(target.dataset.responseIndex);
+                
+                // If target already has an item, return it to the stems list
+                const existingItem = target.querySelector('.match-item');
+                if (existingItem) {
+                    document.querySelector('.match-stems').appendChild(existingItem);
+                }
+                
+                // If this item was in another target, clear that target
+                const oldContainer = draggedItem.parentElement;
+                if(oldContainer.classList.contains('match-target')){
+                    oldContainer.innerHTML = QUIZ.questions[idx].responses[parseInt(oldContainer.dataset.responseIndex)];
+                }
+                
+                target.innerHTML = '';
+                target.appendChild(draggedItem);
+                answers[idx].matches[stemIndex] = responseIndex;
+            }
+        });
+    });
+}
+
+function grade() {
+  const q = QUIZ.questions[idx];
+  let ok = false, modelTxt = '';
+  let scored = false;
+
+  if (answers[idx] === '__scored__') scored = true;
+
+  if (q.type === 'MCQ' || q.type === 'TF') {
+    const val = answers[idx];
+    if (val === null) { alert('Please select an option.'); return; }
+    qCard.querySelectorAll('.option:not([data-si])').forEach(o => o.setAttribute('disabled', ''));
+    const correctIndex = (q.type === 'TF' ? (q.correct ? 0 : 1) : q.correct);
+    qCard.querySelector(`.option[data-index="${correctIndex}"]`).classList.add('is-correct');
+    if (val !== correctIndex) qCard.querySelector(`.option[data-index="${val}"]`).classList.add('is-wrong');
+    ok = (q.type === 'TF') ? ((val === 0) === q.correct) : (val === q.correct);
+  } else if (q.type === 'FTB') {
+    const input = el('#ftb');
+    const val = (input.value || '').trim().toLowerCase();
+    answers[idx] = val;
+    ok = q.answer.toLowerCase() === val;
+    input.setAttribute('disabled', '');
+  } else if (q.type === 'MATCH') {
+      let correctCount = 0;
+      const userMatches = answers[idx].matches;
+      q.correct.forEach(pair => {
+          if(userMatches[pair.s] === pair.r) correctCount++;
+      });
+      ok = correctCount === q.stems.length;
+      modelTxt = `You matched ${correctCount}/${q.stems.length} correctly.`;
+  } else if(q.type === 'RTC'){
+      let allOk = true;
+      let correctCount = 0;
+      const subAns = (answers[idx] && answers[idx].subs) ? answers[idx].subs : [];
+      q.subs.forEach((s, si) => {
+          qCard.querySelectorAll(`[data-si="${si}"]`).forEach(el => el.setAttribute('disabled', ''));
+          let subOk = false;
+          if(s.stype === 'MCQ'){
+              const sel = subAns[si];
+              qCard.querySelector(`.option[data-si="${si}"][data-index="${s.correct}"]`).classList.add('is-correct');
+              if(sel !== s.correct) qCard.querySelector(`.option[data-si="${si}"][data-index="${sel}"]`)?.classList.add('is-wrong');
+              subOk = sel === s.correct;
+          } else if(s.stype === 'FTB'){
+              const input = qCard.querySelector(`.rtc-ftb[data-si="${si}"]`);
+              const val = (input.value || '').trim().toLowerCase();
+              subOk = s.answer.toLowerCase() === val;
+              const subBox = input.closest('.sub-question');
+              subBox.innerHTML += `<div class="sub-model">Model Answer: <strong>${s.answer}</strong></div>`;
+          }
+          if(subOk) correctCount++; else allOk = false;
+      });
+      ok = allOk;
+      modelTxt = `You answered ${correctCount}/${q.subs.length} sub-questions correctly.`;
+  }
+  
+  if (soundReady) {
+    if (ok) correctSynth.triggerAttackRelease("C5", "8n");
+    else wrongSynth.triggerAttackRelease("C3", "8n");
+  }
+
+  if (ok && !scored) {
+    score += (q.type === 'RTC' ? 3 : (q.type === 'MATCH' ? 2 : 1));
+    answers[idx] = '__scored__';
+  }
+  scoreMini.textContent = `Score: ${score}`;
+  showExplanation(ok, modelTxt);
+}
+
+function showExplanation(ok, model = '') {
+  const box = el('#expl');
+  box.style.display = 'block';
+  box.className = `expl ${ok ? 'expl--ok' : 'expl--no'}`;
+  box.innerHTML = `<strong>${ok ? 'Correct!' : 'Review:'}</strong> ${QUIZ.questions[idx].explain} ${model}`;
+  setButtonsState(true);
+}
+
+btnSubmit.addEventListener('click', grade);
+btnNext.addEventListener('click', () => {
+  if (idx < QUIZ.questions.length - 1) {
+    idx++;
+    render();
+  }
+});
+btnFinish.addEventListener('click', () => {
+    qCard.innerHTML = `<div class="q-text" style="font-size:1.2rem; text-align:center;">🎉 Pre-Assessment Complete!</div>
+    <p style="margin:0.5rem 0 1rem; color:var(--muted); text-align:center;">Thank you for completing the quiz. Your results will help guide the training.</p>
+    <div class="expl expl--ok" style="display:block; text-align:center;">
+      <strong>Final Score:</strong> ${score} / ${QUIZ.questions.reduce((acc, q) => acc + (q.type === 'RTC' ? 3 : q.type === 'MATCH' ? 2 : 1), 0)} points
+    </div>`;
+    el('.nav').style.display = 'none';
+});
+
+</script>
+</body>
+</html>

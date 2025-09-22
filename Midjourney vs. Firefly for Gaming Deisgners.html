@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI in Gaming 2025: Midjourney vs. Firefly - The Ultimate Showdown</title>
+    <meta name="description" content="A strategic guide for game designers comparing the 2025 versions of Midjourney (V7) and Adobe Firefly. Explore integrated workflows, bulk creation, and new parameters for creating hit casino games.">
+    <meta name="keywords" content="Midjourney V7, Adobe Firefly 2025, Game Design, AI Art, Casino Games, Slot Design, Prompt Engineering, AI Workflow, Generative AI">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0;400;0;600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
+    <style>
+        /* ================= Base / Theme (Inspired by Python Guide HTML) ================= */
+        :root {
+          --text:#212529; --bg:#fff; --muted:#f8f9fa; --border:#e9ecef;
+          --accent:#fd7e14; --accent-2:#e87312; --header-bg:#212529; --header-fg:#f8f9fa;
+          --ok:#16a34a; --ok-soft:#dcfce7; --bad:#dc2626; --bad-soft:#fee2e2;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            scroll-behavior: smooth;
+        }
+        .container { max-width: 900px; margin: auto; padding: 24px; background: #fff; }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* ================= Header / Footer / Breadcrumbs ================= */
+        .site-header { background: var(--header-bg); color: var(--header-fg); padding: 14px 24px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumbs { margin-bottom: 24px; font-size: 0.9rem; color: #6c757d; }
+        .site-footer { text-align: center; margin-top: 50px; padding: 40px; background: var(--muted); border-top: 1px solid var(--border); }
+
+        /* ================= Typography & Layout ================= */
+        h1 { font-family: 'Lora', serif; font-size: clamp(2.2rem, 5vw, 3rem); text-align: left; margin-bottom: 8px; color: var(--header-bg); line-height: 1.2; }
+        .byline { font-family: 'Lora', serif; font-size: clamp(1.1rem, 3vw, 1.4rem); font-style: italic; color: #6c757d; margin-bottom: 24px; }
+        h2 { font-family: 'Lora', serif; font-size: clamp(1.6rem, 4vw, 2.2rem); color: var(--text); margin: 56px 0 20px; border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
+        h3 { font-family: 'Lora', serif; font-size: clamp(1.3rem, 3vw, 1.6rem); color: var(--text); margin-top: 32px; margin-bottom: 12px; }
+        p { margin-bottom: 16px; word-wrap: break-word; }
+        ul { margin-left: 24px; margin-bottom: 24px; list-style-type: '➡️'; padding-left: 1em; }
+        li { margin-bottom: 12px; padding-left: 0.5em; }
+        .intro { font-size: 1.15rem; line-height: 1.8; background: var(--muted); padding: 24px; border-radius: 4px; border-left: 4px solid var(--accent); margin: 24px 0; }
+        code { background: #ffe8d9; color: var(--accent-2); padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; }
+        
+        /* ================= Card & Tip Styles ================= */
+        .highlight-card, .tips-card {
+            background: var(--muted);
+            border-left: 4px solid var(--accent);
+            padding: 20px 24px;
+            border-radius: 4px;
+            margin: 24px 0;
+            border: 1px solid var(--border);
+        }
+        .tips-card { border-left-color: var(--ok); }
+        .tips-card h4 { color: var(--ok); margin-top: 0; margin-bottom: 15px; font-family: 'Inter', sans-serif; font-size: 1.2rem; }
+        .tips-card ul { list-style-type: '💡'; margin-bottom: 0; }
+        
+        /* ================= Interactive & Structural Elements ================= */
+        .accordion { display: grid; gap: 8px; }
+        .accordion-item { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        .accordion-header { width: 100%; text-align: left; background: var(--muted); border: none; padding: 16px 20px; cursor: pointer; font-size: 1.1rem; font-weight: bold; display: flex; align-items: center; justify-content: space-between; color: var(--text); }
+        .accordion-header i { transition: transform 0.3s ease; }
+        .accordion-header[aria-expanded="true"] { background: #f1f3f5; }
+        .accordion-header[aria-expanded="true"] i { transform: rotate(180deg); }
+        .accordion-content { padding: 0 20px; background: #fff; max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out, padding 0.3s ease-out; }
+
+        .quiz-container { padding: 20px; border: 1px solid var(--border); border-radius: 12px; background: #fff; margin-top: 24px; }
+        .quiz-navigation { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+        .quiz-body { display: none; } .quiz-body.active { display: block; }
+        .quiz-options { display: grid; gap: 12px; }
+        .quiz-option label { display: block; padding: 14px; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; background: var(--muted); }
+        .quiz-option .explanation { display: none; margin-top: 10px; padding: 15px; border-radius: 6px; }
+        .quiz-option.selected.correct label { background: var(--ok-soft); border-color: var(--ok); }
+        .quiz-option.selected.wrong label { background: var(--bad-soft); border-color: var(--bad); }
+        .quiz-option.correct .explanation { border-left: 4px solid var(--ok); background: var(--ok-soft); }
+        .quiz-option.wrong .explanation { border-left: 4px solid var(--bad); background: var(--bad-soft); }
+        .final-score { text-align: center; font-size: 1.5rem; font-weight: bold; padding: 30px; }
+        
+        .glossary-cloud { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; justify-content: center; }
+        .glossary-chip { position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 999px; background: #fff7ed; border: 1px solid #ffd8a8; color: var(--accent-2); font-weight: 600; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+        .glossary-chip:hover, .glossary-chip:focus { background: #ffecde; }
+        .chip-tip { position: fixed; z-index: 1001; min-width: 240px; max-width: min(92vw, 420px); background: var(--header-bg); color: #fff; padding: 12px 14px; border-radius: 12px; box-shadow: 0 12px 28px rgba(0,0,0, .2); opacity: 0; visibility: hidden; transition: opacity 0.15s, visibility 0.15s; line-height: 1.45; }
+        .chip-tip.show { opacity: 1; visibility: visible; }
+        .chip-tip .arrow { position: absolute; width: 12px; height: 12px; background: var(--header-bg); transform: rotate(45deg); }
+
+        /* ================= Table Styles ================= */
+        .table-wrap { position: relative; border: 1px solid var(--border); border-radius: 12px; background: #fff; margin: 24px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .table-scroll { position: relative; overflow-x: auto; }
+        table.data-table { width: 100%; border-collapse: collapse; }
+        table.data-table th, table.data-table td { padding: 14px 16px; border: 1px solid var(--border); text-align: left; vertical-align: top; }
+        table.data-table thead th { background: var(--muted); font-weight: 600; white-space: nowrap; }
+        table.data-table tbody tr:nth-child(even) { background: #fff7ed; } /* Light orange zebra stripe */
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <div style="font-weight: 700; font-size: 1.2rem;">AI Game Design Academy</div>
+</header>
+
+<div class="container">
+
+    <nav class="breadcrumbs">Game Design > AI Tools > 2025 Showdown</nav>
+
+    <h1>AI in Gaming 2025</h1>
+    <p class="byline">Midjourney vs. Firefly: A Strategic Guide for the New Creative Pipeline</p>
+
+    <p class="intro">
+        Welcome to 2025, where the landscape of AI-powered creativity has fundamentally shifted. The debate is no longer about <em>if</em> AI belongs in the design pipeline, but <em>how</em> to strategically leverage a multi-tool ecosystem. For game designers, the choice between Midjourney and Adobe Firefly has evolved from a simple "either/or" to a sophisticated workflow decision.
+    </p>
+
+    <section id="landscape">
+        <h2>The 2025 Landscape: What's Changed?</h2>
+        <p>This year marks a pivotal evolution for both major platforms. Understanding these changes is critical to building an efficient, powerful creative workflow for game asset production.</p>
+        
+        <p>Adobe Firefly has transformed from a standalone image model into a unified creative hub. It now integrates not only Adobe's proprietary models but also leading third-party engines like OpenAI's DALL-E and Google's Imagen/Veo. This makes it a one-stop-shop for multi-modal creation with enterprise-grade safety rails. 🤖</p>
+
+        <p>Meanwhile, Midjourney has launched V7, a significant leap forward in photorealism, prompt adherence, and anatomical coherence (yes, hands are better!). With its new web-based Editor experience, Midjourney solidifies its position as the undisputed leader in rapid style exploration and "blue-sky" concepting, even if it lacks Firefly's deep workflow integration. 🎨</p>
+    </section>
+
+    <section id="firefly">
+        <h2>Adobe Firefly (2025): The Production Powerhouse 🏭</h2>
+        <p>Think of the 2025 version of Firefly as your studio's central production pipeline. Its strength lies less in radical artistic exploration and more in its unmatched ability to integrate, automate, and scale the creation of on-brand assets.</p>
+
+        <h3>One Workspace, Many Models</h3>
+        <p>The single most significant update is that Firefly is now a multi-model platform. A designer can choose the best engine for the task without ever leaving the Adobe ecosystem. This provides immense flexibility while maintaining a single credit system and Adobe's commercial-use guarantee.</p>
+        <p>For example, you might use Google's Imagen/Veo for a specific photorealistic motion beat in a promo video, then switch to the Firefly Image 3 model to generate brand-safe reel symbols, all within the same project.</p>
+        
+        <h3>Bulk Create for Slot Asset Pipelines</h3>
+        <p>Firefly's new Bulk Create feature, powered by new APIs, is a game-changer for slot design. Studios can now automate the generation of thousands of asset variations. This is perfect for creating symbol sets with different backgrounds, resizing key art for various cabinet posters, or recoloring assets for different game tiers.</p>
+        <p>Imagine generating a 10,000-image set of a "WILD" symbol on different backgrounds for A/B testing, all wired directly to your Digital Asset Management (DAM) system. Paired with new Dubbing/Lip-Sync APIs, you can even automate the localization of video promotions into 14 languages.</p>
+
+        <h3>On-the-Go Mobile Workflow</h3>
+        <p>The new Firefly mobile app (iOS/Android) bridges the gap between the physical and digital studio. A designer can now capture photos of a cabinet on the casino floor during a play-test, use Generative Expand to clean up the framing right on their phone, and have the project instantly sync to their desktop Photoshop via Creative Cloud. This creates an incredibly agile feedback loop for on-site reviews.</p>
+        <div class="tips-card">
+            <h4>Key Takeaways for Firefly (2025)</h4>
+            <ul>
+                <li><strong>Hub, Not Just a Tool:</strong> Position Firefly as your central hub for accessing Adobe, Google, and OpenAI models with enterprise safety.</li>
+                <li><strong>Automate Asset Production:</strong> Leverage Bulk Create APIs for mass production of symbol sets, background swaps, and resizes.</li>
+                <li><strong>Embrace Mobile Iteration:</strong> Use the mobile app for quick, on-the-floor captures and edits that sync directly to your main creative suite.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="midjourney">
+        <h2>Midjourney V7 (2025): The Style Exploration Engine ✨</h2>
+        <p>If Firefly is the factory, Midjourney remains the art director's sketchbook. With the launch of V7 and the new Editor experience, Midjourney doubles down on what it does best: unparalleled speed for stylistic exploration and moodboarding.</p>
+
+        <h3>Better Anatomy, Richer Style</h3>
+        <p>Midjourney V7 significantly narrows the "anatomy gap," especially with hands and body coherence, which was a historical weakness. This, combined with its legendary ability to interpret artistic prompts, makes it the go-to tool for the initial phases of game design.</p>
+        <p>Use V7 for "blue-sky" concepting. This is where you explore the soul of your game. Generate dozens of style frames, character explorations, and atmospheric moodboards. The new <code>--exp</code> parameter can push these explorations into even more experimental territory.</p>
+
+        <h3>The New Editor Experience</h3>
+        <p>While still primarily Discord-based, the new web Editor provides a more intuitive way to refine images. It offers tools for Pan, Zoom, and a more robust Vary (Region) feature that functions like a simplified inpainting or outpainting tool. This allows for more surgical adjustments to composition after the initial generation, without needing to jump straight to Photoshop.</p>
+        <div class="tips-card">
+            <h4>Key Takeaways for Midjourney V7 (2025)</h4>
+            <ul>
+                <li><strong>Ideation First:</strong> Use Midjourney for the initial, exploratory phases of design—moodboards, style frames, and character concepts.</li>
+                <li><strong>Embrace the Editor:</strong> Use the new web Editor for quick compositional tweaks like panning and zooming before exporting for final production.</li>
+                <li><strong>Bridge to Production:</strong> Don't treat Midjourney as a final-asset tool. Select your strongest concepts from Midjourney and move them into the Firefly/Photoshop pipeline for production.</li>
+            </ul>
+        </div>
+    </section>
+    
+    <section id="prompts">
+        <h2>Prompt Showcase: 30 Prompts for Modern Game Design</h2>
+        <p>Here are 30 detailed prompts, split between the two platforms, demonstrating their respective strengths in a game design context.</p>
+        
+        <h3>Midjourney V7: Blue-Sky Concepting & Style Frames</h3>
+        <div class="table-wrap">
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead><tr><th>Task</th><th>Prompt Example</th></tr></thead>
+                    <tbody>
+                        <tr><td>Character Ideation</td><td><code>portrait of a space pirate queen, regal and menacing, intricate cybernetic implants, nebula in the background, style of a baroque oil painting --ar 4:5 --v 7 --stylize 800</code></td></tr>
+                        <tr><td>Environment Moodboard</td><td><code>cinematic wide shot of a forgotten underwater city, bioluminescent ruins, giant sea creatures swimming past, moody, atmospheric, deep sea exploration --ar 16:9 --v 7</code></td></tr>
+                        <tr><td>"WILD" Symbol Concept</td><td><code>a hyper-detailed "WILD" symbol forged from dragon fire and obsidian, glowing embers, magical energy pulsing, isolated on black, fantasy game asset --ar 1:1 --q 2 --v 7</code></td></tr>
+                        <tr><td>Experimental UI Style</td><td><code>slot machine UI made of living wood and glowing magical runes, seamless, fantasy RPG interface, enchanted forest theme --v 7 --stylize 600</code></td></tr>
+                        <tr><td>Key Art Style Frame</td><td><code>epic key art for a 'Viking Gods' slot game, Odin and Thor clashing in a cosmic storm, Mjolnir striking Gungnir, lens flares, dynamic energy --ar 9:16 --v 7</code></td></tr>
+                        <tr><td>Creature Design</td><td><code>full body concept art of a crystal golem, assembled from glowing amethyst shards, powerful stance, ancient and magical --v 7 --chaos 30</code></td></tr>
+                        <tr><td>Game World Map</td><td><code>fantasy world map in the style of a medieval cartographer, detailed continents, sea monsters, ornate compass rose, ancient paper texture --ar 3:2 --v 7</code></td></tr>
+                        <tr><td>Bonus Round Concept</td><td><code>a "gates of Valhalla" bonus round entrance, shimmering rainbow bridge, golden gates, ethereal light, epic, heavenly --ar 16:9 --v 7</code></td></tr>
+                        <tr><td>Weapon Asset</td><td><code>concept art of the legendary sword Excalibur, glowing with holy light, embedded in a mossy stone, cinematic, fantasy --ar 1:1 --q 2 --v 7</code></td></tr>
+                        <tr><td>Loading Screen Art</td><td><code>loading screen art for a cyberpunk casino game, a lone cyborg looking out over a neon-drenched city, rain-soaked streets, reflective puddles --ar 16:9 --v 7 --stylize 700</code></td></tr>
+                        <tr><td>Character with Pose</td><td><code>full body shot of a south asian female assassin, agile parkour pose on a rooftop in a futuristic Greater Noida, back to camera, looking over shoulder, neon signs --ar 9:16 --v 7 --oref [URL]</code></td></tr>
+                        <tr><td>Themed Royal Symbol</td><td><code>a 'Queen' royal symbol for a vampire-themed slot, made of blood-red rubies and gothic silver filigree, dark and elegant --ar 1:1 --q 2 --v 7</code></td></tr>
+                        <tr><td>Vehicle Concept</td><td><code>concept design for a steampunk airship, brass and mahogany, ornate details, soaring through clouds above a Victorian London --ar 16:9 --v 7</code></td></tr>
+                        <tr><td>Jackpot Symbol</td><td><code>a giant, flawless diamond as a jackpot symbol, refracting rainbow light, hyper-realistic, 8k, studio lighting --ar 1:1 --q 2 --v 7 --style raw</code></td></tr>
+                        <tr><td>Abstract Background</td><td><code>abstract background of swirling magical energy, purple and gold particle effects, seamless, atmospheric, out-of-focus --v 7 --tile</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h3>Adobe Firefly: Production Assets & Workflow Integration</h3>
+        <div class="table-wrap">
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead><tr><th>Task</th><th>Prompt Example (within Firefly or Photoshop)</th></tr></thead>
+                    <tbody>
+                        <tr><td>Generative Fill (Symbol)</td><td>(Select a basic shield symbol) <code>a roaring lion emblem, carved in gold, hyper-detailed</code></td></tr>
+                        <tr><td>Generative Expand (Key Art)</td><td>(Expand the canvas of a 16:9 image) <code>continue the epic battlefield scene with more soldiers and siege towers on the left</code></td></tr>
+                        <tr><td>Text to Image (Character)</td><td><code>photograph of a casino high roller, confident smile, sharp suit, at a poker table, shallow depth of field, using the Firefly Image 3 model</code></td></tr>
+                        <tr><td>Structure Reference</td><td>(Use a line drawing of a slot cabinet as a reference image) <code>a "Dragon's Luck" themed slot machine, red and gold, ornate dragon carvings, glowing buttons</code></td></tr>
+                        <tr><td>Style Reference (UI)</td><td>(Use a screenshot of a clean, minimalist app as a reference) <code>a settings menu for a mobile game, clean icons, sans-serif font, white space</code></td></tr>
+                        <tr><td>Bulk Background Swap</td><td>(API task) <code>replace background of 'symbol_set_A' with 'background_volcano.jpg' for all 100 images</code></td></tr>
+                        <tr><td>Bulk Resize</td><td>(API task) <code>resize 'key_art_final.psd' to 1920x1080, 1080x1080, and 1080x1920 formats</code></td></tr>
+                        <tr><td>Text to Vector Graphic</td><td><code>a simple, flat icon of a treasure chest, single color, clean lines, suitable for a UI button</code></td></tr>
+                        <tr><td>Mobile Generative Fill</td><td>(On a photo of a cabinet) <code>remove the glare from the overhead lights on the top screen</code></td></tr>
+                        <tr><td>Text to Image (Google Model)</td><td><code>(select Imagen/Veo model) an ultra-realistic 4k video of gold coins falling in slow motion</code></td></tr>
+                        <tr><td>Generative Fill (Environment)</td><td>(Select the sky in a Midjourney image) <code>a dramatic stormy sky with lightning bolts</code></td></tr>
+                        <tr><td>Structure Reference (Pose)</td><td>(Use a 3D model pose as reference) <code>a fantasy elf archer in this exact pose, detailed leather armor, enchanted bow</code></td></tr>
+                        <tr><td>Text to Image (Brand Safe)</td><td><code>stock photo style image of a diverse group of friends laughing and playing a mobile casino game on their phones</code></td></tr>
+                        <tr><td>Generative Fill (Localization)</td><td>(Select text on a poster) <code>change the text "Jackpot" to "Gran Premio" in the same font style</code></td></tr>
+                        <tr><td>Text to Video (Promo)</td><td>(Select Veo model) <code>a 5-second cinematic reveal of a golden dragon eye opening, smoke wisps, glowing embers</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section id="workflow-combined">
+        <h2>The Ultimate 2025 Workflow: Combining Midjourney and Firefly</h2>
+        <p>The most effective studios in 2025 won't choose one tool over the other; they will master an integrated workflow. Here's a practical example for creating key art for a <code>House of the Dragon™</code> themed slot game.</p>
+        <ol>
+            <li><strong>Phase 1 (Midjourney): Blue-Sky Concepting.</strong>
+            <p>Start in Midjourney to find the visual soul of the game. Explore epic, painterly styles that capture the show's dark fantasy aesthetic.</p>
+            <code>/imagine prompt: epic fantasy dragon hoard, slot interface motif, ultra-wide, warm rim light, style of a cinematic fantasy painting --v 7 --ar 16:9</code>
+            <p>Select the two strongest style frames from the generated options.</p>
+            </li>
+            <li><strong>Phase 2 (Photoshop + Firefly): Surgical Edits.</strong>
+            <p>Bring your chosen Midjourney frame into Photoshop. The composition is great, but the central emblem doesn't match the IP. Select the emblem, and use Firefly's Generative Fill to replace it with a prompt like "carved Valyrian spiral emblem, glowing faintly." Then, use Generative Expand to outpaint the image to the exact aspect ratio of the game cabinet.</p>
+            </li>
+            <li><strong>Phase 3 (Firefly): Bulk Production.</strong>
+            <p>With your key art finalized, upload it to Firefly's Bulk Create service. Automatically generate 50+ variations for different regional posters, web banners, and social media assets, complete with clean background swaps or text placements.</p>
+            </li>
+            <li><strong>Phase 4 (Mobile Firefly): On-Site Review.</strong>
+            <p>During a cabinet review, take a photo of the art on the physical machine. Notice a reflection issue? Open the image in the Firefly mobile app, use Generative Fill to quickly patch the glare, and sync it back to the main Creative Cloud project for the team to see instantly.</p>
+            </li>
+        </ol>
+    </section>
+
+    <section id="quiz">
+        <h2>Quiz: Test Your 2025 AI Knowledge</h2>
+        <div class="quiz-container">
+            <div class="quiz-navigation">
+                <button class="btn" id="mainPrevBtn" disabled>❮</button>
+                <span class="question-counter"><span id="mainCurrentQ">1</span> of <span id="mainTotalQ">12</span></span>
+                <button class="btn" id="mainNextBtn">❯</button>
+            </div>
+            <div id="quiz-body-container"></div>
+        </div>
+    </section>
+
+    <section id="faq">
+        <h2>Frequently Asked Questions</h2>
+        <div id="faq-accordion-container"></div>
+    </section>
+    
+    <section id="glossary">
+      <h2>Key Terms for the 2025 AI Designer</h2>
+      <div class="glossary-cloud" id="glossaryCloud"></div>
+    </section>
+
+</div>
+
+<footer class="site-footer">
+    <p>© 2025 AI Game Design Academy. All Rights Reserved.</p>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const quizQuestions = [
+        { q: "In 2025, Adobe Firefly is best described as:", correct: 1, options: [ {text:"A standalone image model like Midjourney."}, {text:"A unified hub integrating Adobe, Google, and OpenAI models."}, {text:"A mobile-only application for simple edits."}, {text:"A tool exclusively for video generation."} ] },
+        { q: "What is the primary strength of Midjourney V7?", correct: 0, options: [ {text:"Rapid style exploration and blue-sky concepting."}, {text:"Bulk asset creation for 10,000+ images."}, {text:"Enterprise-level licensing and indemnification."}, {text:"Direct integration with Photoshop and After Effects."} ] },
+        { q: "Which new Midjourney V7 parameter replaces `--cref` for character consistency?", correct: 3, options: [ {text:"`--sref`"}, {text:"`--c_ref`"}, {text:"`--char`"}, {text:"`--oref`"} ] },
+        { q: "A game studio needs to create 500 variations of a reel symbol with different backgrounds for a marketing campaign. Which tool is best suited for this task?", correct: 1, options: [ {text:"Midjourney's `--repeat` command."}, {text:"Firefly's Bulk Create API."}, {text:"Photoshop's batch processing actions."}, {text:"The Midjourney Editor."} ] },
+        { q: "According to the 2025 workflow, where should a designer start when creating a new game concept?", correct: 2, options: [ {text:"In Photoshop, to set up the template."}, {text:"In Firefly, to ensure brand safety from the start."}, {text:"In Midjourney, to explore a wide range of visual styles."}, {text:"In the Firefly mobile app, to capture references."} ] },
+        { q: "What is a major advantage of using the Firefly platform for a large, risk-averse game studio?", correct: 0, options: [ {text:"Its training data is commercially safe and indemnified."}, {text:"It generates more artistic and surreal images."}, {text:"It is primarily operated through Discord."}, {text:"It has a parameter for increasing chaos."} ] },
+        { q: "The new Midjourney V7 Editor is best used for:", correct: 2, options: [ {text:"Replacing the need for Photoshop entirely."}, {text:"Automating asset localization."}, {text:"Quick compositional adjustments like Pan and Vary Region."}, {text:"Managing your subscription credits."} ] },
+        { q: "Which of these classic Midjourney syntaxes is noted as being deprecated or unsupported in V7?", correct: 3, options: [ {text:"Image prompts with `--iw`"}, {text:"Using `--no` to exclude things"}, {text:"Using `--sref` for style"}, {text:"Multi-prompt weighting with `::`"} ] },
+        { q: "A designer on the casino floor spots a glare on their new cabinet art. What is the fastest 2025 workflow to fix this?", correct: 1, options: [ {text:"Go back to the office and re-render in Midjourney."}, {text:"Use the Firefly mobile app's Generative Fill and sync to Creative Cloud."}, {text:"Manually edit the photo in a different mobile app."}, {text:"Wait for the next software update."} ] },
+        { q: "To get a clean image with minimal noise or film grain in Midjourney V7, you should:", correct: 0, options: [ {text:"Combine `--style raw`, low `--stylize`, and use `--no film grain`."}, {text:"Use a very high `--stylize` value."}, {text:"Use the `--clean` parameter."}, {text:"Increase the `--q` value to 5."} ] },
+        { q: "In the integrated workflow, what is the primary role of Photoshop?", correct: 2, options: [ {text:"Initial idea generation."}, {text:"Bulk resizing of assets."}, {text:"Surgical edits like precise Generative Fill and final compositing."}, {text:"Managing API credits."} ] },
+        { q: "Firefly's 2025 platform allows a user to do what for the first time within the Adobe ecosystem?", correct: 3, options: [ {text:"Generate an image from text."}, {text:"Upscale an image to a higher resolution."}, {text:"Reference another image for style."}, {text:"Choose to use models from Google or OpenAI for a task."} ] }
+      ];
+
+      const faqs = [
+        { q: "Which tool is better in 2025: Midjourney or Firefly?", a: "Neither is 'better'—they excel at different tasks. Use Midjourney for initial, high-speed style exploration and concept art. Use Firefly for production work, including surgical edits, bulk creation, and ensuring brand-safe, commercially indemnified assets." },
+        { q: "What is Omni Reference (`--oref`) in Midjourney V7?", a: "It's the powerful successor to Character Reference (`--cref`). You provide an image URL of a character, and `--oref` ensures that character appears consistently across different scenes and poses. It's essential for creating reliable game IP." },
+        { q: "Can I still use multi-prompt weights like `dragon::2 gold::1` in Midjourney V7?", a: "No, the notes indicate this syntax is deprecated and not officially supported in V7. For emphasis, you should use more descriptive language in your prompt. For exclusion, use `--no`. For blending images, use image prompts with the `--iw` parameter." },
+        { q: "What does it mean that Firefly is a 'multi-model platform'?", a: "It means that within the Firefly interface, you are not limited to using only Adobe's Firefly Image model. You can choose to use other powerful models, like Google's Imagen/Veo or OpenAI's DALL-E, for specific tasks, all under a single Adobe credit system." },
+        { q: "How does the Firefly mobile app change the game design workflow?", a: "It creates a powerful loop between on-site reviews and the digital studio. A designer can take a picture of a physical cabinet, use AI to edit it on the spot (e.g., remove glare, expand the background), and have the changes sync instantly to their team's Creative Cloud library." },
+        { q: "Are Midjourney V7 images safe to use for commercial games?", a: "Under a paid plan, you have commercial rights to the images you create. However, because Midjourney's training data is not public, some large, risk-averse studios may prefer Firefly, which offers full indemnification (legal protection) for its outputs." },
+        { q: "What's the best way to get a clean, noiseless image in Midjourney V7?", a: "There's no single 'denoise' button. You must use a combination of parameters: <code>--style raw</code> (to reduce AI's opinion), a low <code>--stylize</code> value (e.g., <code>--s 50</code>), a low <code>--chaos</code> value (e.g., <code>--c 5</code>), and negative prompts like <code>--no film grain, noise, speckle</code>." },
+        { q: "How do I control perspective in Midjourney V7?", a: "You drive perspective primarily through descriptive language in your prompt. Use camera and photography terms like '14mm ultra-wide lens,' 'low-angle shot,' 'from a bird's eye view,' or 'single vanishing point.' Afterward, you can use the new web Editor to fine-tune the composition with Pan and Zoom." },
+        { q: "What is Firefly's 'Bulk Create' feature?", a: "It's an enterprise-level automation tool that uses APIs to generate thousands of variations of an image. For game studios, this means you can automatically create a full set of reel symbols on different backgrounds, or resize key art for every marketing platform, saving immense amounts of time." },
+        { q: "If Midjourney V7 is better at hands, is there any reason to use Firefly for characters?", a: "Yes. While Midjourney is great for *concepting* characters, Firefly's integration with Photoshop is superior for *refining* them. You might design a character in Midjourney, then bring it into Photoshop and use Firefly's Generative Fill for precise edits, like changing an item of clothing or fixing a minor artifact." },
+        { q: "What are Style Reference versions (`--sv`) in Midjourney V7?", a: "When you use a style reference (`--sref`), the `--sv` parameter lets you choose which version of the style-matching algorithm to use. The default is the latest, but you might use an older version if you have a style code that was generated with it, ensuring consistency." },
+        { q: "Can I use Google's Veo video model in Midjourney?", a: "No. According to the notes, Google's Imagen/Veo models are integrated into the Adobe Firefly platform. Midjourney has its own native video generation capabilities, which are separate." }
+      ];
+
+      const glossaryData = [
+         { term: "Omni Reference (--oref)", def: "The Midjourney V7 parameter for maintaining strong character and object consistency using a reference image." },
+         { term: "Bulk Create", def: "An Adobe Firefly feature that uses APIs to automate the generation of thousands of image variations for production pipelines." },
+         { term: "Generative Fill", def: "An Adobe Firefly feature (in Photoshop and other apps) that allows you to add, remove, or replace parts of an image using text prompts." },
+         { term: "Generative Expand", def: "An Adobe Firefly feature that allows you to extend the canvas of an image, filling the new space with AI-generated content that matches the original." },
+         { term: "Style Reference (--sref)", def: "A Midjourney parameter that uses an image URL to influence the aesthetic style (color, lighting, etc.) of a new generation." },
+         { term: "Style Weight (--sw)", def: "A Midjourney V7 parameter (0-1000) that adjusts the strength of a Style Reference." },
+         { term: "Indemnification", def: "Legal protection offered by a company (like Adobe) against copyright claims for commercially used AI-generated assets." },
+         { term: "Blue-Sky Concepting", def: "The initial, exploratory phase of design where the goal is to generate a wide range of creative ideas without limits." },
+         { term: "Vary (Region)", def: "A tool in Midjourney's Editor that allows you to select a specific area of an image and regenerate only that part with a new prompt." },
+         { term: "Multi-Modal", def: "An AI system that can understand and generate content in multiple formats, such as text, images, and video. The 2025 Firefly platform is multi-modal." },
+         { term: "API", def: "A set of rules that allows different software applications to communicate with each other, enabling automation like Firefly's Bulk Create." },
+         { term: "DAM", def: "A Digital Asset Management system for storing, organizing, and distributing a company's digital content, such as game art." }
+      ];
+      
+      function setupQuiz(containerId, questionsData) {
+        const quizSection = document.getElementById(containerId);
+        if (!quizSection) return;
+        const bodyContainer = quizSection.querySelector('#quiz-body-container');
+        const prevBtn = quizSection.querySelector('#mainPrevBtn');
+        const nextBtn = quizSection.querySelector('#mainNextBtn');
+        const currentQSpan = quizSection.querySelector('#mainCurrentQ');
+        const totalQSpan = quizSection.querySelector('#mainTotalQ');
+        totalQSpan.textContent = questionsData.length;
+        if (!bodyContainer || !prevBtn || !nextBtn || !currentQSpan || !totalQSpan) return;
+        let userAnswers = new Array(questionsData.length).fill(null);
+        let currentQuestionIndex = 0;
+
+        function renderQuestion() {
+            const qData = questionsData[currentQuestionIndex];
+            let optionsHTML = qData.options.map((opt, index) => {
+                let classes = "quiz-option";
+                let explanationHTML = '';
+                if (userAnswers[currentQuestionIndex] !== null) {
+                    const isSelected = userAnswers[currentQuestionIndex].selectedIndex === index;
+                    const isCorrect = index === qData.correct;
+                    if (isSelected) {
+                        classes += " selected " + (userAnswers[currentQuestionIndex].isCorrect ? 'correct' : 'wrong');
+                    } else if (isCorrect) {
+                       classes += " correct";
+                    }
+                    if(isSelected) {
+                        explanationHTML = `<div class="explanation" style="display:block;">${userAnswers[currentQuestionIndex].isCorrect ? '✅ Correct!' : '❌ Incorrect.'} The correct answer is explained in the text.</div>`;
+                    }
+                }
+                return `<div class="${classes}" data-option-index="${index}"><label><input type="radio" name="q${currentQuestionIndex}" value="${index}" ${userAnswers[currentQuestionIndex] !== null ? 'disabled' : ''}><span>${opt.text}</span></label>${explanationHTML}</div>`;
+            }).join('');
+            bodyContainer.innerHTML = `<div class="quiz-body active"><h3>Quiz: Test Your 2025 AI Knowledge</h3><p><strong>Q${currentQuestionIndex + 1}:</strong> ${qData.q}</p><div class="quiz-options">${optionsHTML}</div></div>`;
+            currentQSpan.textContent = currentQuestionIndex + 1;
+            prevBtn.disabled = currentQuestionIndex === 0;
+            nextBtn.disabled = userAnswers[currentQuestionIndex] === null || currentQuestionIndex === questionsData.length - 1;
+            if (currentQuestionIndex === questionsData.length - 1) {
+                nextBtn.textContent = 'Finish';
+                nextBtn.disabled = userAnswers[currentQuestionIndex] === null;
+            } else {
+                 nextBtn.textContent = '❯';
+            }
+            bodyContainer.querySelectorAll('.quiz-option input').forEach(radio => radio.addEventListener('change', handleOptionSelect));
+        }
+
+        function handleOptionSelect(e) {
+            const selectedOptionIndex = parseInt(e.target.value);
+            const qData = questionsData[currentQuestionIndex];
+            userAnswers[currentQuestionIndex] = { selectedIndex: selectedOptionIndex, isCorrect: selectedOptionIndex === qData.correct };
+            renderQuestion();
+        }
+
+        function showFinalScore(){
+            const correctCount = userAnswers.filter(a => a && a.isCorrect).length;
+            quizSection.innerHTML = `<div class="final-score">You scored ${correctCount} out of ${questionsData.length}! <br><button class="btn" onclick="window.location.reload()" style="margin-top:20px;">Try Again</button></div>`;
+        }
+
+        prevBtn.addEventListener('click', () => { if (currentQuestionIndex > 0) { currentQuestionIndex--; renderQuestion(); } });
+        nextBtn.addEventListener('click', () => { 
+            if (currentQuestionIndex < questionsData.length - 1) { 
+                currentQuestionIndex++; 
+                renderQuestion(); 
+            } else {
+                showFinalScore();
+            }
+        });
+        renderQuestion();
+      }
+      
+      function setupFAQs() {
+            const faqContainer = document.getElementById('faq-accordion-container');
+            faqContainer.innerHTML = `<div class="accordion">${faqs.map(faq => `
+                <div class="accordion-item">
+                    <button class="accordion-header" aria-expanded="false">
+                        <span>${faq.q}</span><i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="accordion-content"><p>${faq.a.replace(/<code>/g, '<code style="background: #ffe8d9; color: var(--accent-2); padding: 2px 6px; border-radius: 4px; font-family: \'Courier New\', Courier, monospace;">').replace(/<\/code>/g, '</code>')}</p></div>
+                </div>`).join('')}</div>`;
+        }
+
+        function setupAccordions() {
+             document.querySelector('.container').addEventListener('click', function(event) {
+                const header = event.target.closest('.accordion-header');
+                if (!header) return;
+
+                const content = header.nextElementSibling;
+                const isExpanded = header.getAttribute('aria-expanded') === 'true';
+                
+                header.setAttribute('aria-expanded', String(!isExpanded));
+                content.style.maxHeight = isExpanded ? null : content.scrollHeight + 40 + "px";
+                content.style.padding = isExpanded ? "0 20px" : "20px";
+            });
+        }
+        
+        function setupGlossary() {
+            const cloud = document.getElementById('glossaryCloud');
+            if (!cloud) return;
+            cloud.innerHTML = glossaryData.map(kw => `<button class="glossary-chip" type="button" data-term="${kw.term}" data-def="${kw.def}">${kw.term}</button>`).join('');
+
+            if (!document.querySelector('.chip-tip')) {
+                const tip = document.createElement('div');
+                tip.className = 'chip-tip';
+                tip.innerHTML = '<div class="arrow"></div><div class="tip-content"></div>';
+                document.body.appendChild(tip);
+            }
+            const tip = document.querySelector('.chip-tip');
+            const tipContent = tip.querySelector('.tip-content');
+            let openBtn = null;
+
+            function positionTipFor(btn) {
+                const rect = btn.getBoundingClientRect();
+                tip.style.display = 'block';
+                const tipRect = tip.getBoundingClientRect();
+                
+                let top = rect.bottom + 12;
+                let arrowTop = -6;
+
+                if (top + tipRect.height > window.innerHeight) {
+                    top = rect.top - tipRect.height - 12;
+                    arrowTop = tipRect.height - 6;
+                }
+
+                let left = rect.left + rect.width / 2 - tipRect.width / 2;
+                left = Math.max(8, Math.min(left, window.innerWidth - tipRect.width - 8));
+                
+                tip.style.top = `${top + window.scrollY}px`;
+                tip.style.left = `${left + window.scrollX}px`;
+                tip.querySelector('.arrow').style.top = `${arrowTop}px`;
+                tip.querySelector('.arrow').style.left = `${rect.left + rect.width / 2 - left - 6}px`;
+            }
+            
+            function showTip(event) {
+                const btn = event.currentTarget;
+                tipContent.innerHTML = `<strong>${btn.dataset.term}</strong>: ${btn.dataset.def}`;
+                tip.classList.add('show');
+                openBtn = btn;
+                positionTipFor(btn);
+            }
+            
+            function hideTip() {
+                tip.classList.remove('show');
+                openBtn = null;
+            }
+
+            cloud.querySelectorAll('.glossary-chip').forEach(btn => {
+                btn.addEventListener('mouseenter', showTip);
+                btn.addEventListener('mouseleave', hideTip);
+                btn.addEventListener('focus', showTip);
+                btn.addEventListener('blur', hideTip);
+            });
+            window.addEventListener('scroll', () => { if (openBtn) positionTipFor(openBtn); }, true);
+            window.addEventListener('resize', () => { if (openBtn) hideTip(); }, true);
+        }
+
+        // --- INITIALIZE ALL COMPONENTS ---
+        setupQuiz('quiz', quizQuestions);
+        setupFAQs();
+        setupAccordions();
+        setupGlossary();
+    });
+</script>
+
+</body>
+</html>
+

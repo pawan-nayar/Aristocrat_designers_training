@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hitting the Jackpot: An Interactive Guide to Midjourney for Game Design</title>
+    <style>
+        /* Utilizing a bolder font and a color palette inspired by Aristocrat's vibrant, high-energy aesthetic (Reds, Golds, and deep blacks) */
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Inter:wght@400;600;700&display=swap');
+
+        :root {
+            --background-color: #100000;
+            --primary-text-color: #FFFFFF;
+            --secondary-text-color: #CCCCCC;
+            /* Primary Brand Red - Vibrant and Energetic */
+            --accent-color: #E60000; 
+            --accent-color-dark: #B30000;
+            /* Secondary Accent Gold - Wealth and Excitement */
+            --highlight-color: #FFD700; 
+            --highlight-color-dark: #DAA520;
+            --surface-color: #1A1A1A;
+            --border-color: #440000;
+            --success-color: #00FF7F;
+            --error-color: #FF4500;
+            --code-bg-color: #2C0000;
+            /* Bold, impactful font for headers */
+            --header-font: 'Oswald', sans-serif; 
+            /* Clean, readable font for body */
+            --body-font: 'Inter', sans-serif; 
+        }
+
+        body {
+            font-family: var(--body-font);
+            background-color: var(--background-color);
+            color: var(--primary-text-color);
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 30px 45px;
+            background-color: var(--surface-color);
+            border-radius: 10px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--border-color);
+        }
+
+        h1, h2, h3 {
+            font-family: var(--header-font);
+            color: var(--primary-text-color);
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        h1 {
+            font-size: 3.5rem;
+            text-align: center;
+            border-bottom: 4px solid var(--accent-color);
+            padding-bottom: 15px;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            font-family: var(--header-font);
+            color: var(--highlight-color);
+            margin-top: 0;
+            margin-bottom: 40px;
+            font-size: 1.5rem;
+            font-weight: 400;
+        }
+        h2 {
+            font-size: 2.2rem;
+            margin-top: 60px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            color: var(--accent-color);
+        }
+        h3 {
+            font-size: 1.7rem;
+            margin-top: 40px;
+            color: var(--highlight-color);
+        }
+        p, ul, li {
+            margin-bottom: 1.5rem;
+            color: var(--secondary-text-color);
+            font-size: 1.05rem;
+        }
+        strong {
+            color: var(--highlight-color);
+            font-weight: 700;
+        }
+        code {
+            background-color: var(--code-bg-color);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            color: #f0f0f0;
+            border: 1px solid var(--border-color);
+        }
+
+        .prompt-container {
+            background-color: var(--code-bg-color);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            position: relative;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.5);
+        }
+        .prompt-text {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #f0f0f0;
+            font-size: 0.95rem;
+        }
+        .copy-button {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background-color: var(--accent-color);
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .copy-button:hover {
+            background-color: var(--accent-color-dark);
+            transform: scale(1.05);
+        }
+        .copy-button.copied {
+            background-color: var(--success-color);
+            color: #121212;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 25px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            border: 2px solid var(--border-color);
+        }
+        .image-caption {
+            text-align: center;
+            font-style: italic;
+            color: var(--secondary-text-color);
+            font-size: 0.9rem;
+            margin-top: -15px;
+        }
+
+        .pro-tip {
+            background-color: rgba(255, 215, 0, 0.1);
+            border-left: 5px solid var(--highlight-color);
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .pro-tip strong {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--highlight-color);
+            font-family: var(--header-font);
+            text-transform: uppercase;
+        }
+        .pro-tip p {
+            margin-bottom: 0;
+        }
+        
+        blockquote {
+            border-left: 4px solid var(--accent-color);
+            padding-left: 25px;
+            margin: 30px 0;
+            font-style: italic;
+            color: var(--primary-text-color);
+            font-size: 1.2rem;
+        }
+
+        .interactive-tester, .quiz-section {
+            background-color: #252525;
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 40px;
+        }
+        .interactive-tester h3, .quiz-section h3 {
+            margin-top: 0;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .control-group label {
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--primary-text-color);
+        }
+        .control-group select, .control-group input[type="range"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: var(--code-bg-color);
+            color: var(--primary-text-color);
+            border: 1px solid var(--border-color);
+            font-family: inherit;
+        }
+        .control-group input[type="range"] {
+            padding: 0;
+        }
+        
+        .faq-section, .glossary-section {
+            margin-top: 60px;
+        }
+        .accordion-item {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+        .accordion-header {
+            background-color: var(--code-bg-color);
+            padding: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+            font-size: 1.1rem;
+            font-family: var(--header-font);
+            text-transform: uppercase;
+        }
+        .accordion-header:hover {
+            background-color: #3a0000;
+        }
+        .accordion-header::after {
+            content: '▼';
+            font-size: 1rem;
+            color: var(--highlight-color);
+            transition: transform 0.3s ease;
+        }
+        .accordion-item.active .accordion-header::after {
+            transform: rotate(180deg);
+        }
+        .accordion-content {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+            background-color: #1A1A1A;
+        }
+        .accordion-item.active .accordion-content {
+            padding: 20px;
+            max-height: 600px;
+        }
+
+        /* Quiz Styles */
+        .quiz-container { display: none; }
+        .quiz-container.active { display: block; }
+        .quiz-options { list-style: none; padding: 0; }
+        .quiz-options li {
+            background-color: var(--code-bg-color);
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .quiz-options li:hover { border-color: var(--highlight-color); }
+        .quiz-options li.selected { border-color: var(--highlight-color-dark); background-color: #333; }
+        .quiz-options li.correct { border-color: var(--success-color); background-color: rgba(0, 255, 127, 0.1); }
+        .quiz-options li.incorrect { border-color: var(--error-color); background-color: rgba(255, 69, 0, 0.1); }
+        .quiz-navigation { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; }
+        .quiz-button {
+            background-color: var(--accent-color);
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: 700;
+        }
+        .quiz-button:hover { background-color: var(--accent-color-dark); }
+        .quiz-button:disabled { background-color: #555; cursor: not-allowed; }
+        .quiz-explanation {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        .quiz-explanation.correct { background-color: rgba(0, 255, 127, 0.1); border-left: 4px solid var(--success-color); }
+        .quiz-explanation.incorrect { background-color: rgba(255, 69, 0, 0.1); border-left: 4px solid var(--error-color); }
+
+        /* Glossary Styles */
+        .glossary-list {
+            column-count: 2;
+            column-gap: 50px;
+        }
+        .glossary-item {
+            margin-bottom: 25px;
+            break-inside: avoid;
+        }
+        .glossary-term {
+            font-weight: 700;
+            color: var(--highlight-color);
+            font-family: var(--header-font);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+            color: var(--secondary-text-color);
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 20px 25px; }
+            h1 { font-size: 2.8rem; }
+            h2 { font-size: 1.9rem; }
+            .controls { grid-template-columns: 1fr; }
+            .glossary-list { column-count: 1; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Hitting the Jackpot</h1>
+        <p class="subtitle">An Interactive Guide to Midjourney for Game Design</p>
+        
+        <blockquote>"We are united by our shared values and mission to bring joy to life through the power of play." – Aristocrat Leisure</blockquote>
+        
+        <p>In the high-energy world of casino game design, your concept art is the initial spark—the core idea that captures the player's imagination. But the <strong>Midjourney parameters</strong>? They are your artistic controls. They manage the vibrancy, the style, and the visual excitement of the final product. With a strategic adjustment—a command like <code>--stylize 800</code> or <code>--ar 9:16</code>—you can transform a basic concept into a dazzling, market-leading visual experience.</p>
+        <p>This guide is an exploration into the art of intentional design, inspired by the vibrant, bold, and character-driven style of industry leaders like Aristocrat Gaming. We will embark on a creative journey together, starting with a simple idea and evolving it using the full spectrum of Midjourney's parameters. Our project? To craft the visual identity for <strong>"Buffalo Diamond: Canyon Heist,"</strong> a hypothetical new iteration of Aristocrat's most iconic brand, blending the classic wilderness theme with a high-stakes jewel heist concept.</p>
+        
+        <img src="https://placehold.co/900x500/1a1a1a/FFD700?text=Buffalo+Diamond:+Canyon+Heist+Concept+Art" alt="Conceptual art for the Buffalo Diamond Canyon Heist slot game">
+        
+        <h2>Section 1: The Cabinet Blueprint (Foundations of Form)</h2>
+        <p>Before the reels can spin, the game needs a home. The first set of parameters defines the container of your art—its shape and the algorithm that brings it to life. This is crucial for designing visuals tailored to specific hardware, like Aristocrat's imposing portrait cabinets (e.g., The Baron Portrait) or dual-screen setups (e.g., MarsX).</p>
+        <p>Our initial concept for "Buffalo Diamond" focuses on the core visual elements:</p>
+        <div class="prompt-container">
+            <span class="prompt-text">/imagine prompt: a powerful buffalo with diamond horns charging through a canyon at sunset, vibrant purple and orange sky, high-energy slot machine art style, dynamic --v 7</span>
+            <button class="copy-button">Copy</button>
+        </div>
+        <p>This gives us a solid starting point. But the default square format doesn't match the towering presence of a modern slot cabinet. We need to design for the hardware.</p>
+        
+        <h3>Mastering Aspect Ratio (`--ar`) for Hardware</h3>
+        <p>The shape of your image dictates its impact on the casino floor. A portrait format maximizes the visual real estate on modern cabinets, creating an immersive experience. Let's adapt our prompt for a towering, attention-grabbing portrait display.</p>
+        <div class="prompt-container">
+            <span class="prompt-text">/imagine prompt: a powerful buffalo with diamond horns charging through a canyon at sunset, vibrant purple and orange sky, high-energy slot machine art style, dynamic --v 7 --ar 9:16</span>
+            <button class="copy-button">Copy</button>
+        </div>
+        <img src="https://placehold.co/506x900/1a1a1a/FFD700?text=Buffalo+Diamond+--ar+9:16" alt="Buffalo Diamond in portrait cabinet format">
+        <p class="image-caption">The 9:16 aspect ratio immediately frames the concept for a portrait cabinet or mobile display.</p>
+        <p><strong>The Result:</strong> Instantly, the design shifts. The buffalo now towers vertically, utilizing the full height of the screen. The canyon feels deeper, drawing the player's eye upward towards potential jackpot meters. It's no longer just concept art; it's a cabinet design.</p>
+
+        <h4>Prompt Explorations: Aspect Ratios in Gaming</h4>
+        <ul>
+            <li>For a dual-screen setup background (MarsX): <code>... the grand canyon landscape, panoramic view, stylized sunset --ar 16:9</code></li>
+            <li>For social media marketing (Instagram/TikTok Stories): <code>... a close-up animation of the "Diamond Heist" jackpot symbol spinning --ar 9:16</code></li>
+            <li>For a massive overhead display or website banner: <code>... a panoramic "Buffalo Stampede" event across the desert --ar 3:1</code></li>
+        </ul>
+
+        <h2>Section 2: The Art Director's Toolkit (Aesthetic & Style)</h2>
+        <p>If the core controls define the hardware, these parameters define the visual flair that makes a game stand out. They directly influence the artistic style and mood, crucial for differentiating "Buffalo Diamond" and aligning it with the established Aristocrat aesthetic—vibrant, high-energy, and premium.</p>
+        
+        <h3>Controlling Stylization (`--stylize` or `--s`)</h3>
+        <p>This parameter determines how "artistic" or "opinionated" Midjourney gets. A low value is precise, while a high value allows for more creative flair. Aristocrat games often have a rich, slightly exaggerated, painterly quality that feels premium and exciting. Let's increase the stylization to give our buffalo a more dramatic and awe-inspiring presence.</p>
+        <div class="prompt-container">
+            <span class="prompt-text">/imagine prompt: a powerful buffalo with diamond horns charging through a canyon at sunset, vibrant purple and orange sky, high-energy slot machine art style, dynamic --v 7 --ar 9:16 --stylize 800</span>
+            <button class="copy-button">Copy</button>
+        </div>
+        <img src="https://placehold.co/506x900/1a1a1a/FFD700?text=Buffalo+Diamond+--stylize+800" alt="Buffalo Diamond with high stylization">
+        <p class="image-caption">A higher stylize value introduces dramatic lighting, enhanced textures, and the high-energy "pop" needed for a slot game.</p>
+        <p><strong>Think Like This:</strong> A low <code>stylize</code> value (e.g., 50-100) is like a technical illustration for game specifications. A high <code>stylize</code> value (e.g., 700-1000) is like the final marketing art designed to excite players. For precise symbol design, you might use a lower value; for the overall game atmosphere, go higher.</p>
+
+        <h3>The Realism Dial (`--style raw`)</h3>
+        <p>Sometimes, you need less art and more accuracy. Aristocrat's successful NFL-themed games require photorealistic elements. <code>--style raw</code> strips away Midjourney's default "beautification," adhering strictly to your prompt. This is excellent for generating realistic textures or licensed characters.</p>
+         <div class="prompt-container">
+            <span class="prompt-text">/imagine prompt: hyper-realistic texture of a large, uncut diamond, high detail, 8k, studio lighting --v 7 --style raw --s 50</span>
+            <button class="copy-button">Copy</button>
+        </div>
+
+        <h4>Prompt Explorations: Style & Aesthetics</h4>
+        <ul>
+            <li>For a stylized, social casino version (e.g., Big Fish Games style): <code>... a cute, cartoonish buffalo mascot, bright colors, friendly, vector style --niji 6 --s 250</code></li>
+            <li>For designing high-value symbols for "Dragon Link": <code>... a flawless golden dragon orb, photorealistic rendering, black background --style raw --s 100</code></li>
+            <li>For a dark, atmospheric "Game of Thrones" style concept: <code>... a menacing iron throne in a dark dungeon, dramatic volumetric lighting, gritty texture --s 600</code></li>
+        </ul>
+
+        <h2>Section 3: Brand DNA & Consistency (The Director's Chair)</h2>
+        <p>This is where you move from creating individual assets to establishing a cohesive brand identity. These parameters use existing images to influence style and character, ensuring consistency across all touchpoints—a hallmark of successful game franchises like Buffalo or Dragon Link.</p>
+        
+        <h3>Using Style Reference (`--sref`) for the Aristocrat "Look"</h3>
+        <p>Aristocrat games share a distinct visual DNA—a specific way light reflects off gold, a certain vibrancy in their color palettes, and a recognizable rendering style. We can use <code>--sref</code> with URLs of existing, successful Aristocrat game art (like the classic Buffalo Gold) to infuse "Buffalo Diamond" with that same market-proven aesthetic.</p>
+        <div class="prompt-container">
+            <span class="prompt-text">/imagine prompt: concept art for a new "Diamond Jackpot" symbol, a glowing diamond and gold coins --v 7 --sref https://i.pinimg.com/originals/1d/62/7f/1d627f4406a9c3a5f9a80f306d2e305c.jpg</span>
+            <button class="copy-button">Copy</button>
+        </div>
+        <p>Midjourney will analyze the colors, lighting, and rendering style of the reference image and apply it to our new symbol, ensuring it feels like it belongs in the Aristocrat portfolio.</p>
+
+        <h3>Maintaining Character Consistency (`--oref`)</h3>
+        <p>Every hit game needs recognizable IP. To ensure our Diamond Buffalo looks the same in the base game, the bonus rounds, and the marketing materials, we use Omni Reference (<code>--oref</code>).</p>
+         <div class="prompt-container">
+            <span class="prompt-text">/imagine prompt: The Diamond Buffalo celebrating a jackpot win, rearing up, surrounded by flashing lights and coins --oref [URL_of_your_base_buffalo_design] --cw 100</span>
+            <button class="copy-button">Copy</button>
+        </div>
+        <p>The <code>--cw 100</code> (Character Weight 100) ensures the buffalo's design, including the unique diamond horns, remains perfectly consistent while allowing the pose and environment to change.</p>
+        
+        <div class="pro-tip">
+            <strong>Omnichannel Marketing Masterclass:</strong> Game launches require assets for the cabinet, digital ads, social media, and print. Maintain brand consistency across all platforms with a <strong>permutation prompt</strong>. A prompt ending with <strong><code>--ar {9:16, 1:1, 16:9}</code></strong> will generate vertical (Cabinet/TikTok), square (Instagram), and widescreen (Web Banner) versions simultaneously. Combine this with <code>--sref</code> and <code>--oref</code> to create an entire launch campaign in a single command.
+        </div>
+        
+        <h4>Prompt Explorations: Reference & Consistency</h4>
+        <ul>
+            <li>To design a consistent "Mr. Cashman" character: <code>... portrait of Mr. Cashman holding a giant check, smiling --oref [URL_of_Mr_Cashman_ModelSheet] --cw 100</code></li>
+            <li>To blend two successful styles (e.g., Western and Sci-Fi): <code>... futuristic cowboy saloon concept --sref [URL_Western_style]::1 [URL_SciFi_style]::2</code></li>
+            <li>To ensure a clean design by excluding unwanted elements: <code>... Buffalo Diamond background landscape --no trees</code></li>
+        </ul>
+
+        <div class="interactive-tester">
+            <h3>Interactive Game Design Studio</h3>
+            <p>Experiment with key parameters to see how the concept art for "Buffalo Diamond" changes. Adjust the sliders and dropdowns to update the example prompt below.</p>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="ar-select">Aspect Ratio (--ar)</label>
+                    <select id="ar-select">
+                        <option value="1:1">1:1 (Square/Symbol)</option>
+                        <option value="16:9">16:9 (Widescreen/Dual Screen)</option>
+                        <option value="9:16" selected>9:16 (Portrait Cabinet/Mobile)</option>
+                        <option value="3:1">3:1 (Cabinet Topper)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="stylize-slider">Stylize (--s) <span id="s-value">500</span></label>
+                    <input type="range" id="stylize-slider" min="0" max="1000" value="500" step="50">
+                </div>
+                 <div class="control-group">
+                    <label for="chaos-slider">Chaos (--c) <span id="c-value">15</span></label>
+                    <input type="range" id="chaos-slider" min="0" max="100" value="15" step="5">
+                </div>
+            </div>
+            <div class="prompt-container">
+                <span id="interactive-prompt-text" class="prompt-text"></span>
+                <button class="copy-button" id="interactive-copy-button">Copy</button>
+            </div>
+        </div>
+
+        <h2>Section 4: The Animator's Desk (Bringing the Reels to Life)</h2>
+        <p>Modern gaming demands motion. The excitement of a "Big Win" or the anticipation of a "Hold & Spin" feature relies on dynamic animation. Midjourney's v7 video generation allows designers to prototype these animations rapidly, turning static concept art into mesmerizing motion studies.</p>
+        
+        <h3>Prototyping Animations with Video</h3>
+        <p>The process starts with a source image (the starting frame), followed by a description of the action. Let's prototype the "Jackpot Celebration" animation, where coins explode from the center of the screen.</p>
+        <div class="prompt-container">
+            <span class="prompt-text">[Image URL of your game screen] Gold coins and diamonds explode from the center of the screen and rain down, bright lens flares, sparks fly out, energetic celebration --ar 16:9 --motion high</span>
+            <button class="copy-button">Copy</button>
+        </div>
+        <p>This generates a short video based on the starting image. We use <strong><code>--motion high</code></strong> for maximum excitement. For ambient animations or idle states, use <strong><code>--motion low</code></strong> and add <strong><code>--loop</code></strong> to ensure they play seamlessly.</p>
+        
+        <img src="https://placehold.co/900x506/1a1a1a/FFD700?text=Jackpot+Celebration+Animation+(Video)" alt="Animated jackpot concept">
+        <p class="image-caption">Rapidly prototyping animations provides a clearer vision for the development team.</p>
+        
+        <h4>Prompt Explorations: Motion in Gaming</h4>
+        <ul>
+            <li>For the Buffalo Stampede feature: <code> [Image URL of the landscape] A herd of buffalo charges across the screen, dust kicks up, camera shakes slightly --motion high</code></li>
+            <li>For the Dragon Link Orb idle animation: <code> [Image URL of the Orb] The golden orb pulses slowly with energy, subtle glow effect, mesmerizing --motion low --loop</code></li>
+            <li>For a background environment animation: <code> [Image URL of the canyon] Clouds drift slowly across the sky, subtle heat haze effect in the distance --motion low --loop</code></li>
+        </ul>
+
+        <h2>Section 5: The Efficiency Expert (Mastering Your Workflow)</h2>
+        <p>Speed to market is critical in the gaming industry. These commands help you optimize your creative process, allowing you to iterate faster, explore more concepts, and generate production-ready assets efficiently.</p>
+        <ul>
+            <li><strong><code>--fast</code> / <code>--relax</code> / <code>--turbo</code></strong>: Your speed controls. <strong>Think like this:</strong> Use <code>--relax</code> for overnight batch generation of low-priority concepts, <code>--fast</code> for daily design work, and <code>--turbo</code> when deadlines are looming.</li>
+            <li><strong><code>--stop</code></strong>: Halts generation partway through (e.g., <code>--stop 70</code>). This is perfect for creating softer, atmospheric effects or abstract backgrounds that don't require full rendering detail.</li>
+            <li><strong><code>--tile</code></strong>: Essential for creating seamless, repeating patterns for reel backgrounds, cabinet artwork, or digital interfaces. Let's create a stylized pattern for the background of "Buffalo Diamond."</li>
+        </ul>
+        <div class="prompt-container">
+            <span class="prompt-text">/imagine prompt: stylized pattern of buffalo horns and diamond facets, deep purple and gold, intricate, seamless --tile --v 7</span>
+            <button class="copy-button">Copy</button>
+        </div>
+        <img src="https://placehold.co/900x400/1a1a1a/FFD700?text=Buffalo+Diamond+Seamless+Background+--tile" alt="Seamless game pattern">
+        <p class="image-caption">The `--tile` parameter is perfect for creating intricate, production-ready background textures.</p>
+
+        <h4>Prompt Explorations: Workflow Efficiency</h4>
+        <ul>
+            <li>To rapidly generate 10 variations of the "Wild" symbol: <code>... Buffalo Diamond WILD symbol design, gold lettering, rugged texture --repeat 10 --fast</code></li>
+            <li>To create a soft, atmospheric dust effect for the background: <code>... swirling desert dust and sand, abstract, soft orange light --stop 60</code></li>
+            <li>For a repeating pattern for the "5 Dragons" game: <code>... a subtle dragon scale pattern, metallic gold on red silk --tile</code></li>
+        </ul>
+        
+        <h2>Section 6: The Innovation Lab (Embracing the Unexpected)</h2>
+        <p>Aristocrat leads the industry by constantly innovating ("Innovate through the power of play"). These parameters are for designers who love to experiment and discover new visual territories. This is where you move beyond established styles and brainstorm radical new concepts.</p>
+        
+        <h3>Embracing Chaos (`--chaos` or `--c`)</h3>
+        <p>This injects randomness and diversity into your initial grid. A value of <code>--chaos 0</code> produces very similar designs, while <code>--chaos 100</code> gives you four wildly different interpretations of the same concept. It's the ultimate tool for breaking out of a creative rut when designing a new game theme.</p>
+        <div class="prompt-container">
+            <span class="prompt-text">/imagine prompt: a completely new slot game theme based on "Cybernetic Jungle", futuristic animals, neon plants --v 7 --ar 9:16 --chaos 80</span>
+            <button class="copy-button">Copy</button>
+        </div>
+        <p><strong>The Result:</strong> The four images in your grid will now explore diverse compositions, lighting styles, and art directions. One might be hyper-realistic, another might look like vector art. This single command can spark a completely new direction for a game.</p>
+
+        <h3>The Weird Factor (`--weird` or `--w`)</h3>
+        <p>Want to explore truly unconventional aesthetics? The <code>--weird</code> parameter pushes Midjourney to generate quirky, surreal, and unexpected results. This can be useful for designing unique bonus rounds or entirely new genres of games.</p>
+         <div class="prompt-container">
+            <span class="prompt-text">/imagine prompt: a slot machine interface made of liquid gold and ancient runes, surreal, abstract symbols --v 7 --weird 1000</span>
+            <button class="copy-button">Copy</button>
+        </div>
+
+        <h4>Prompt Explorations: Experimental Design</h4>
+        <ul>
+            <li>To quickly brainstorm logo designs (using V7's Draft Mode for speed): <code>... logo for "Canyon Heist", stylized text, dynamic, rugged --draft --c 80</code></li>
+            <li>To create a highly unique bonus round environment: <code>... inside a giant geode, massive crystals, glowing light, surreal landscape --exp --w 1500</code></li>
+            <li>To explore abstract concepts for a new game mechanic: <code>... the visual representation of "Reel Power" --c 100</code></li>
+        </ul>
+
+        <div class="quiz-section">
+            <h3>Test Your Design Chops</h3>
+            <div id="quiz">
+                <div id="quiz-header">
+                    <p>Question <span id="question-number">1</span> of 10</p>
+                </div>
+                <div id="quiz-body"></div>
+                <div class="quiz-navigation">
+                    <button id="prev-btn" class="quiz-button" disabled>Previous</button>
+                    <button id="next-btn" class="quiz-button">Next</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-section">
+            <h2>Frequently Asked Questions (Game Design Focus)</h2>
+            <div id="faq-container"></div>
+        </div>
+
+        <div class="glossary-section">
+            <h2>Glossary of Terms</h2>
+            <div class="glossary-list" id="glossary-container">
+                </div>
+        </div>
+
+        <footer>
+            <p>This guide was designed to leverage Midjourney's power for the gaming industry. Now, take these tools and go create the next big hit!</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Copy Button Functionality ---
+            const copyButtons = document.querySelectorAll('.copy-button');
+            copyButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    let promptText = '';
+                    if (button.id === 'interactive-copy-button') {
+                        promptText = document.getElementById('interactive-prompt-text').innerText;
+                    } else {
+                         promptText = button.previousElementSibling.innerText;
+                    }
+                   
+                    // Use the modern Clipboard API
+                    navigator.clipboard.writeText(promptText).then(() => {
+                        button.textContent = 'Copied!';
+                        button.classList.add('copied');
+                        setTimeout(() => {
+                            button.textContent = 'Copy';
+                            button.classList.remove('copied');
+                        }, 2000);
+                    }).catch(err => {
+                         console.error('Failed to copy text: ', err);
+                    });
+                });
+            });
+
+            // --- Interactive Tester Functionality ---
+            const arSelect = document.getElementById('ar-select');
+            const stylizeSlider = document.getElementById('stylize-slider');
+            const chaosSlider = document.getElementById('chaos-slider');
+            const sValueSpan = document.getElementById('s-value');
+            const cValueSpan = document.getElementById('c-value');
+            const interactivePromptText = document.getElementById('interactive-prompt-text');
+            
+            // Updated Base Prompt for the Aristocrat/Buffalo theme
+            const basePrompt = "/imagine prompt: a powerful buffalo with diamond horns charging through a canyon at sunset, vibrant purple and orange sky, high-energy slot machine art style, dynamic --v 7";
+
+            function updateInteractivePrompt() {
+                if (!arSelect || !stylizeSlider || !chaosSlider || !interactivePromptText) return;
+                
+                const arValue = arSelect.value;
+                const stylizeValue = stylizeSlider.value;
+                const chaosValue = chaosSlider.value;
+                
+                sValueSpan.textContent = stylizeValue;
+                cValueSpan.textContent = chaosValue;
+
+                const fullPrompt = `${basePrompt} --ar ${arValue} --s ${stylizeValue} --c ${chaosValue}`;
+                interactivePromptText.textContent = fullPrompt;
+            }
+
+            [arSelect, stylizeSlider, chaosSlider].forEach(el => {
+                if (el) el.addEventListener('input', updateInteractivePrompt);
+            });
+            updateInteractivePrompt();
+           
+            // --- Quiz Data and Logic (Updated for Game Design Context) ---
+            const quizData = [
+                { question: "You are designing art for a towering portrait slot cabinet. Which parameter is essential?", options: ["--tile", "--ar 16:9", "--ar 9:16", "--s 1000"], answer: 2, explanation: "`--ar 9:16` sets the aspect ratio to a tall vertical format, maximizing the visual real estate on portrait cabinets and mobile devices." },
+                { question: "To design a game symbol (like a diamond) that is hyper-realistic and less artistic, you should:", options: ["Increase --stylize", "Use --style raw and decrease --stylize", "Use --niji 6", "Increase --chaos"], answer: 1, explanation: "Using `--style raw` removes Midjourney's default aesthetic, and a low `--stylize` value (e.g., `--s 50`) ensures a literal interpretation, ideal for photorealism." },
+                { question: "How can you ensure a new game concept adheres to the established visual style of Aristocrat's 'Dragon Link' series?", options: ["Use the /blend command", "Use --seed 123", "Use --sref with an image from Dragon Link", "Use --oref"], answer: 2, explanation: "`--sref` (Style Reference) allows you to use the aesthetic (colors, lighting, rendering style) of an existing successful game to guide your new creation." },
+                { question: "You need to brainstorm four radically different art directions for a new game theme. Which parameter helps the most?", options: ["--stylize 0", "--seed 42", "--repeat 4", "--chaos 100"], answer: 3, explanation: "`--chaos 100` maximizes the variation in the initial grid, providing four distinct artistic interpretations of your prompt." },
+                { question: "You have designed a new game mascot and need to generate images of it in different poses for the bonus rounds. Which parameter is crucial?", options: ["--sref", "--p", "--oref", "--iw"], answer: 2, explanation: "`--oref` (Omni Reference) is the powerful V7 parameter for character consistency, ensuring your mascot looks the same across different generations and poses." },
+                { question: "To create a seamless, repeating pattern for the reel background texture, which parameter is essential?", options: ["--ar 1:1", "--loop", "--repeat", "--tile"], answer: 3, explanation: "The `--tile` parameter is specifically designed to generate images whose edges line up perfectly, creating seamless patterns suitable for backgrounds." },
+                { question: "How would you prototype an animation for a 'Coin Fountain' jackpot celebration in V7?", options: ["Add `--video` to a text prompt", "Start with a game screen image, then add a prompt describing the coins and use `--motion high`", "Use the /animate command", "Blend two images"], answer: 1, explanation: "The v7 video workflow requires a starting image, a text prompt describing the action (coins exploding), and motion parameters (like `--motion high` for energy)." },
+                { question: "You need to generate assets for a game launch simultaneously for the cabinet (9:16) and a website banner (16:9). How do you do this efficiently?", options: ["Run two separate prompts", "Use a permutation prompt: `--ar {9:16, 16:9}`", "Use the /batch command", "It's not possible"], answer: 1, explanation: "Permutation prompts automatically create and run multiple jobs based on the options inside the curly braces {}, streamlining omnichannel asset creation." },
+                { question: "The `--weird` parameter is best utilized for:", options: ["Designing standard UI elements", "Creating photorealistic textures", "Brainstorming unconventional, quirky, or surreal game concepts", "Ensuring brand consistency"], answer: 2, explanation: "`--weird` (or `--w`) pushes the AI to explore unusual aesthetics, perfect for generating unique artistic outcomes and breaking creative molds." },
+                 { question: "How do you control how strongly an `--oref` image influences the result (e.g., prioritizing the face over the outfit)?", options: ["Use `--iw` (Image Weight)", "Use `--sw` (Style Weight)", "Use `--cw` (Character Weight)", "Use `--s` (Stylize)"], answer: 2, explanation: "`--cw` (Character Weight) ranges from 0 to 100. Lower values prioritize the face, while higher values (like 100) incorporate the outfit and overall appearance." }
+            ];
+
+            let currentQuestionIndex = 0;
+            let userAnswers = new Array(quizData.length).fill(null);
+            
+            const quizBody = document.getElementById('quiz-body');
+            const questionNumberSpan = document.getElementById('question-number');
+            const nextBtn = document.getElementById('next-btn');
+            const prevBtn = document.getElementById('prev-btn');
+
+            function showQuestion(index) {
+                const q = quizData[index];
+                let optionsHTML = '<ul class="quiz-options">';
+                q.options.forEach((option, i) => {
+                    let li_class = '';
+                    if (userAnswers[index] !== null) {
+                        // Highlight the selected answer's correctness
+                        if (userAnswers[index].selectedIndex === i) {
+                            li_class = userAnswers[index].isCorrect ? 'correct' : 'incorrect';
+                        }
+                        // Also highlight the correct answer if the user chose incorrectly
+                        if (!userAnswers[index].isCorrect && i === q.answer) {
+                            li_class = 'correct';
+                        }
+                    }
+                    optionsHTML += `<li data-index="${i}" class="${li_class}">${option}</li>`;
+                });
+                optionsHTML += '</ul>';
+
+                let explanationHTML = '';
+                if(userAnswers[index] !== null) {
+                    explanationHTML = `<div class="quiz-explanation ${userAnswers[index].isCorrect ? 'correct' : 'incorrect'}" style="display:block;"><strong>Explanation:</strong> ${q.explanation}</div>`;
+                } else {
+                     explanationHTML = `<div class="quiz-explanation"></div>`;
+                }
+
+                quizBody.innerHTML = `<h3>${q.question}</h3>${optionsHTML}${explanationHTML}`;
+                questionNumberSpan.textContent = index + 1;
+
+                // Navigation button logic
+                prevBtn.disabled = index === 0;
+                if (index === quizData.length - 1) {
+                    nextBtn.textContent = userAnswers[index] === null ? 'Select Answer' : 'Finish Quiz';
+                } else {
+                    nextBtn.textContent = userAnswers[index] === null ? 'Select Answer' : 'Next Question';
+                }
+                // Disable next until an answer is submitted
+                 nextBtn.disabled = userAnswers[index] === null; 
+
+
+                const options = quizBody.querySelectorAll('.quiz-options li');
+                options.forEach(option => {
+                    option.addEventListener('click', () => handleOptionClick(index, parseInt(option.dataset.index)));
+                });
+            }
+
+            function handleOptionClick(qIndex, oIndex) {
+                if (userAnswers[qIndex] !== null) return; // Prevent changing answer after submission
+
+                const question = quizData[qIndex];
+                const isCorrect = oIndex === question.answer;
+                userAnswers[qIndex] = { selectedIndex: oIndex, isCorrect: isCorrect };
+                
+                // Update UI immediately by re-rendering
+                showQuestion(qIndex); 
+            }
+            
+            nextBtn.addEventListener('click', () => {
+                if (currentQuestionIndex < quizData.length - 1) {
+                    currentQuestionIndex++;
+                    showQuestion(currentQuestionIndex);
+                } else {
+                   // Show results
+                   let correctCount = userAnswers.filter(a => a && a.isCorrect).length;
+                   quizBody.innerHTML = `<h2>Quiz Complete! You hit the Jackpot!</h2><p>You scored ${correctCount} out of ${quizData.length}.</p><button class="quiz-button" onclick="location.reload()">Play Again</button>`;
+                   nextBtn.style.display = 'none';
+                   prevBtn.style.display = 'none';
+                   document.getElementById('quiz-header').style.display = 'none';
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    showQuestion(currentQuestionIndex);
+                }
+            });
+
+            showQuestion(0);
+
+            // --- FAQ Data and Logic (Updated for Game Design Context) ---
+            const faqData = [
+                { q: "What is the difference between --cref and --oref for character design?", a: "<code>--cref</code> is the legacy parameter. <strong><code>--oref</code> (Omni Reference)</strong> is the newer, V7 version. It provides a much stronger likeness and consistency for game characters, mascots, and even specific objects like unique jackpot symbols." },
+                { q: "How do I find the seed of an existing game asset concept?", a: "After a job is complete, react to the image in Discord with the envelope emoji (✉️). The Midjourney Bot will send you a DM with the job details, including the seed number. This is crucial for iterative design." },
+                { q: "Can I combine the styles of two different games, like 'Buffalo' and 'Dragon Link'?", a: "Yes! Use multiple URLs after <code>--sref</code>. For example: <code>--sref [URL_Buffalo] [URL_DragonLink]</code>. You can also weight their influence: <code>--sref [URL_Buffalo]::2 [URL_DragonLink]::1</code> to favor the Buffalo style." },
+                { q: "What's the best practice for creating consistent game mascots?", a: "Use <code>--oref [image URL]</code> with a clear model sheet of your mascot. Adjust the character weight with <code>--cw</code> (0-100). Use lower values (e.g., 30) if you only want the face to match, and higher values (e.g., 100) if the outfit must also be identical." },
+                { q: "Why does Midjourney sometimes ignore specific colors or symbol shapes in my prompt?", a: "This can happen if your prompt is too complex. Always place parameters at the very end. Using <code>--style raw</code> can also help Midjourney adhere more closely to specific instructions, reducing its default 'artistic flair'." },
+                { q: "What is a permutation prompt and how is it used in asset creation?", a: "It lets you generate many variations quickly using curly braces `{}`. Example: `/imagine a {ruby,emerald,diamond} game symbol` will create three jobs, one for each gem type." },
+                { q: "How do I generate text for 'WILD' or 'JACKPOT' symbols?", a: "Midjourney v7 is better at text. Put the text in quotation marks: `/imagine a game symbol that says \"WILD\" in gold metallic font`. It's still imperfect, so you may need to refine it in Photoshop, but it's excellent for concepting." },
+                { q: "What does `Remix Mode` do for iteration?", a: "Remix mode allows you to change your prompt when you create a variation (V buttons). You can edit the text (e.g., change 'red dragon' to 'blue dragon') or add parameters before generating the new grid, speeding up iteration." },
+                { q: "Can I use negative prompts to remove elements?", a: "Yes. Use the <code>--no</code> parameter. For example, if your canyon scene keeps adding trees and you don't want them: <code>/imagine a canyon background --no trees</code>." },
+                { q: "How do I ensure my concept art is high-resolution enough for production?", a: "After generating your initial grid, use the Upscale buttons (U1-U4). You can then use further upscaling options (like Upscale (4x)) to achieve very high resolutions suitable for print or 4K displays." },
+                { q: "My image is too 'cartoony'. How do I achieve the premium, realistic look of modern slots?", a: "Use photographic terms (e.g., 'cinematic lighting, photorealistic, 8k, high detail'). Also, utilize <code>--style raw</code> and keep the <code>--stylize</code> value moderate (e.g., <code>--s 200-500</code>)." },
+                { q: "Can I edit a specific part of an image, like changing a symbol on the reels?", a: "Yes. Use the 'Vary (Region)' feature after upscaling. This opens an editor where you can select a part of the image (like one symbol) and write a new prompt just for that area." },
+                { q: "What are Style Tuners?", a: "A Style Tuner allows you to create a unique, consistent aesthetic for a game franchise. You train Midjourney by choosing your preferred images, and it generates a unique code you can apply with `--style [code]` to all future assets for that game." },
+                { q: "Are the concepts I create private?", a: "By default, images are public. To ensure confidentiality for unreleased game concepts, you need a Pro or Mega Plan and must use <code>--stealth</code> mode." },
+                { q: "Can these AI-generated images be used as final production assets?", a: "Often, yes, especially for backgrounds, textures (using `--tile`), and atmospheric effects. For key elements like characters and symbols, they usually serve as advanced concept art that is then refined or modeled by 3D artists." }
+            ];
+
+            const faqContainer = document.getElementById('faq-container');
+            faqData.forEach(faq => {
+                const item = document.createElement('div');
+                item.className = 'accordion-item';
+                item.innerHTML = `
+                    <div class="accordion-header">${faq.q}</div>
+                    <div class="accordion-content"><p>${faq.a}</p></div>
+                `;
+                faqContainer.appendChild(item);
+            });
+
+            // Accordion Logic (Applies to dynamically generated items)
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const item = header.parentElement;
+                    const isActive = item.classList.contains('active');
+                    
+                    // Close all items
+                    document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('active'));
+                    
+                    // Open the clicked item if it wasn't active
+                    if (!isActive) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+
+
+            // --- Glossary Data and Logic ---
+            const glossaryData = [
+                { term: "Aspect Ratio (--ar)", def: "The shape of the image. Crucial for designing for specific hardware (e.g., 9:16 for portrait cabinets, 16:9 for widescreen)." },
+                { term: "Chaos (--c)", def: "Controls the variation (0-100) of the initial image grid. Higher values produce more diverse concepts for brainstorming." },
+                { term: "Character Weight (--cw)", def: "Used with --oref (0-100), adjusts the strength of the character reference (lower values prioritize the face, higher values include the outfit)." },
+                { term: "Draft Mode (--draft)", def: "A V7 parameter that generates lower-quality images at half the GPU cost, ideal for rapid ideation of symbols or layouts." },
+                { term: "Loop (--loop)", def: "A video parameter that creates a seamless, repeating video clip, ideal for ambient animations or attract modes." },
+                { term: "Motion (--motion)", def: "A video parameter that controls the amount of movement in a video generation ('low', 'medium', 'high')." },
+                { term: "Negative Prompt (--no)", def: "Specifies elements to exclude from an image (e.g., `--no fog`)." },
+                { term: "Niji Model (--niji)", def: "An alternative model tuned for anime and illustrative styles, often used in social casino or cartoon-style games." },
+                { term: "Omni Reference (--oref)", def: "The V7 parameter for strong character and object consistency, using an image URL as a reference." },
+                { term: "Permutation Prompt ({})", def: "Uses curly braces `{}` to generate multiple jobs from a single prompt, streamlining asset creation for multiple platforms or variations." },
+                { term: "Raw Mode (--style raw)", def: "Reduces Midjourney's default aesthetic, resulting in a more literal interpretation, ideal for photorealism." },
+                { term: "Relax Mode", def: "A free, non-priority generation mode (for eligible plans) for non-urgent batch jobs." },
+                { term: "Remix Mode", def: "A setting that allows you to edit your prompt when creating a variation (V buttons), speeding up iteration." },
+                { term: "Repeat (--r)", def: "Runs a single prompt multiple times, useful for batch creation of similar assets." },
+                { term: "Seed (--seed)", def: "Determines the initial noise field. Using the same seed and prompt produces similar images, useful for minor tweaks." },
+                { term: "Stealth Mode (--stealth)", def: "Hides generations from the public gallery, essential for maintaining confidentiality of unreleased game concepts." },
+                { term: "Stop (--stop)", def: "Stops the generation process early (10-100), often resulting in a softer look, useful for atmospheric effects." },
+                { term: "Style Reference (--sref)", def: "Uses image URLs to influence the aesthetic style (color, lighting, rendering) of the generated image." },
+                { term: "Style Tuner", def: "A tool that generates a unique style code based on user preferences, used to maintain a consistent look for a game franchise." },
+                { term: "Stylize (--s)", def: "Controls how strongly Midjourney's default artistic style is applied (0-1000). Higher values are more artistic/vibrant, lower are more literal." },
+                { term: "Tile (--tile)", def: "Generates an image that can be seamlessly repeated, essential for background textures." },
+                { term: "Turbo Mode", def: "The fastest generation mode, consumes GPU time at a higher rate." },
+                { term: "Vary (Region)", def: "An editing tool (Inpainting) that allows you to select a specific area of an image and regenerate just that part." },
+                { term: "Version (--v)", def: "Selects a specific version of the Midjourney model (e.g., --v 7)." },
+                { term: "Weird (--w)", def: "An experimental parameter (0-3000) that introduces quirky and unconventional aesthetics for brainstorming." },
+            ];
+
+            const glossaryContainer = document.getElementById('glossary-container');
+            // Sort glossary data alphabetically
+            glossaryData.sort((a, b) => a.term.localeCompare(b.term));
+
+            glossaryData.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'glossary-item';
+                div.innerHTML = `<p><span class="glossary-term">${item.term}:</span> ${item.def}</p>`;
+                glossaryContainer.appendChild(div);
+            });
+        });
+    </script>
+
+</body>
+</html>
