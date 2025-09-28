@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI Art & Midjourney Quiz (50 Qs)</title>
+
+<!-- Font: Montserrat -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Tone.js for Sound Effects -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+
+<style>
+:root{
+  /* Brand palette (warm cream + orange + espresso) */
+  --bg:#fff8f3;
+  --surface:#ffffff;
+  --surface-soft:#fff3eb;
+  --text:#2a2725;
+  --muted:#6d6660;
+  --line:#eadfd6;
+
+  --header:#1f1b18;
+  --headerText:#f6f3f1;
+
+  --accent:#ef7d55;
+  --accent-tint:#f3b09a;
+  --accent-deep:#d8663f;
+
+  /* Semantics */
+  --correct:#16a34a; --correct-soft:#dcfce7;
+  --wrong:#dc2626; --wrong-soft:#fee2e2;
+
+  /* Matching helper fills */
+  --pair1:#fefce8; --pair2:#f0fdf4; --pair3:#eff6ff; --pair4:#fdf2f8;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%; margin:0}
+body{
+  font-family:'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background:var(--bg); color:var(--text);
+  min-height:100vh; display:flex; flex-direction:column;
+  overflow:hidden;
+  --headerCurrentH: 72px;
+  --footerCurrentH: 60px;
+}
+
+/* Common Header/Footer */
+.bd-header{background:#212529; color:#f8f9fa; border-bottom:3px solid var(--accent); height:var(--headerCurrentH); overflow:hidden}
+.bd-header .inner{max-width:1100px; margin:0 auto; padding:.7rem 1rem; display:flex; align-items:center; gap:1rem; height:100%}
+.bd-header .sizer{margin-left:auto; display:none}
+.bd-header.collapsed .sizer{display:flex}
+.bd-toggle{background:transparent; color:#f8f9fa; border:1px solid #495057; padding:.25rem .5rem; border-radius:999px; font-weight:800; cursor:pointer}
+.bd-toggle:hover{background:#343a40}
+.bd-header.collapsed .bd-brand, .bd-header.collapsed .bd-nav, .bd-header.collapsed .bd-search{display:none}
+.bd-brand{font-weight:900; letter-spacing:.3px; color:#fff; text-decoration:none; font-size:1.05rem; white-space:nowrap}
+.bd-nav{margin-left:auto; display:flex; gap:.9rem; flex-wrap:wrap}
+.bd-nav a{color:#ced4da; text-decoration:none; font-weight:700; font-size:.9rem}
+.bd-nav a:hover{color:#fff}
+.bd-search{display:flex; align-items:center; gap:.4rem}
+.bd-search input{background:#343a40; color:#fff; border:1px solid #495057; padding:.45rem .6rem; border-radius:8px; width:170px}
+.bd-search button{background:var(--accent); color:#fff; border:none; padding:.45rem .7rem; border-radius:8px; font-weight:800; cursor:pointer}
+.bd-search button:hover{background:var(--accent-deep)}
+.bd-footer{background:#212529; color:#ced4da; height:var(--footerCurrentH); overflow:hidden; border-top:1px solid #343a40}
+.bd-footer .inner{max-width:1100px; margin:0 auto; padding:.4rem 1rem; display:flex; align-items:center; gap:1rem; height:100%}
+.bd-footer .expander{margin-left:auto; display:none}
+.bd-footer.collapsed .expander{display:block}
+.bd-footer.collapsed .inner > :not(.expander){display:none}
+
+.content{flex:1 1 auto; display:flex; justify-content:center; padding:.5rem; height:calc(100vh - var(--headerCurrentH) - var(--footerCurrentH));}
+.app{
+  width:100%; max-width:860px; height:100%; background:var(--surface);
+  border-radius:14px; box-shadow:0 10px 28px rgba(0,0,0,.08);
+  display:flex; flex-direction:column; overflow:hidden;
+}
+
+/* App Header */
+.app__header{background:var(--header); color:var(--headerText); padding:.8rem 1rem;}
+.app__title{font-size:1.05rem; font-weight:800; letter-spacing:.3px; margin:0 0 .15rem}
+.app__subtitle{font-size:.8rem; opacity:.9; margin:0 0 .45rem}
+.progress{width:100%; height:6px; background:rgba(255,255,255,.25); border-radius:9999px; overflow:hidden;}
+.progress__bar{height:100%; width:0%; background:var(--accent); border-radius:9999px; transition:width .3s ease;}
+.meta{display:flex; gap:.4rem; margin-top:.45rem; flex-wrap:wrap; font-size:.7rem;}
+.badge{background:rgba(255,255,255,.12); color:#fff; padding:.15rem .5rem; border-radius:999px; font-weight:600;}
+
+/* Main Content */
+.main{ flex:1; overflow:auto; padding:1rem 1rem .6rem; }
+.card{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:1rem;}
+.q-head{display:flex; align-items:flex-start; justify-content:space-between; gap:.8rem;}
+.q-index{font-weight:800; color:var(--accent); font-size:.95rem}
+.q-labels{display:flex; align-items:center; gap:.5rem;}
+.q-category{font-size:.7rem; padding:.2rem .5rem; border-radius:999px; background:var(--surface-soft); border:1px solid var(--line); color:var(--muted); font-weight:700; text-transform:capitalize;}
+.q-type{font-size:.72rem; padding:.2rem .5rem; border-radius:999px; background:var(--surface-soft); color:#5a2e1f; font-weight:700}
+.q-text{margin:.6rem 0 .8rem; line-height:1.5; font-weight:600; font-size:1rem}
+
+/* Options (MCQ/TF) */
+.options{display:flex; flex-direction:column; gap:.45rem}
+.option{border:1px solid var(--line); border-radius:10px; padding:.65rem .8rem; cursor:pointer; transition:.2s; background:#fff; position:relative;}
+.option:hover{border-color:var(--accent); background:var(--accent-tint)}
+.option.is-selected{border-color:var(--accent); background:var(--accent-tint)}
+.option.is-correct{border-color:var(--correct); background:var(--correct-soft); color:var(--correct); font-weight:700}
+.option.is-wrong{border-color:var(--wrong); background:var(--wrong-soft); color:var(--wrong); font-weight:700}
+.option[disabled]{opacity:.75; pointer-events:none}
+
+/* FTB Input */
+.ftb input{width:100%; padding:.7rem .8rem; border:1px solid var(--line); border-radius:10px; font-size:.95rem;}
+.ftb input:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(239,125,85,.15)}
+
+/* Sequence (Drag & Drop) */
+.seq-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.4rem}
+.seq-item{border:1px solid var(--line); border-radius:10px; background:#fff; padding:.6rem .8rem; display:flex; gap:.6rem; align-items:center; cursor:grab; user-select:none;}
+.seq-item .handle{opacity:.55}
+.seq-item.dragging{opacity:.6; background:var(--accent-tint); border-color:var(--accent)}
+
+/* Match (Tap-to-pair) */
+.match{display:grid; gap:1rem;}
+@media(min-width:760px){ .match{ grid-template-columns:1fr 1fr; } }
+.mcol h4{margin:.1rem 0 .5rem; font-size:.9rem; color:var(--muted)}
+.mitem{border:1px solid var(--line); border-radius:10px; background:#fff; padding:.55rem .7rem; cursor:pointer; transition:.2s; margin-bottom:.4rem;}
+.mitem:hover{border-color:var(--accent); background:var(--accent-tint)}
+.mitem.is-picked{border-color:var(--accent); box-shadow:0 0 0 3px rgba(239,125,85,.18)}
+.mitem.paired-1{background:var(--pair1)}
+.mitem.paired-2{background:var(--pair2)}
+.mitem.paired-3{background:var(--pair3)}
+.mitem.paired-4{background:var(--pair4)}
+.mpair{font-size:.85rem; color:var(--muted); margin-top:.25rem}
+
+/* RTC Context */
+.rtc{border-left:4px solid var(--accent); background:var(--surface-soft); padding:.8rem .8rem; border-radius:8px; margin-bottom:.8rem; line-height:1.45; color:#5a2e1f;}
+
+/* Explanation */
+.expl{margin-top:.8rem; border-left:4px solid; padding:.75rem .8rem; border-radius:8px; line-height:1.55; display:none;}
+.expl--ok{border-color:var(--correct); background:var(--correct-soft); color:var(--correct)}
+.expl--no{border-color:var(--wrong); background:var(--wrong-soft); color:var(--wrong)}
+.expl .model{margin-top:.5rem; font-weight:600}
+
+/* Footer Navigation */
+.nav{border-top:1px solid var(--line); padding:.7rem 1rem; display:flex; justify-content:space-between; align-items:center; gap:.6rem; background:var(--surface);}
+.btn{border:none; border-radius:.65rem; padding:.55rem 1rem; font-weight:800; cursor:pointer; transition:.2s; font-size:.92rem;}
+.btn--pri{background:var(--accent); color:#fff}
+.btn--pri:hover{background:var(--accent-deep)}
+.btn--sec{background:var(--surface-soft); color:var(--muted); border:1px solid var(--line)}
+.btn--sec:hover{background:var(--accent-tint); color:#5a2e1f; border-color:var(--accent-tint)}
+.btn[disabled]{opacity:.6; cursor:not-allowed}
+.score{font-weight:800; color:var(--accent); font-size:.95rem;}
+
+/* Hint Modal */
+.modal-overlay{position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:1000; opacity:0; pointer-events:none; transition:opacity .3s ease;}
+.modal-overlay.visible{opacity:1; pointer-events:auto;}
+.modal-content{background:var(--surface); padding:1.5rem 2rem; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.3); max-width:500px; width:90%; text-align:center;}
+.modal-content h3{margin-top:0; color:var(--accent);}
+.modal-content p{line-height:1.6;}
+.modal-close{margin-top:1rem;}
+
+/* Small screens */
+@media(max-width:480px){
+  .app__title{font-size:.95rem}
+  .app__subtitle{font-size:.72rem}
+  .q-text{font-size:.98rem}
+  .btn{font-size:.9rem}
+}
+
+/* Motion safe */
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important; animation:none !important}
+}
+</style>
+</head>
+<body>
+
+<header class="bd-header">
+  <div class="inner">
+    <a class="bd-brand" href="/">AI Art Explorer</a>
+    <nav class="bd-nav">
+      <a href="#">Home</a>
+      <a href="#">About</a>
+    </nav>
+    <form class="bd-search" onsubmit="event.preventDefault();">
+      <input type="search" placeholder="Search..." aria-label="Search" />
+      <button type="submit">Search</button>
+    </form>
+    <div class="sizer"><button id="toggleHeader" class="bd-toggle" title="Collapse header">▲</button></div>
+  </div>
+</header>
+
+<div class="content">
+<div class="app" id="app">
+  <header class="app__header">
+    <h1 class="app__title">AI Art & Midjourney Mastery</h1>
+    <p class="app__subtitle">A 50-question quiz on concepts, commands, and creativity.</p>
+    <div class="progress"><div class="progress__bar" id="progressBar"></div></div>
+    <div class="meta">
+      <span class="badge" id="badgeIndex">Q 1 / 50</span>
+      <span class="badge" id="badgeType">MCQ</span>
+      <span class="badge" id="badgeMarks">10 Marks</span>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="card" id="qCard">
+      <!-- Question content will render here -->
+    </div>
+  </main>
+
+  <footer class="nav">
+    <button class="btn btn--sec" id="btnPrev">← Prev</button>
+    <div class="score" id="scoreMini">Score: 0</div>
+    <div>
+      <button class="btn btn--sec" id="btnHint">Hint (-5)</button>
+      <button class="btn btn--sec" id="btnSkip">Skip</button>
+      <button class="btn btn--pri" id="btnSubmit">Submit</button>
+      <button class="btn btn--pri" id="btnNext" style="display:none">Next →</button>
+      <button class="btn btn--pri" id="btnFinish" style="display:none">Finish</button>
+    </div>
+  </footer>
+</div>
+</div>
+
+<footer class="bd-footer" id="bdFooter">
+  <div class="inner">
+    <div>© 2025 AI Art Explorer</div>
+    <div class="expander"><button id="toggleFooter" class="bd-toggle" title="Expand footer">▼</button></div>
+  </div>
+</footer>
+
+<!-- Hint Modal Structure -->
+<div class="modal-overlay" id="hintModal">
+  <div class="modal-content">
+    <h3>Hint</h3>
+    <p id="hintText"></p>
+    <button class="btn btn--pri modal-close" id="closeHintModal">Got it!</button>
+  </div>
+</div>
+
+<script>
+// Layout controls (unchanged from original)
+document.addEventListener('DOMContentLoaded', () => {
+  const header = document.querySelector('.bd-header');
+  const footer = document.getElementById('bdFooter');
+  const toggleHeaderBtn = document.getElementById('toggleHeader');
+  const toggleFooterBtn = document.getElementById('toggleFooter');
+
+  function collapseHeader(){ document.body.style.setProperty('--headerCurrentH','3vh'); header.classList.add('collapsed'); }
+  function expandHeader(){ document.body.style.setProperty('--headerCurrentH','72px'); header.classList.remove('collapsed'); }
+  function collapseFooter(){ document.body.style.setProperty('--footerCurrentH','3vh'); footer.classList.add('collapsed'); }
+  
+  if(toggleHeaderBtn) toggleHeaderBtn.addEventListener('click', () => header.classList.contains('collapsed') ? expandHeader() : collapseHeader());
+  if(toggleFooterBtn) toggleFooterBtn.addEventListener('click', () => footer.classList.contains('collapsed') ? expandFooter() : collapseFooter());
+
+  const app = document.getElementById('app');
+  if(app) ['click','touchstart','keydown','wheel'].forEach(evt => app.addEventListener(evt, () => { collapseHeader(); collapseFooter(); }, { passive:true, once: true }));
+});
+
+/* ---------- DATA: 50 Midjourney AI Art questions ---------- */
+const QUIZ = {
+  subject: "AI Art",
+  chapter: "Midjourney Mastery",
+  total: 50,
+  questions: [
+    { type:"MCQ", category:"Commands", text:"In Midjourney, which command is the primary way to generate an image from a text prompt?", options:["/create", "/generate", "/imagine", "/draw"], correct:2, hint:"It's what you do with your mind before you can see an image.", explain:"The `/imagine` command is the fundamental prompt command used to create images in Midjourney." },
+    { type:"FTB", category:"Parameters", text:"To control the randomness or artistic variation of the initial image grid, you would use the ` --________` parameter.", answer:"chaos", hint:"This parameter's values range from 0 to 100, with higher values being more 'wild'.", explain:"The `--chaos` (or `--c`) parameter influences how varied the initial grid images are. Higher values produce more unusual and unexpected results." },
+    { type:"TF", category:"Philosophy", text:"A primary advantage of using AI art tools like Midjourney is to increase the speed of idea visualization.", correct:true, hint:"Think about how long it takes to sketch an idea versus typing a prompt.", explain:"True. AI art generators excel at rapidly translating concepts into visual form, which is invaluable for brainstorming, storyboarding, and creative exploration." },
+    { type:"MATCH", category:"Parameters", text:"Match the Midjourney parameter to its function.", stems:["--ar", "--seed", "--no", "--style"], responses:["Specifies an aspect ratio (e.g., 16:9)", "Ensures image grid consistency for reproducibility", "A negative prompt to exclude concepts", "Switches between aesthetic systems (e.g., raw, cute)"], correct:[{s:0,r:0},{s:1,r:1},{s:2,r:2},{s:3,r:3}], hint:"Think about what each abbreviation might stand for.", explain:"`--ar` is for Aspect Ratio. `--seed` provides a starting point for consistency. `--no` excludes unwanted elements. `--style` fine-tunes the aesthetics of the model." },
+    { type:"MCQ", category:"Features", text:"Which feature in Midjourney allows you to extend an image's canvas in a specific direction?", options:["Zoom Out", "Vary (Region)", "Pan", "Remix"], correct:2, hint:"This feature uses arrows (← → ↑ ↓) to expand the image.", explain:"The `Pan` feature allows you to extend your image in any of the four cardinal directions, creating a wider or taller scene." },
+    { type:"SEQ", category:"Workflow", text:"Arrange the ideal AI art creation process in the correct order.", items:["Analyze", "Master", "Prepare", "Adjust", "Reflect"], correct:["Prepare", "Analyze", "Reflect", "Adjust", "Master"], hint:"You must get ready before you can begin.", explain:"A strong workflow involves preparing your idea, analyzing the output, reflecting on it, adjusting the prompt, and eventually mastering the process." },
+    { type:"FTB", category:"Prompting", text:"To give one part of your prompt more importance than another, you use a technique called multi-prompting with a double colon, which is known as prompt ________.", answer:"weighting", hint:"You are giving certain words more 'weight'.", explain:"Prompt weighting, using `::`, allows you to control how much influence a specific word or phrase has on the final image. For example, `space ship::2` gives 'space ship' twice the importance." },
+    { type:"TF", category:"Platform", text:"Midjourney primarily operates through a web-based application on its own website.", correct:false, hint:"Think about the community aspect and where you type the commands.", explain:"False. Midjourney's primary interface is a bot within the Discord chat platform, where users interact with it on servers." },
+    { type:"MCQ", category:"Prompting", text:"Which of the following elements is crucial for setting the mood and tension in an image?", options:["Object", "Character", "Atmosphere / Weather", "Logo"], correct:2, hint:"Think about how a foggy day feels different from a sunny one.", explain:"Atmosphere and weather (e.g., 'dramatic storm clouds', 'golden hour sunlight', 'eerie fog') are powerful tools for controlling the emotion and tension of a scene." },
+    { type:"MCQ", category:"Parameters", text:"What does the `--stop` parameter do?", options:["Pauses the generation to be resumed later", "Cancels the job entirely", "Stops the generation process at an earlier percentage", "Stops you from being billed for the job"], correct:2, hint:"This can create blurrier, less detailed, 'softer' images.", explain:"The `--stop` parameter halts the generation at a specified percentage (10-100), resulting in less detailed and more abstract images." },
+    { type:"RTC", category:"Prompting", context:"A user types the prompt: `cinematic shot, a lone adventurer looking at a giant, glowing tree, fantasy art --ar 7:4 --style raw --no text`", subs:[ {stype:"MCQ", text:"What is the purpose of `--style raw`?", options:["It makes the image black and white", "It reduces Midjourney's default 'opinionated' aesthetic", "It adds a vintage photo effect", "It guarantees a realistic character"], correct:1}, {stype:"FTB", text:"What element is the user trying to explicitly prevent from appearing in the image?", answer:"text"}, {stype:"TF", text:"The resulting image will be a perfect square.", correct:false} ], hint:"'Raw' style gives the user more control. The `--no` parameter is for exclusion. Check the aspect ratio.", explain:"`--style raw` gives a more unstyled, less 'Midjourney-esque' look. `--no text` is a negative prompt to avoid words or signatures. `--ar 7:4` creates a rectangular, not square, image." },
+    { type:"MCQ", category:"Art Styles", text:"If you want to create an image that looks like a simplified, clean graphic, which art style would be most appropriate?", options:["Photorealism", "Graffiti Art", "Icon / SVG", "Cyberpunk"], correct:2, hint:"Think of logos or user interface elements.", explain:"Specifying styles like 'flat icon', 'vector logo', or 'SVG' will guide Midjourney to produce clean, graphic-style images with simple lines and colors." },
+    { type:"FTB", category:"Parameters", text:"To get the unique number for a generated image grid, which you can use later with the `--seed` parameter for consistency, you would react to the job with the ________ emoji.", answer:"envelope", hint:"Think of how you would mail something to yourself.", explain:"Reacting with the envelope emoji (✉️) sends the job details, including the seed number and prompt, to your direct messages." },
+    { type:"TF", category:"Versions", text:"Using an older Midjourney version, like `--v 4`, will always produce a more realistic image than the latest version.", correct:false, hint:"Models generally improve over time.", explain:"False. Newer versions of Midjourney (like V6) are significantly more advanced in realism, prompt understanding, and detail than older versions." },
+    { type:"MATCH", category:"Features", text:"Match the Midjourney button/feature to its action.", stems:["V1", "U2", "Vary (Strong)", "Zoom Out 2x"], responses:["Creates four new variations of the first image", "Upscales the second image in the grid", "Creates a new grid with significant changes to the original image", "Doubles the canvas size, adding new details around the original"], correct:[{s:0,r:0},{s:1,r:1},{s:2,r:2},{s:3,r:3}], hint:"'V' is for Variation, 'U' is for Upscale.", explain:"The buttons under the image grid are for creating Variations (V) or Upscaling (U) a specific image (1-4, top-left to bottom-right). Zoom and Vary have their own dedicated functions." },
+    { type:"MCQ", category:"Prompting", text:"In prompt engineering, what is a 'persona' or 'archetype' used for?", options:["To set the image resolution", "To define a character's role or personality", "To choose a color palette", "To specify the camera model"], correct:1, hint:"Are you describing a 'wise old wizard' or a 'brave young knight'?", explain:"Defining a persona, role, or archetype (e.g., 'a grizzled detective', 'an ethereal queen') helps Midjourney understand the character's backstory, clothing, and posture." },
+    { type:"MCQ", category:"Use Cases", text:"Beyond creating final art pieces, Midjourney is an excellent tool for which stage of the design process?", options:["Final accounting", "A/B Testing and Storyboarding", "User database management", "Writing code"], correct:1, hint:"It's great for quickly visualizing different options or scenes.", explain:"Midjourney's speed makes it perfect for A/B testing different visual concepts and for creating rapid storyboards to plan a narrative sequence." },
+    { type:"TF", category:"Parameters", text:"The parameter `--quality 0.25` will produce a more detailed image than `--quality 1`.", correct:false, hint:"Higher numbers usually mean higher quality.", explain:"False. A lower quality setting (`--q 0.25`) uses fewer GPU minutes, resulting in a faster but less detailed image. The default is `--q 1`." },
+    { type:"FTB", category:"Prompting", text:"The part of the image closest to the viewer is known as the ________.", answer:"foreground", hint:"It's the opposite of the background.", explain:"In visual composition, the foreground is the area of the scene that appears nearest to the viewer, and prompting for it can add depth to your images." },
+    { type:"MCQ", category:"Art Styles", text:"Which prompt term would you use to generate an image with a dark, futuristic, high-tech aesthetic, often featuring neon lights?", options:["Retro", "Cinematic", "Cyberpunk", "Line Art"], correct:2, hint:"Think 'Blade Runner' or 'The Matrix'.", explain:"'Cyberpunk' is the go-to style for creating images with a dystopian, high-tech, neon-drenched futuristic feel." },
+    { type:"SEQ", category:"Composition", text:"Arrange these common prompt elements from the general scene to the specific details.", items:["A dynamic action pose", "An ancient, mossy forest", "Golden hour lighting", "A female elf warrior"], correct:["An ancient, mossy forest", "Golden hour lighting", "A female elf warrior", "A dynamic action pose"], hint:"Start with the location, then the light, then the subject, then what the subject is doing.", explain:"A good prompting structure often starts broad (location, atmosphere) and then narrows down to the specific character and their actions for a coherent scene." },
+    { type:"MCQ", category:"Features", text:"The `Vary (Region)` feature allows you to do what?", options:["Change the entire image style", "Reroll the entire image with the same prompt", "Select a specific part of an upscaled image to regenerate", "Change the aspect ratio"], correct:2, hint:"It's useful for fixing a small mistake, like on a character's hand.", explain:"Vary (Region) provides an editor where you can select a specific area of your upscaled image and have Midjourney regenerate only that part with a modified prompt." },
+    { type:"TF", category:"Philosophy", text:"The primary goal of AI art is to replace human artists entirely.", correct:false, hint:"Think of it as a tool, not a replacement.", explain:"False. AI art is widely seen as a powerful tool that enhances creativity, augments workflows, and opens up new visual possibilities for artists and designers, rather than replacing them." },
+    { type:"FTB", category:"Commands", text:"If you have an existing image, you can use its URL at the start of your prompt to ________ its style or content.", answer:"influence", hint:"The image URL acts as a visual guide.", explain:"Using an image URL as part of a prompt allows you to influence the composition, style, and colors of the final output, blending the image with your text prompt." },
+    { type:"MCQ", category:"Parameters", text:"What is the purpose of the `--video` parameter?", options:["It creates a fully animated movie", "It generates a short video of the image grid being formed", "It embeds a YouTube video in the image", "It adds video-player UI elements to the image"], correct:1, hint:"It shows the 'making of' the grid.", explain:"Adding `--video` to the end of a prompt will save a short progress video showing the initial image grid's formation, which is sent to you via a link." },
+    { type:"MATCH", category:"Art Styles", text:"Match the art style term to its description.", stems:["Line Art", "Typography", "Cinematic", "Wildlife Photography"], responses:["Focuses on artistic lettering and font design", "Creates an image that feels like a still from a movie", "Aims for realistic depictions of animals in their natural habitat", "Uses outlines and contours rather than shading"], correct:[{s:0,r:3},{s:1,r:0},{s:2,r:1},{s:3,r:2}], hint:"Each term is quite literal in its description.", explain:"'Line Art' is about outlines. 'Typography' is about text. 'Cinematic' emulates film. 'Wildlife Photography' focuses on realistic animal shots." },
+    { type:"MCQ", category:"Prompting", text:"If you describe a shot as a 'top-down view' or 'bird's-eye view', you are specifying the:", options:["Lighting", "Character's emotion", "Camera Angle", "Time of day"], correct:2, hint:"This prompt detail determines the viewer's perspective.", explain:"Specifying the camera angle (e.g., 'low-angle shot', 'wide shot', 'top-down view') is a key technique for controlling the composition and narrative of your image." },
+    { type:"TF", category:"Prompting", text:"Writing a very long, detailed paragraph is always better than a concise, well-structured prompt.", correct:false, hint:"Clarity is more important than length.", explain:"False. While detail is good, a concise and well-structured prompt that clearly communicates the most important concepts is often more effective than a long, rambling paragraph." },
+    { type:"FTB", category:"Concept", text:"The journey from a vague idea to a final, polished visual is a core part of the AI art ________.", answer:"workflow", answerAlt:["process"], hint:"It's the series of steps you take to achieve a result.", explain:"Developing a personal workflow—how you refine ideas, adjust prompts, and select outputs—is key to moving from random generations to intentional creation." },
+    { type:"MCQ", category:"Influence", text:"Which of the following would you include in a prompt to influence the 'feel' of an image?", options:["A specific hex color code", "A link to a spreadsheet", "The name of a famous director or artist", "The current date"], correct:2, hint:"Whose style do you want to emulate? Van Gogh? Wes Anderson?", explain:"Mentioning artists (e.g., 'in the style of Vincent van Gogh'), directors ('cinematic shot by Wes Anderson'), or art movements can powerfully influence the mood, color, and composition of the generated image." },
+    { type:"MCQ", category:"Features", text:"What is the primary purpose of 'Remix Mode' in Midjourney's settings?", options:["To automatically add music to video generations", "To allow editing the prompt when creating a variation", "To mix two existing images together", "To apply a random filter to the output"], correct:1, hint:"It gives you more control when you press a 'V' button.", explain:"Remix Mode allows you to change your prompt, parameters, or model version each time you create a variation, enabling iterative and fine-tuned image development." },
+    { type:"FTB", category:"Models", text:"The Midjourney model specialized for creating anime and illustrative styles is called `________ Journey`.", answer:"Niji", hint:"The name is Japanese for 'rainbow'.", explain:"The Niji Journey model is a collaboration tuned specifically for anime aesthetics, producing vibrant and high-quality illustrative images." },
+    { type:"TF", category:"Parameters", text:"The `--stylize` parameter (or `--s`) controls how strongly the AI's artistic training is applied, with lower values giving more creative freedom.", correct:false, hint:"Higher values mean a more 'opinionated' or artistic style from the AI.", explain:"False. Higher `--stylize` values result in more artistic and 'opinionated' images, while lower values adhere more closely to the prompt's literal text." },
+    { type:"MCQ", category:"Commands", text:"Which command analyzes an uploaded image and generates four potential text prompts that could have created it?", options:["/blend", "/shorten", "/describe", "/ask"], correct:2, hint:"It does the reverse of `/imagine`.", explain:"The `/describe` command is a powerful tool for learning new prompting vocabulary by seeing how Midjourney interprets an existing image." },
+    { type:"FTB", category:"Parameters", text:"To create seamless, repeating patterns for textures or wallpapers, you would use the ` --________` parameter.", answer:"tile", hint:"Think of what you put on a floor or bathroom wall.", explain:"The `--tile` parameter generates images that can be used as repeating tiles to create seamless patterns, perfect for textures and backgrounds." },
+    { type:"MCQ", category:"Prompting", text:"Using curly braces with comma-separated options, like `/imagine a painting of a {cat, dog, bird}`, is known as what?", options:["Remix Prompting", "Permutation Prompting", "Chaos Prompting", "Weighted Prompting"], correct:1, hint:"This technique creates multiple jobs from one prompt.", explain:"Permutation Prompting allows you to quickly generate variants by creating separate jobs for each item inside the curly braces `{}`." },
+    { type:"TF", category:"Features", text:"The `Zoom Out` feature can only make an image smaller; it cannot add new details to the scene.", correct:false, hint:"Zooming out reveals what's *around* the original image.", explain:"False. The `Zoom Out` feature extends the canvas and uses the original image and prompt to intelligently fill in the new space, effectively adding more to the scene." },
+    { type:"MCQ", category:"Use Cases", text:"Creating a consistent visual style, character design, and environment for a project is a process known as:", options:["Worldbuilding", "Storyboarding", "A/B Testing", "Inpainting"], correct:0, hint:"You are building a new, cohesive world.", explain:"Worldbuilding involves establishing a consistent set of visual rules for characters, locations, and objects. Using `--seed` and consistent style prompts in Midjourney is key for this." },
+    { type:"MATCH", category:"Commands", text:"Match the Midjourney command to its primary function.", stems:["/settings", "/shorten", "/blend", "/info"], responses:["Shows your account details and queued jobs", "Visually combines 2-5 uploaded images", "Lets you review and adjust model versions and styles", "Analyzes a long prompt and suggests shorter alternatives"], correct:[{s:0,r:2},{s:1,r:3},{s:2,r:1},{s:3,r:0}], hint:"`/info` gives you information about yourself.", explain:"`/settings` opens your personal settings panel. `/shorten` helps refine prompts. `/blend` mixes images. `/info` shows your user profile." },
+    { type:"FTB", category:"Concept", text:"The unique aesthetic and 'look' of a specific AI model version, like Midjourney V6, is often referred to as its ________ model.", answer:"base", hint:"It's the foundational style before you add other prompts.", explain:"The base model refers to the underlying version of the AI (e.g., V5.2, V6) which has its own inherent, 'opinionated' aesthetic that influences all generations." },
+    { type:"MCQ", category:"Parameters", text:"What does the experimental `--weird` parameter do?", options:["Guarantees a photorealistic result", "Introduces quirky and offbeat aesthetics", "Corrects anatomical errors in hands", "Reduces your subscription cost"], correct:1, hint:"The name is very literal.", explain:"The `--weird` parameter injects unconventional aesthetics into your images, pushing them towards surreal and unexpected compositions." },
+    { type:"TF", category:"Philosophy", text:"A prompt's 'intent' is what you type, and its 'execution' is how the AI interprets and renders it.", correct:true, hint:"Intent is the idea; execution is the result.", explain:"True. A key skill in AI art is aligning your intended concept (intent) with the AI's final output (execution) through careful prompting and refinement." },
+    { type:"RTC", category:"Workflow", context:"A designer needs to create a new logo for a coffee shop called 'The Cosmic Bean.' They want a simple, modern look.", subs:[ {stype:"MCQ", text:"Which prompt style is best for this task?", options:["hyperrealistic 8k photograph", "vector logo, minimalist, flat icon", "impressionist oil painting", "character design sheet"], correct:1}, {stype:"FTB", text:"To ensure the logo has no background, they might add `________ background` to the prompt.", answer:"white"}, {stype:"TF", text:"Using `--chaos 100` would be a good strategy for a clean, predictable logo.", correct:false} ], hint:"Vector and minimalist are keywords for logos. High chaos is unpredictable.", explain:"For logos, `vector logo, minimalist, flat icon` is the best approach. A `white background` makes it easy to edit. High chaos (`--chaos`) is the opposite of the predictability needed for logo design." },
+    { type:"MCQ", category:"Prompting", text:"The term 'chiaroscuro' in a prompt would most directly influence the image's:", options:["Color palette", "Lighting and contrast", "Subject's age", "Aspect ratio"], correct:1, hint:"It's an art term referring to strong light and shadow.", explain:"Chiaroscuro is an artistic technique that uses strong contrasts between light and dark, affecting the lighting, mood, and sense of volume in an image." },
+    { type:"FTB", category:"Parameters", text:"When using an image prompt, the ` --________` parameter controls the influence of the image versus the text prompt.", answer:"iw", hint:"It stands for 'Image Weight'.", explain:"The `--iw` (Image Weight) parameter, with values from 0 to 2, adjusts how much the image prompt influences the job compared to the text part of the prompt." },
+    { type:"MCQ", category:"Art Styles", text:"If you wanted to create an image resembling a technical drawing or a blueprint, what keyword would be most effective?", options:["Graffiti", "Schematic", "Panoramic", "Polaroid"], correct:1, hint:"Think of a diagram that shows how something works.", explain:"Keywords like 'schematic', 'blueprint', 'technical drawing', or 'diagram' will produce clean, line-based images that explain a structure or mechanism." },
+    { type:"TF", category:"Community", text:"You can view and get inspiration from other users' creations in the Midjourney community feed on the website.", correct:true, hint:"Midjourney has a website for managing your account and browsing images.", explain:"True. The Midjourney website features a community showcase where you can browse popular creations, see the prompts that made them, and get inspiration for your own work." },
+    { type:"MATCH", category:"Concepts", text:"Match the visual concept to its description.", stems:["Negative Space", "Rule of Thirds", "Focal Point", "Leading Lines"], responses:["The primary subject or area of interest that draws the viewer's eye", "Lines within the image that guide the viewer's eye to the subject", "The empty area around the subject, used to create emphasis and balance", "A compositional guide that divides an image into a 3x3 grid"], correct:[{s:0,r:2},{s:1,r:3},{s:2,r:0},{s:3,r:1}], hint:"'Focal Point' is where you focus.", explain:"These are fundamental art and photography principles. Including them in prompts (e.g., 'subject on the right third, rule of thirds') can improve your compositions." },
+    { type:"FTB", category:"Concept", text:"The unexpected or surprising results from a deliberately vague or chaotic prompt can be used to break creative blocks and create ________.", answer:"suspense", answerAlt:["serendipity"], hint:"Think of an unplanned, happy discovery.", explain:"Using AI art for 'happy accidents' or serendipity can create suspense and surprise, leading to new creative directions you hadn't considered." },
+    { type:"MCQ", category:"Platform", text:"Besides Midjourney, which of the following is another well-known AI image generator?", options:["Adobe Firefly", "Microsoft Word", "Google Sheets", "Discord"], correct:0, hint:"It's made by the same company as Photoshop.", explain:"Adobe Firefly is another major text-to-image model, known for being trained on Adobe Stock imagery and being integrated into the Adobe creative suite." }
+  ]
+};
+
+/* ---------- STATE ---------- */
+let idx = 0;
+let score = 0;
+const answers = new Array(QUIZ.questions.length).fill(null);
+const hintsUsed = new Array(QUIZ.questions.length).fill(false);
+
+/* ---------- SOUNDS ---------- */
+let soundReady = false;
+const correctSynth = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 1 } }).toDestination();
+const wrongSynth = new Tone.Synth({ oscillator: { type: "square" }, envelope: { attack: 0.01, decay: 0.4, sustain: 0.1, release: 1 } }).toDestination();
+
+// Start audio context on first user interaction
+document.body.addEventListener('click', async () => {
+    if (!soundReady) {
+        await Tone.start();
+        soundReady = true;
+    }
+}, { once: true });
+
+
+/* ---------- HELPERS ---------- */
+const el = sel => document.querySelector(sel);
+const qCard = el('#qCard');
+const progressBar = el('#progressBar');
+const badgeIndex = el('#badgeIndex');
+const badgeType = el('#badgeType');
+const badgeMarks = el('#badgeMarks');
+const btnPrev = el('#btnPrev');
+const btnNext = el('#btnNext');
+const btnSubmit = el('#btnSubmit');
+const btnSkip = el('#btnSkip');
+const btnHint = el('#btnHint');
+const btnFinish = el('#btnFinish');
+const scoreMini = el('#scoreMini');
+const hintModal = el('#hintModal');
+const hintText = el('#hintText');
+const closeHintModal = el('#closeHintModal');
+
+
+function updateHeader(){
+  const totalQuestions = QUIZ.questions.length;
+  badgeIndex.textContent = `Q ${idx+1} / ${totalQuestions}`;
+  badgeType.textContent = QUIZ.questions[idx].type;
+  badgeMarks.textContent = `10 Marks`;
+  const pct = ((idx)/totalQuestions)*100;
+  progressBar.style.width = `${pct}%`;
+}
+function setButtonsState(afterSubmit=false){
+  const totalQuestions = QUIZ.questions.length;
+  btnPrev.disabled = idx===0;
+  btnNext.style.display = afterSubmit && idx < totalQuestions - 1 ? 'inline-block':'none';
+  btnSubmit.style.display = afterSubmit ? 'none':'inline-block';
+  btnSkip.style.display = afterSubmit ? 'none':'inline-block';
+  btnHint.style.display = afterSubmit ? 'none' : 'inline-block';
+  btnHint.disabled = hintsUsed[idx];
+  btnFinish.style.display = afterSubmit && idx === totalQuestions - 1 ? 'inline-block':'none';
+}
+
+/* ---------- RENDERERS ---------- */
+function render(){
+  updateHeader();
+  qCard.innerHTML = '';
+  const q = QUIZ.questions[idx];
+
+  // Head
+  const head = document.createElement('div');
+  head.className='q-head';
+  head.innerHTML = `
+    <div class="q-index">Question ${idx+1}</div>
+    <div class="q-labels">
+      <span class="q-category">${q.category}</span>
+      <span class="q-type">${q.type}</span>
+    </div>
+  `;
+  qCard.appendChild(head);
+
+  // Question text / context
+  if(q.type==='RTC' && q.context){
+    const ctx = document.createElement('div');
+    ctx.className='rtc';
+    ctx.innerHTML = q.context;
+    qCard.appendChild(ctx);
+  }
+  const qtext = document.createElement('div');
+  qtext.className='q-text';
+  qtext.innerHTML = q.text || '';
+  qCard.appendChild(qtext);
+
+  // Body per type
+  if(q.type==='MCQ' || q.type==='TF'){
+    const optionsWrap = document.createElement('div');
+    optionsWrap.className='options';
+    const opts = (q.type==='TF') ? ['True','False'] : q.options;
+    opts.forEach((opt,i)=>{
+      const div = document.createElement('div');
+      div.className='option';
+      div.dataset.index=i;
+      div.innerHTML=opt;
+      div.addEventListener('click',()=>selectOption(div,i));
+      optionsWrap.appendChild(div);
+    });
+    qCard.appendChild(optionsWrap);
+    restoreMCQ();
+  }
+  else if(q.type==='FTB'){
+    const wrap = document.createElement('div'); wrap.className='ftb';
+    wrap.innerHTML = `<input id="ftb" placeholder="Type your answer..." autocomplete="off">`;
+    qCard.appendChild(wrap);
+    if(typeof answers[idx]==='string') el('#ftb').value = answers[idx];
+  }
+  else if(q.type==='SEQ'){
+    const list = document.createElement('ul'); list.className='seq-list'; list.id='seqList';
+    const items = answers[idx] && Array.isArray(answers[idx]) ? answers[idx] : shuffle([...q.items]);
+    items.forEach(t=>{
+      const li = document.createElement('li'); li.className='seq-item'; li.draggable=true;
+      li.innerHTML = `<span class="handle">☰</span><span class="txt">${t}</span>`;
+      list.appendChild(li);
+    });
+    addDnD(list);
+    qCard.appendChild(list);
+  }
+  else if(q.type==='MATCH'){
+    const wrap = document.createElement('div'); wrap.className='match';
+    const A = document.createElement('div'); A.className='mcol';
+    A.innerHTML = `<h4>Column A</h4>`;
+    q.stems.forEach((s,i)=>{
+      const d = document.createElement('div'); d.className='mitem'; d.innerHTML=s; d.dataset.side='A'; d.dataset.index=i;
+      d.addEventListener('click',()=>pickMatch(d));
+      A.appendChild(d);
+    });
+    const B = document.createElement('div'); B.className='mcol';
+    B.innerHTML = `<h4>Column B</h4>`;
+    q.responses.forEach((r,i)=>{
+      const d = document.createElement('div'); d.className='mitem'; d.innerHTML=r; d.dataset.side='B'; d.dataset.index=i;
+      d.addEventListener('click',()=>pickMatch(d));
+      B.appendChild(d);
+    });
+    wrap.appendChild(A); wrap.appendChild(B);
+    const pairsInfo = document.createElement('div'); pairsInfo.id='pairsInfo'; pairsInfo.style.marginTop='.3rem';
+    wrap.appendChild(pairsInfo);
+    qCard.appendChild(wrap);
+    restoreMatch();
+  }
+  else if(q.type==='RTC'){
+    q.subs.forEach((sub,si)=>{
+      const box = document.createElement('div'); box.style.margin='0.6rem 0 0';
+      const st = document.createElement('div'); st.className='q-text'; st.style.fontWeight='600';
+      st.innerHTML = (si+1)+'. '+sub.text;
+      box.appendChild(st);
+      if(sub.stype==='MCQ'){
+        const opts = document.createElement('div'); opts.className='options';
+        sub.options.forEach((o,i)=>{
+          const d=document.createElement('div'); d.className='option'; d.dataset.si=si; d.dataset.index=i;
+          d.innerHTML=o;
+          d.addEventListener('click',()=>selectRTCOption(d,si,i));
+          opts.appendChild(d);
+        });
+        box.appendChild(opts);
+      }else if(sub.stype==='FTB'){
+        const wrap = document.createElement('div'); wrap.className='ftb';
+        wrap.innerHTML=`<input data-si="${si}" class="rtc-ftb" placeholder="Type answer...">`;
+        box.appendChild(wrap);
+      }
+      qCard.appendChild(box);
+    });
+    restoreRTC();
+  }
+
+  const expl = document.createElement('div'); expl.className='expl'; expl.id='expl';
+  qCard.appendChild(expl);
+  
+  setButtonsState(false);
+}
+
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]} return a; }
+
+/* ----- Interactions per type ----- */
+function selectOption(div,i){
+  qCard.querySelectorAll('.option').forEach(o=>o.classList.remove('is-selected'));
+  div.classList.add('is-selected');
+  answers[idx] = i;
+}
+
+function restoreMCQ(){
+  const val = answers[idx];
+  if(val===null || typeof val==='undefined') return;
+  const opt = qCard.querySelector(`.option[data-index="${val}"]`);
+  if(opt) opt.classList.add('is-selected');
+}
+
+function addDnD(list){
+  let dragEl=null;
+  list.querySelectorAll('.seq-item').forEach(li=>{
+    li.addEventListener('dragstart', ()=>{ dragEl=li; li.classList.add('dragging'); });
+    li.addEventListener('dragend', ()=>{ li.classList.remove('dragging'); });
+  });
+  list.addEventListener('dragover', e=>{
+    e.preventDefault();
+    const after = getDragAfterElement(list, e.clientY);
+    if(dragEl) after==null ? list.appendChild(dragEl) : list.insertBefore(dragEl, after);
+  });
+  function getDragAfterElement(container, y){
+    const els=[...container.querySelectorAll('.seq-item:not(.dragging)')];
+    return els.reduce((closest,child)=>{
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height/2;
+      if(offset<0 && offset>closest.offset) return {offset, element:child};
+      else return closest;
+    }, {offset:Number.NEGATIVE_INFINITY}).element;
+  }
+}
+
+let pickedA=null, pickedB=null;
+function pickMatch(node){
+  const side=node.dataset.side;
+  if(side==='A'){ if(pickedA===node){ node.classList.remove('is-picked'); pickedA=null; } else { if(pickedA) pickedA.classList.remove('is-picked'); pickedA=node; node.classList.add('is-picked'); } }
+  if(side==='B'){ if(pickedB===node){ node.classList.remove('is-picked'); pickedB=null; } else { if(pickedB) pickedB.classList.remove('is-picked'); pickedB=node; node.classList.add('is-picked'); } }
+  if(pickedA && pickedB){
+    const colorClass = `paired-${(getPairs().length % 4)+1}`;
+    pickedA.classList.remove('is-picked'); pickedB.classList.remove('is-picked');
+    pickedA.classList.add(colorClass); pickedB.classList.add(colorClass);
+    const pair = {s:parseInt(pickedA.dataset.index), r:parseInt(pickedB.dataset.index), c:colorClass};
+    const current = getPairs(); current.push(pair); setPairs(current);
+    updatePairsInfo();
+    pickedA=null; pickedB=null;
+  }
+}
+function getPairs(){ return (answers[idx] && Array.isArray(answers[idx])) ? answers[idx] : []; }
+function setPairs(p){ answers[idx]=p; }
+function updatePairsInfo(){
+  const q = QUIZ.questions[idx];
+  const div = el('#pairsInfo');
+  const pairs = getPairs();
+  const lines = pairs.map(pr=> `${q.stems[pr.s]} → ${q.responses[pr.r]}`);
+  div.innerHTML = lines.length? `<div class="mpair"><strong>Pairs:</strong><br>${lines.join('<br>')}</div>` : '';
+}
+function restoreMatch(){
+  const pairs = getPairs();
+  if(!pairs.length) return;
+  pairs.forEach(pr=>{
+    const A = qCard.querySelector(`.mitem[data-side="A"][data-index="${pr.s}"]`);
+    const B = qCard.querySelector(`.mitem[data-side="B"][data-index="${pr.r}"]`);
+    if(A && B){ A.classList.add(pr.c); B.classList.add(pr.c); }
+  });
+  updatePairsInfo();
+}
+
+function selectRTCOption(div,si,i){
+  const q = QUIZ.questions[idx];
+  if(!answers[idx]) answers[idx] = {subs: new Array(q.subs.length).fill(null)};
+  qCard.querySelectorAll(`.option[data-si="${si}"]`).forEach(o=>o.classList.remove('is-selected'));
+  div.classList.add('is-selected');
+  answers[idx].subs[si] = i;
+}
+function restoreRTC(){
+  const q = QUIZ.questions[idx];
+  if(!answers[idx] || !answers[idx].subs) return;
+  q.subs.forEach((s,si)=>{
+    const val = answers[idx].subs[si];
+    if(s.stype==='MCQ' && val!==null){
+      const opt = qCard.querySelector(`.option[data-si="${si}"][data-index="${val}"]`);
+      if(opt) opt.classList.add('is-selected');
+    }
+    if(s.stype==='FTB' && typeof val==='string'){
+      const input = qCard.querySelector(`.rtc-ftb[data-si="${si}"]`); if(input) input.value = val;
+    }
+  });
+}
+
+/* ---------- SUBMIT / CHECK ---------- */
+function showExplanation(ok, model=null){
+  const box = el('#expl'); if(!box) return;
+  box.classList.remove('expl--ok','expl--no'); box.style.display='block';
+  const q = QUIZ.questions[idx];
+  box.classList.add(ok?'expl--ok':'expl--no');
+  box.innerHTML = `<div><strong>${ok?'Correct!':'Let’s review:'}</strong> ${q.explain || ''}</div>` + (model?`<div class="model">${model}</div>`:'');
+  setButtonsState(true);
+  // Scroll explanation into view
+  box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function grade(){
+  const q = QUIZ.questions[idx];
+  let ok=false, modelTxt='';
+  let scored = false;
+  if(answers[idx] === '__scored__' || (answers[idx] && answers[idx]._scored)) {
+      scored = true;
+  }
+
+  if(q.type==='MCQ' || q.type==='TF'){
+    const val = answers[idx];
+    if(val===null){ showExplanation(false, 'Please select an option.'); return; }
+    qCard.querySelectorAll('.option').forEach(o=>o.setAttribute('disabled',''));
+    const correctIndex = (q.type==='TF' ? (q.correct?0:1) : q.correct);
+    qCard.querySelectorAll('.option').forEach((o,i)=>{
+      if(i === correctIndex) o.classList.add('is-correct');
+      else if(i===val) o.classList.add('is-wrong');
+    });
+    ok = (q.type==='TF') ? ((val===0)===q.correct) : (val===q.correct);
+    const correctText = q.type==='TF' ? (q.correct ? 'True' : 'False') : (q.options[correctIndex]);
+    modelTxt = `Correct Answer: <strong>${correctText}</strong>`;
+  }
+  else if(q.type==='FTB'){
+    const input = el('#ftb');
+    const val = (input.value||'').trim().toLowerCase();
+    answers[idx]=val;
+    const targets = [q.answer.toLowerCase(), ...(q.answerAlt||[]).map(x=>x.toLowerCase())];
+    ok = targets.includes(val);
+    modelTxt = `Model Answer: <strong>${q.answer}</strong>`;
+    input.setAttribute('disabled','');
+  }
+  else if(q.type==='SEQ'){
+    const order = [...qCard.querySelectorAll('.seq-item .txt')].map(x=>x.textContent);
+    answers[idx]=order;
+    ok = JSON.stringify(order)===JSON.stringify(q.correct);
+    modelTxt = 'Correct order:<br>• ' + q.correct.join('<br>• ');
+    qCard.querySelectorAll('.seq-item').forEach(li=>li.draggable=false);
+  }
+  else if(q.type==='MATCH'){
+    const pairs = getPairs();
+    if(pairs.length !== q.stems.length){ showExplanation(false, "Please pair all items before submitting."); return; }
+    let good=0;
+    pairs.forEach(pr=>{ if(q.correct.some(c=>c.s===pr.s && c.r===pr.r)) good++; });
+    ok = good===q.stems.length;
+    modelTxt = 'Correct pairs:<br>' + q.correct.map(c=>`• ${q.stems[c.s]} → ${q.responses[c.r]}`).join('<br>');
+    qCard.querySelectorAll('.mitem').forEach(m=>m.style.pointerEvents='none');
+  }
+  else if(q.type==='RTC'){
+    const subAns = answers[idx] && answers[idx].subs ? answers[idx].subs : new Array(q.subs.length).fill(null);
+    q.subs.forEach((s,si)=>{
+      if(s.stype==='FTB'){
+        const input = qCard.querySelector(`.rtc-ftb[data-si="${si}"]`);
+        if(input){ subAns[si]=(input.value||'').trim().toLowerCase(); input.setAttribute('disabled',''); }
+      } else if(s.stype==='MCQ'){
+        qCard.querySelectorAll(`.option[data-si="${si}"]`).forEach(o=>o.setAttribute('disabled',''));
+      }
+    });
+    answers[idx] = {subs: subAns, _scored: true}; // Mark RTC as scored after first attempt
+    let allOk=true;
+    q.subs.forEach((s,si)=>{
+      if(s.stype==='MCQ'){
+        const sel = subAns[si];
+        qCard.querySelectorAll(`.option[data-si="${si}"]`).forEach((o,i)=>{
+          if(i===s.correct) o.classList.add('is-correct');
+          else if(i===sel) o.classList.add('is-wrong');
+        });
+        if(sel!==s.correct) allOk=false;
+      }else if(s.stype==='FTB'){
+        const val = (subAns[si]||'').toLowerCase();
+        const alts = [ (s.answer||'').toLowerCase(), ...((s.alt||[]).map(x=>x.toLowerCase())) ];
+        if(!alts.includes(val)) allOk=false;
+      }
+    });
+    ok = allOk;
+    modelTxt = 'Review each part using the highlights. Green is correct, red is incorrect.';
+  }
+  
+  // Play sound
+  if (soundReady) {
+    if (ok) {
+        correctSynth.triggerAttackRelease("C5", "8n");
+    } else {
+        wrongSynth.triggerAttackRelease("C3", "8n");
+    }
+  }
+
+  if(ok && !scored){
+    score += 10;
+  }
+  scoreMini.textContent = `Score: ${score}`;
+  showExplanation(ok, modelTxt);
+}
+
+/* ---------- HINT LOGIC ---------- */
+btnHint.addEventListener('click', () => {
+    if (hintsUsed[idx]) return;
+    
+    // Penalize and update state
+    score -= 5;
+    hintsUsed[idx] = true;
+    btnHint.disabled = true;
+    scoreMini.textContent = `Score: ${score}`;
+
+    // Show hint in modal
+    const q = QUIZ.questions[idx];
+    hintText.textContent = q.hint || "No hint available for this question.";
+    hintModal.classList.add('visible');
+});
+
+closeHintModal.addEventListener('click', () => {
+    hintModal.classList.remove('visible');
+});
+hintModal.addEventListener('click', (e) => {
+    if (e.target === hintModal) {
+        hintModal.classList.remove('visible');
+    }
+});
+
+
+/* ---------- NAV ---------- */
+btnPrev.addEventListener('click', ()=>{ if(idx>0){ idx--; render(); }});
+btnNext.addEventListener('click', ()=>{ if(idx<QUIZ.questions.length-1){ idx++; render(); }});
+btnSubmit.addEventListener('click', grade);
+btnSkip.addEventListener('click', ()=>{ answers[idx]='__skipped__'; showExplanation(false,"Marked as skipped."); });
+btnFinish.addEventListener('click', ()=>{
+  const totalQuestions = QUIZ.questions.length;
+  progressBar.style.width='100%';
+  const totalMarks = totalQuestions * 10;
+  qCard.innerHTML = `
+    <div class="q-text" style="font-size:1.15rem;">🎉 Quiz Complete!</div>
+    <p style="margin:.4rem 0 1rem;color:var(--muted)">You finished all ${totalQuestions} questions.</p>
+    <div class="expl expl--ok" style="display:block"><strong>Your final score:</strong> ${score} / ${totalMarks}</div>
+  `;
+  btnPrev.disabled=true; btnNext.style.display='none'; btnSubmit.style.display='none'; btnSkip.style.display='none'; btnFinish.style.display='none'; btnHint.style.display='none';
+});
+
+/* ---------- INIT ---------- */
+document.addEventListener('DOMContentLoaded', render);
+</script>
+</body>
+</html>
