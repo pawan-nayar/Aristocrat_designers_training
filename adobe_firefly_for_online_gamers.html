@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Alchemist's Guide to Adobe Firefly: Creating Magical Casino Game Art</title>
+  <meta name="description" content="A world-class guide to mastering Adobe Firefly for casino game design. Explore prompt engineering, advanced styles, generative fill, and create stunning, commercially safe AI art assets.">
+  <meta name="keywords" content="Adobe Firefly, AI Art, Casino Game Design, Generative AI, Asset Creation, Prompt Engineering, AI for Gaming, Slot Machine Art">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ================= Base / Theme (Adopted from Python Template) ================= */
+    :root {
+      --text:#212529; --bg:#fff8f3; --surface:#ffffff; --border:#eadfd6;
+      --accent:#ef7d55; --accent-2:#d8663f; --header-bg:#1f1b18; --header-fg:#f6f3f1;
+      --ok:#16a34a; --ok-soft:#dcfce7; --bad:#dc2626; --bad-soft:#fee2e2;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;}
+    .container{max-width:850px;margin:auto;padding:24px;}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline; color: var(--accent-2)}
+
+    /* ================= Header / Footer / Breadcrumbs ================= */
+    .site-header,.site-footer{background:var(--header-bg);color:var(--header-fg);padding:14px 24px}
+    .site-header{border-bottom: 3px solid var(--accent); display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;position:sticky;top:0;z-index:100}
+    .logo{font-family: 'Playfair Display', serif; font-weight:700;font-size:1.25rem;color:#fff}
+    .site-header nav{display:flex;gap:14px}
+    .site-header nav a{color:#ced4da}
+    .site-header nav a:hover{color:#fff}
+    .site-footer{text-align:center;margin-top:50px;padding:40px; border-top: 1px solid #343a40;}
+    .breadcrumbs{margin-bottom:24px;font-size:0.9rem;color:#6d6660}
+    .breadcrumbs a{color:var(--accent)}
+
+    /* ================= Typography & Layout ================= */
+    h1{font-family: 'Playfair Display', serif; font-size:clamp(2.2rem,5vw,3rem);text-align:left;margin-bottom:8px;color:var(--header-bg);line-height:1.2; letter-spacing: 1px;}
+    .byline{font-size:clamp(1rem,3vw,1.3rem);font-style:italic;color:#5a2e1f;margin-bottom:24px}
+    h2{font-family: 'Playfair Display', serif; font-size:clamp(1.6rem,4vw,2.2rem);color:var(--header-bg);margin:48px 0 16px;border-bottom:2px solid var(--border);padding-bottom:8px}
+    h3{font-size:clamp(1.2rem,3vw,1.5rem);color:var(--text);margin-top:32px;margin-bottom:12px}
+    h4{font-size:clamp(1rem,2.5vw,1.2rem);font-weight:bold;color:var(--accent-2);margin-bottom:10px}
+    p{margin-bottom:16px;word-wrap:break-word}
+    ul{margin-left:24px;margin-bottom:24px;list-style-type:'✦';padding-left:1em}
+    li{margin-bottom:12px;padding-left:0.5em}
+    .article-meta{display:flex;align-items:center;gap:12px;color:#6d6660;margin-bottom:32px;font-size:0.95rem}
+    .author-emoji{font-size:32px;line-height:1}
+    .intro{font-size:1.1rem;line-height:1.8;background:var(--surface-soft,#fff3eb);padding:20px;border-radius:12px;border-left:4px solid var(--accent);margin:24px 0}
+    .img-frame{border:1px solid var(--border); position:relative;width:100%;padding-top:50%;overflow:hidden;border-radius:12px;margin:16px 0 24px;box-shadow:0 4px 15px rgba(0,0,0,0.1)}
+    .img-frame img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+    .btn{background:var(--accent);color:#fff;border:none;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer; transition: background-color 0.2s ease;}
+    .btn:hover { background-color: var(--accent-2); }
+    
+    /* ================= Interactive & Structural Elements ================= */
+    .interactive-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;margin:24px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.05);}
+    .table-wrap{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:24px 0}
+    table.data-table{width:100%;border-collapse:collapse;background:var(--surface)}
+    table.data-table th, table.data-table td{padding:12px 15px;border:1px solid var(--border);text-align:left;vertical-align:top;}
+    table.data-table thead th{background:var(--surface-soft,#fff3eb);font-weight:600;}
+    .accordion{display:grid;gap:8px}
+    .accordion-header{width:100%;text-align:left;background:var(--surface-soft,#fff3eb);border:1px solid var(--border);padding:16px 20px;border-radius:8px;cursor:pointer;font-size:1.1rem;font-weight:bold;display:flex;align-items:center}
+    .accordion-header .accordion-title { margin-right: auto; padding-right: 1rem; }
+    .accordion-header::after{content:'+';color:#6d6660}
+    .accordion-header[aria-expanded="true"]{background:var(--border);border-bottom-left-radius:0;border-bottom-right-radius:0}
+    .accordion-header[aria-expanded="true"]::after{content:'−'}
+    .accordion-content{padding:20px;display:none;border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px; background: var(--surface);}
+    .do-dont-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; align-items: start;}
+    .do-dont-grid h5 { font-size: 1rem; margin-bottom: 8px; }
+    .do-col { border-left: 3px solid var(--ok); padding-left: 15px; }
+    .dont-col { border-left: 3px solid var(--bad); padding-left: 15px; }
+    .code-block { background: #2d2d2d; color: #f8f8f2; padding: 1em; border-radius: 8px; overflow-x: auto; font-size: 0.95rem; font-family: 'Courier New', Courier, monospace; }
+
+    /* --- Prompt Showcase --- */
+    .prompt-showcase { background-color: #2d2d2d; border-radius: 12px; padding: 20px; position: relative; }
+    .showcase-image-wrapper { width: 100%; padding-top: 50%; /* 2:1 Aspect Ratio */ position: relative; border-radius: 8px; overflow: hidden; margin-bottom: 20px; }
+    .showcase-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s ease; }
+    .showcase-prompt-area { background-color: #1f1b18; border-radius: 8px; padding: 15px; }
+    .showcase-prompt-header { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 10px; flex-wrap: wrap;}
+    .showcase-prompt-header h5 { color: var(--accent); margin: 0; font-size: 1.1rem; }
+    .showcase-copy-btn { background: #495057; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+    .showcase-prompt-text { font-family: 'Courier New', Courier, monospace; color: #ced4da; font-size: 0.95rem; line-height: 1.6; }
+    .showcase-nav { position: absolute; top: 40%; transform: translateY(-50%); background-color: rgba(239,125,85,0.8); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; }
+    .showcase-nav:hover { background-color: var(--accent-2); }
+    #showcase-prev { left: -20px; }
+    #showcase-next { right: -20px; }
+    .showcase-footer { text-align: center; margin-top: 15px; color: #6d6660; font-weight: 600; }
+
+    /* --- Poll, Wizard & Mini-Game Styles --- */
+    .wizard-grid, .poll-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+    .wizard-step label, .poll-question { font-weight: bold; color: var(--accent-2); display: block; margin-bottom: 8px; }
+    .wizard-step select, .wizard-step input { width: 100%; background: #fff; color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 10px; font-size: 1rem; }
+    #wizard-output { background: #2d2d2d; color: #fff; padding: 15px; border-radius: 8px; border-left: 3px solid var(--ok); margin-top: 15px; grid-column: 1 / -1; }
+    .poll-option { background-color: var(--surface-soft); border: 1px solid var(--border); border-radius: 8px; padding: 12px; cursor: pointer; transition: background-color 0.2s; }
+    .poll-option:hover { background-color: var(--border); }
+    .poll-option .poll-label { font-weight: 600; }
+    .poll-result-bar { height: 10px; background-color: var(--accent-2); width: 0%; border-radius: 5px; transition: width 0.5s ease-in-out; }
+    .poll-percentage { font-size: 0.9rem; font-weight: bold; }
+    #game-image-container { width: 100%; height: 200px; background-size: cover; background-position: center; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border); }
+    #game-options { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .game-option-btn { padding: 10px 20px; font-size: 1rem; cursor: pointer; border-radius: 8px; border: 2px solid var(--accent); background: var(--surface); color: var(--accent-2); font-weight: bold; }
+    .game-option-btn:hover { background: var(--surface-soft); }
+
+    /* --- Quiz Styles --- */
+    .quiz-container{padding:20px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+    .quiz-navigation{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+    .quiz-body.active{display:block}
+    .quiz-options{display:grid; gap:12px;}
+    .quiz-option label{display:flex; align-items:center; gap:12px; padding:14px;border:2px solid var(--border);border-radius:8px;cursor:pointer;background:var(--surface-soft)}
+    .quiz-option input[type="radio"]{flex-shrink:0;}
+    .quiz-option .explanation{display:none;margin-top:10px;padding:15px;border-radius:6px;border-left:4px solid #a0aec0; background: var(--surface);}
+    .quiz-option.selected.correct label{background:var(--ok-soft);border-color:var(--ok); color: var(--ok);}
+    .quiz-option.selected.wrong label{background:var(--bad-soft);border-color:var(--bad); color: var(--bad);}
+    .quiz-option.correct .explanation{border-left-color:var(--ok);}
+    .quiz-option.wrong .explanation{border-left-color:var(--bad);}
+
+    /* --- RTC Quiz Styles --- */
+    .rtc-quiz-block { margin-bottom: 24px; }
+    .rtc-context { border-left: 4px solid var(--accent); background: var(--surface-soft); padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; line-height: 1.6; color: #5a2e1f; }
+    .rtc-sub-question { margin-left: 20px; margin-bottom: 16px; }
+    .rtc-sub-question p { font-weight: 600; }
+    .rtc-sub-question input[type="text"] { width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 6px; }
+
+    /* --- Glossary Styles --- */
+    .glossary-cloud{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px;justify-content:center}
+    .glossary-chip{position:relative;display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:var(--surface-soft);border:1px solid var(--border);color:var(--accent-2);font-weight:600;cursor:pointer;}
+    .glossary-chip:hover, .glossary-chip:focus{background:rgba(239,125,85,0.2);}
+    .chip-tip{position:fixed;z-index:101;min-width:240px;max-width:min(92vw,420px);background:var(--accent);color:#fff;padding:12px 14px;border-radius:12px;box-shadow:0 12px 28px rgba(239,125,85,0.35);opacity:0;visibility:hidden;transition:.15s;line-height:1.45}
+    .chip-tip.show{opacity:1;visibility:visible}
+    .chip-tip .arrow{position:absolute;width:12px;height:12px;background:var(--accent);transform:rotate(45deg)}
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+      <a href="#" class="logo">The Alchemist's Guide</a>
+      <nav>For Online Gamers</a></nav>
+  </header>
+
+  <div class="container">
+    
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="#">AI Art</a> &gt; <a href="#">Generative Tools</a> &gt; Adobe Firefly</nav>
+
+    <h1>The Alchemist's Guide to Adobe Firefly</h1>
+    <p class="byline">Creating Magical Casino Game Art from Zero to Hero</p>
+    <div class="article-meta"><span class="author-emoji">🔮</span><span>AI Art Expert &nbsp; | &nbsp; For Artists & Game Designers</span></div>
+    <p class="intro">Welcome, creator! In the ever-evolving world of game design, the ability to rapidly produce stunning, high-quality visuals is pure gold. Imagine possessing the power of an alchemist, turning simple text—mere words—into glittering slot symbols, epic backgrounds, and charismatic characters. That is the magic of Adobe Firefly. This guide is your spellbook, your comprehensive grimoire designed to take you from a curious apprentice to a master visual alchemist, transforming your creative process for the online casino world forever.</p>
+    
+    <section id="introduction">
+        <h2>Your First Masterpiece: From Bland to Brilliant</h2>
+        <p>Every magical journey begins with a single step. For us, that step is crafting a simple asset and watching it transform. Our quest: <strong>to create a magnificent jackpot icon for a new slot game, "Dragon's Hoard."</strong> We will start with a weak prompt and, step-by-step, infuse it with power by learning the core controls of Firefly, creating a clear learning arc from a bad result to a professional one.</p>
+        
+        <h3>Step 1: The Vague Incantation (The Prompt Bar)</h3>
+        <p>A beginner's first instinct is to be too simple when using the main <strong>Prompt bar</strong>.  This cedes all creative control to the AI, resulting in generic, uninspired visuals that are unusable in a real game. It's like asking an orchestra to "play music" without giving them a score.</p>
+        <div class="do-dont-grid">
+            <div class="dont-col">
+                <h5>❌ The Don't: A Vague Prompt</h5>
+                <p>A single, undefined concept gives the AI no direction on style, composition, or detail.</p>
+                <div class="code-block">"gold coin"</div>
+                <div class="img-frame"><img src="https://placehold.co/600x300/fff8f3/dc2626?text=Generic+Coin+Result" alt="A generic, uninteresting gold coin generated from a vague prompt."></div>
+            </div>
+            <div class="do-col">
+                <h5>✅ The Do: A Descriptive Prompt</h5>
+                <p>Specify the subject, key elements, material, and artistic style to guide the AI toward your vision.</p>
+                <div class="code-block">"A heavy gold coin, detailed dragon emblem in the center, ancient artifact, fantasy art"</div>
+                <div class="img-frame"><img src="https://placehold.co/600x300/fff8f3/16a34a?text=Detailed+Coin+Result" alt="A detailed, interesting gold coin with a dragon emblem, generated from a descriptive prompt."></div>
+            </div>
+        </div>
+
+        <h3>Step 2: Choosing Your Forge (Project Setup Panel)</h3>
+        <p>Before you hit 'Generate', you must choose your tools. In the Firefly interface, the right-hand panel is your setup area.  Here lie the most important foundational settings. For our "Dragon's Hoard" coin, we must make three key choices:</p>
+        <ul>
+            <li><strong>Model:</strong> Always select the latest Adobe model (e.g., <strong>Firefly Image 4</strong>). This ensures your creation is "Commercially Safe"—trained on licensed data and legally cleared for use in your game.</li>
+            <li><strong>Content Type:</strong> This is a critical switch. Since our coin is a fantastical object and not a real-world photo, we must select <strong>Art</strong>. This tells Firefly to think like an illustrator, not a photographer.</li>
+             <li><strong>Aspect Ratio:</strong> For an in-game icon, <strong>Square (1:1)</strong> is the perfect choice. This ensures our asset is perfectly framed from the start.</li>
+        </ul>
+        
+        <h3>Step 3: Amplifying the Magic (Fine-Tuning Controls)</h3>
+        <p>Now, we crank up the power. The <strong>Visual Intensity</strong> slider dictates how much artistic license the AI takes. For a jackpot icon that needs to pop, we slide it to the right for a higher intensity. Then, we add <strong>Effects</strong>. By browsing the Effects panel and adding tags like "Hyperrealistic" and "Cinematic," we give Firefly even more stylistic instruction.  </p>
+        <h4>The Final Spell & Result</h4>
+        <p>By combining our descriptive prompt with the correct settings, we transmute our bland concept into a treasure worthy of a jackpot.</p>
+        <div class="code-block">"A heavy gold coin, detailed dragon emblem in the center, ancient artifact, fantasy art, hyperrealistic, cinematic lighting, high contrast"</div>
+        <div class="img-frame"><img src="https://placehold.co/800x400/fff8f3/ef7d55?text=Final+Jackpot+Icon" alt="The final, professional-quality jackpot icon of a dragon coin."></div>
+        <p>This is the core learning arc: <strong>Detailed Prompt → Correct Settings → Stylistic Refinements.</strong> You have progressed from a novice to an apprentice, turning a vague idea into a tangible, high-quality game asset.</p>
+    </section>
+    
+    <section id="deep-dive-controls">
+      <h2>A Deeper Alchemy: Mastering the Fine-Tuning Controls</h2>
+      <p>True mastery lies in the details. The right-hand panel in Firefly is filled with powerful sliders and selectors that allow you to move from being a simple prompter to a true art director. Let's break down the most critical controls.</p>
+      
+      <h3>Composition, Color, and Lighting</h3>
+      <p>These three sections work together to define the mood and structure of your image.</p>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Control Panel</th><th>Function</th><th>Casino Game Use Case</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Composition Reference</strong></td>
+              <td>Upload an image to make Firefly copy its layout and structure. This is not about style, but about the placement of elements. A powerful use is to feed it a simple black and white sketch or a 3D blockout to guide the final composition, ensuring characters and objects are exactly where you want them.</td>
+              <td>✅ <strong>Do:</strong> Upload a rough sketch of a character pose to guide the AI. <br> ❌ <strong>Don't:</strong> Use it to copy a style; that's what Style Reference is for.</td>
+            </tr>
+            <tr>
+              <td><strong>Color and Tone</strong></td>
+              <td>Apply a global color scheme. 'Golden' infuses warm, yellow light, perfect for treasure themes. 'Cool Tone' adds blues and cyans for nighttime or underwater scenes. 'Pastel' creates soft, low-saturation visuals ideal for a more casual or friendly game aesthetic.</td>
+              <td>✅ <strong>Do:</strong> Use 'Golden' to give all assets for a "Pharaoh's Gold" game a consistent, warm palette. <br> ❌ <strong>Don't:</strong> Rely on this alone; your prompt should still mention key colors.</td>
+            </tr>
+            <tr>
+              <td><strong>Lighting</strong></td>
+              <td>Set the lighting style. 'Dramatic Light' creates high contrast and deep shadows, perfect for a high-stakes poker scene. 'Studio Light' provides clean, even illumination ideal for clear, readable UI elements and symbols. 'Golden Hour' gives a soft, warm, late-afternoon glow for inviting backgrounds.</td>
+              <td>✅ <strong>Do:</strong> Use 'Dramatic Light' for a high-stakes, noir-themed poker game background. <br> ❌ <strong>Don't:</strong> Use 'Studio Light' for an outdoor jungle scene, as it will look unnatural.</td>
+            </tr>
+            <tr>
+              <td><strong>Camera Angle</strong></td>
+              <td>Choose a virtual camera shot. 'Shot from below' makes a subject look powerful and imposing. 'Shot from above' can make a scene feel strategic, like a tabletop game. 'Closeup' and 'Macrophotography' are essential for creating highly detailed icons and symbols that capture the player's eye.</td>
+              <td>✅ <strong>Do:</strong> Use 'Shot from below' to make a final boss character look intimidating and powerful. <br> ❌ <strong>Don't:</strong> Use 'Wide Angle' for a UI icon, as the details will be too small.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+    <section id="interactive-wizards">
+        <h2>The Alchemist's Lab: Interactive Catalysts</h2>
+        <p>Theory is one thing, but alchemy is a practical art. These interactive tools will help you mix your own potions and see the results instantly, accelerating your learning from hours to minutes.</p>
+        
+        <div class="interactive-box">
+            <h3>Style Combination Wizard</h3>
+            <p>Stuck in a creative rut? This wizard helps you discover unique visual styles by combining different artistic Effects. See what happens when you mix Cubism with Cyberpunk!</p>
+            <div id="prompt-wizard" class="wizard-grid">
+                 <div class="wizard-step">
+                    <label for="wizard-subject">1. Choose a Base Subject</label>
+                     <select id="wizard-subject">
+                        <option>A majestic slot machine reel symbol, lion head</option>
+                        <option>A charismatic pirate captain character</option>
+                        <option>A shiny 'Spin' UI button</option>
+                        <option>A jackpot icon of a diamond</option>
+                        <option>An epic background of a fantasy kingdom</option>
+                        <option>A 'WILD' symbol made of electricity</option>
+                        <option>A set of futuristic poker chips</option>
+                        <option>A game logo for 'Cosmic Cash'</option>
+                    </select>
+                </div>
+                <div class="wizard-step">
+                    <label for="wizard-style">2. Choose a Core Style (Movement)</label>
+                    <select id="wizard-style">
+                        <option value="art deco style">Art Deco</option>
+                        <option value="art nouveau, flowing lines">Art Nouveau</option>
+                        <option value="bauhaus">Bauhaus</option>
+                        <option value="cubism">Cubism</option>
+                        <option value="cyberpunk">Cyberpunk</option>
+                        <option value="fantasy art">Fantasy</option>
+                        <option value="film noir">Film Noir</option>
+                        <option value="impressionism">Impressionism</option>
+                        <option value="industrial">Industrial</option>
+                        <option value="maximalism">Maximalism</option>
+                        <option value="minimalism">Minimalism</option>
+                        <option value="psychedelic">Psychedelic</option>
+                        <option value="science fiction">Science Fiction</option>
+                        <option value="steampunk, intricate clockwork">Steampunk</option>
+                        <option value="surrealism">Surrealism</option>
+                    </select>
+                </div>
+                <div class="wizard-step">
+                    <label for="wizard-details">3. Add a Technique or Material</label>
+                     <select id="wizard-details">
+                        <option value="watercolor painting">Watercolor</option>
+                        <option value="layered paper">Layered Paper</option>
+                        <option value="made of metal">Made of Metal</option>
+                        <option value="neon">Neon</option>
+                        <option value="isometric">Isometric</option>
+                        <option value="acrylic paint">Acrylic Paint</option>
+                        <option value="bold lines">Bold Lines</option>
+                        <option value="chiaroscuro">Chiaroscuro</option>
+                        <option value="doodle drawing">Doodle Drawing</option>
+                        <option value="halftone">Halftone</option>
+                        <option value="sketch">Sketch</option>
+                        <option value="bioluminescence">Bioluminescence</option>
+                        <option value="bokeh effect">Bokeh Effect</option>
+                        <option value="claymation">Claymation</option>
+                        <option value="yarn">Made of Yarn</option>
+                    </select>
+                </div>
+                <div id="wizard-output"><pre><code id="wizard-code">A majestic slot machine reel symbol, lion head, art deco style, watercolor painting</code></pre></div>
+            </div>
+        </div>
+        
+        <div class="interactive-box">
+            <h3>Community Poll: Your Biggest AI Art Challenge</h3>
+            <p>You're not alone on this journey! What is the biggest hurdle you face when trying to create the perfect image? Vote below to see what your fellow alchemists are struggling with.</p>
+            <div id="poll" class="poll-container">
+                <div class="poll-question">What's your biggest challenge with AI art?</div>
+                <div id="poll-options">
+                    <div class="poll-option" data-option="prompting"><span class="poll-label">Writing Good Prompts</span><div class="poll-result"><span class="poll-percentage"></span><div class="poll-result-bar"></div></div></div>
+                    <div class="poll-option" data-option="consistency"><span class="poll-label">Getting Consistent Results</span><div class="poll-result"><span class="poll-percentage"></span><div class="poll-result-bar"></div></div></div>
+                    <div class="poll-option" data-option="settings"><span class="poll-label">Understanding All the Settings</span><div class="poll-result"><span class="poll-percentage"></span><div class="poll-result-bar"></div></div></div>
+                    <div class="poll-option" data-option="originality"><span class="poll-label">Creating a Unique Style</span><div class="poll-result"><span class="poll-percentage"></span><div class="poll-result-bar"></div></div></div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section id="showcase-section">
+        <h2>The Gallery of Wonders: 20 Asset Examples</h2>
+        <p>The best way to learn is by studying masterworks. This gallery showcases 20 practical examples of casino assets. Use the arrows to navigate, and click the copy button to steal the secret spell for yourself.</p>
+        <div class="interactive-box">
+            <div class="prompt-showcase">
+                <div class="showcase-image-wrapper">
+                    <img id="showcase-image" src="" alt="Generated AI art example for casino games" class="showcase-image">
+                </div>
+                <div class="showcase-prompt-area">
+                    <div class="showcase-prompt-header">
+                        <h5 id="showcase-title"></h5>
+                        <button id="showcase-copy-btn" title="Copy current prompt">📋 Copy</button>
+                    </div>
+                    <p id="showcase-prompt-text" class="showcase-prompt-text"></p>
+                </div>
+                <button id="showcase-prev" class="showcase-nav">‹</button>
+                <button id="showcase-next" class="showcase-nav">›</button>
+            </div>
+             <div class="showcase-footer">
+                <span id="showcase-counter">1 / 20</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="quiz-main">
+        <h2>The Oracle's Wisdom: Knowledge Checks</h2>
+        <h3>Test Your Knowledge: Mastery Quiz</h3>
+        <p>You've studied the spellbook. Now, face the Oracle to test your newfound knowledge. These 12 questions will challenge your understanding of Firefly's core concepts and features.</p>
+        <div class="quiz-container">
+            <div class="quiz-navigation"><button class="btn" id="mainPrevBtn">❮</button><span class="question-counter"><span id="mainCurrentQ">1</span> of 12</span><button class="btn" id="mainNextBtn">❯</button></div>
+            <div id="quiz-body-container"></div>
+        </div>
+    </section>
+
+    <section id="faq">
+        <h2>Frequently Asked Questions</h2>
+        <div id="faq-accordion-container"></div>
+    </section>
+
+    <section id="glossary-section">
+      <h2>The Grimoire of Terms</h2>
+      <p>Every magical art has its own language. Hover over these terms to reveal their meaning and master the vocabulary of a true AI alchemist.</p>
+      <div class="glossary-cloud" id="glossaryCloud"></div>
+    </section>
+
+    <section id="rtc-quizzes">
+        <h2>The Alchemist's Final Exam: Contextual Challenges</h2>
+        <p>True mastery is about applying knowledge in real-world scenarios. Read the following contexts and answer the questions to prove you are a true master alchemist.</p>
+        <div id="rtc-quiz-container"></div>
+    </section>
+
+  </div>
+
+  <footer class="site-footer">
+    <p>© 2025 Beyond Dictionary. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // --- DATA (Single Source of Truth) ---
+      const quizQuestions = [
+            { q: "You need a realistic casino lobby background. Which 'Content Type' is the best starting point?", correct: 0, options: [ { text: "Photo", explanation: "✅ Correct! 'Photo' mode is specifically tuned to generate images that mimic real-world photography. This is your go-to for creating believable environments, objects, and textures that look like they were captured by a camera, making it ideal for a realistic setting." }, { text: "Art", explanation: "Incorrect. 'Art' mode is designed for illustrative styles like painting or cartoons. While powerful, it would work against your goal of photorealism, likely producing something more stylized or painterly instead of a lifelike lobby." }, { text: "Auto", explanation: "Incorrect. While 'Auto' can be a good starting point if you're unsure, it might misinterpret your prompt. For a clear goal like photorealism, explicitly selecting 'Photo' gives you far more precise control over the final output and ensures the AI prioritizes realism." }, { text: "None of the above", explanation: "Incorrect. The 'Photo' setting is the exact tool designed for this purpose in Firefly, giving you the best chance at generating a high-quality, realistic image." } ] },
+            { q: "What does Firefly's 'commercially safe' label mean for a casino game designer?", correct: 2, options: [ { text: "The images are free to use.", explanation: "Incorrect. While the content is legally cleared, usage is still governed by your Adobe subscription, which includes a set number of generative credits. The 'safe' part refers to the legal status, not the cost." }, { text: "The AI model is less powerful.", explanation: "Incorrect. 'Commercially safe' refers to the legal and ethical sourcing of the training data. The power and quality of the model are independent of this label; in fact, Adobe's latest models are both safe and extremely capable." }, { text: "The AI was trained on licensed data, reducing legal risks.", explanation: "✅ Correct! This is the core benefit. Firefly is trained on Adobe Stock and public domain content, which means you can use the generated assets in commercial projects with significantly reduced risk of copyright infringement claims." }, { text: "The images are low resolution.", explanation: "Incorrect. The resolution of the output is a separate setting and is not related to the commercial safety of the model. You can generate high-resolution, commercially safe images." } ] },
+            { q: "Which feature is best for ensuring all your game's characters have a consistent art style?", correct: 3, options: [ { text: "Generative Fill", explanation: "Incorrect. Generative Fill is a powerful editing tool for changing parts of an existing image, but it doesn't enforce a consistent style across completely new generations." }, { text: "Effects Panel", explanation: "Incorrect. The Effects panel applies general stylistic keywords (like 'Steampunk' or 'Neon'). While helpful, it can't match the specific, unique nuances of your game's established art direction." }, { text: "Prompt Enhancement", explanation: "Incorrect. This feature improves a single prompt by adding detail, but it doesn't have memory or knowledge of your previous creations, so it cannot ensure consistency between them." }, { text: "Style Reference", explanation: "✅ Correct! This feature is specifically designed for style consistency. By uploading an image that represents your game's art style, you guide Firefly to create all subsequent images with a similar color palette, texture, and overall aesthetic." } ] },
+            { q: "What is the Firefly equivalent of Midjourney's `--stylize` or `--s` command?", correct: 1, options: [ { text: "The Model Selector", explanation: "Incorrect. The Model Selector changes the entire AI 'brain' being used for generation, which is a much broader control than adjusting the level of artistic interpretation for a single image." }, { text: "The Visual Intensity slider", explanation: "✅ Correct! This slider directly controls how much artistic liberty the AI takes. A low intensity forces the AI to stick closely to your prompt (like low --stylize), while a high intensity allows it to be more creative and stylized." }, { text: "The Effects panel", explanation: "Incorrect. The Effects panel adds specific stylistic keywords. While a high stylization might be an *outcome* of using certain effects, the Visual Intensity slider is the direct control for the *degree* of stylization itself." }, { text: "Content Type toggle", explanation: "Incorrect. The Content Type toggle sets the fundamental category of the output (Art vs. Photo) rather than the intensity of the style being applied within that category." } ] },
+            { q: "You want to add a pile of gold coins to an existing image of a treasure chest inside Photoshop. Which tool should you use?", correct: 0, options: [ { text: "Generative Fill", explanation: "✅ Correct! This is the perfect use case for Generative Fill. You make a selection where you want the coins to appear and provide a simple text prompt like 'a pile of gold coins.' Firefly will then generate the coins seamlessly into that area." }, { text: "Style Reference", explanation: "Incorrect. Style Reference is used in the main Firefly web app to influence the artistic style of a new generation from scratch, not for adding elements to an existing image within Photoshop." }, { text: "The Clone Stamp tool", explanation: "Incorrect. The Clone Stamp is a traditional Photoshop tool used for copying existing pixels from one area to another. It cannot create new, original content like a pile of coins." }, { text: "The Prompt Wizard", explanation: "Incorrect. The Prompt Wizard is a tool within this guide to help you build text prompts; it is not a feature for editing images inside Photoshop." } ] },
+            { q: "What is the purpose of a 'negative prompt'?", correct: 2, options: [ { text: "To make the image look sad or negative.", explanation: "Incorrect. A negative prompt is a technical instruction for exclusion, and it has no connection to the emotional mood or tone of the image. The mood is controlled by positive keywords in the main prompt." }, { text: "To reverse the colors of the image.", explanation: "Incorrect. Inverting or reversing colors is a separate image editing process. A negative prompt is used during the generation phase to control the content, not the final color palette." }, { text: "To tell the AI what elements to exclude from the image.", explanation: "✅ Correct! This feature gives you crucial control by allowing you to specify concepts you don't want to see. For example, adding 'text, words' to the negative prompt helps prevent the AI from generating unwanted typography." }, { text: "To make the prompt less powerful.", explanation: "Incorrect. A negative prompt actually makes your overall instruction *more* powerful and precise by refining the boundaries of what is acceptable in the final output." } ] },
+            { q: "How does Firefly's `Generative Expand` in Photoshop help in creating marketing banners?", correct: 1, options: [ { text: "It automatically adds marketing text.", explanation: "Incorrect. Generative Expand creates new image pixels to enlarge the canvas; it does not generate or add text layers. Text must still be added using Photoshop's Type Tool." }, { text: "It can change a vertical image to a wide banner by generating new content.", explanation: "✅ Correct! This is its primary function. You can extend the canvas to any new aspect ratio, and Generative Expand will intelligently fill the new, empty space with content that seamlessly matches the existing image." }, { text: "It increases the resolution of the image.", explanation: "Incorrect. While Adobe has upscaling features, the specific purpose of Generative Expand is to add new content to the canvas area, not to increase the pixel density of the existing image." }, { text: "It creates a video animation from the banner.", explanation: "Incorrect. Generative Expand is a tool for still images within Photoshop and is not used for creating animations. That would require a different toolset, like Adobe After Effects." } ] },
+            { q: "Which of these is NOT a category in the Firefly 'Effects' panel?", correct: 3, options: [ { text: "Techniques (e.g., Watercolor)", explanation: "Incorrect. 'Techniques' is a valid and useful category that allows you to mimic specific art creation methods like watercolor, woodcut, or layered paper, giving your image a tangible, handcrafted feel." }, { text: "Themes (e.g., Sci-Fi)", explanation: "Incorrect. 'Themes' is a valid category for applying broad conceptual styles. It's a great shortcut for establishing a genre for your asset, such as 'Sci-Fi', 'Fantasy', or 'Biopunk'." }, { text: "Materials (e.g., Brushed Metal)", explanation: "Incorrect. 'Materials' is a valid category used to give your subject a specific texture or surface property. This is incredibly useful for UI elements, allowing you to create buttons made of 'Felt' or 'Brushed Metal'." }, { text: "Characters (e.g., Hero, Villain)", explanation: "✅ Correct! While you would describe a hero or villain in your text prompt, there is no 'Characters' category within the Effects panel. The panel is for styles, themes, and techniques, not for specific character archetypes." } ] },
+            { q: "In the Midjourney vs. Firefly comparison, which platform has the stronger claim for 'commercially safe' outputs?", correct: 0, options: [ { text: "Adobe Firefly", explanation: "✅ Correct! Adobe's explicit training on the licensed Adobe Stock library and public domain content is a cornerstone of its design. This provides a level of legal indemnity that is a major advantage for commercial and enterprise users." }, { text: "Midjourney", explanation: "Incorrect. While Midjourney's terms allow for commercial use (with a paid plan), the specifics of its training data are not as transparent as Adobe's, which can introduce a higher level of potential legal risk for large-scale commercial projects." }, { text: "They are both equal.", explanation: "Incorrect. Their approach to training data is fundamentally different. Adobe's focus on a 'clean' and licensed dataset gives Firefly a distinct and marketable advantage in the area of commercial safety and legal peace of mind." }, { text: "Neither is commercially safe.", explanation: "Incorrect. Both platforms can be used for commercial work under their respective terms. However, Firefly was specifically engineered from the ground up to address and minimize the legal and ethical concerns surrounding AI training data." } ] },
+            { q: "What is the best way to get a 'shot from below' or 'worm's-eye view' of a giant slot machine?", correct: 2, options: [ { text: "Describe it in the prompt.", explanation: "Incorrect. While you can and should describe this in the prompt, Firefly provides a much more direct and reliable tool. Relying on the prompt alone for camera angles can lead to inconsistent results." }, { text: "Use the Lighting panel.", explanation: "Incorrect. The Lighting panel controls the direction and quality of light within the scene (e.g., 'Studio Light,' 'Golden Hour'), but it does not change the virtual camera's position or perspective." }, { text: "Use the Camera Angle selector.", explanation: "✅ Correct! The Camera Angle menu has specific presets like 'Shot from below' and 'Shot from above.' Using this setting gives the AI a clear, unambiguous instruction on the desired perspective, yielding far more consistent results." }, { text: "Increase the Visual Intensity.", explanation: "Incorrect. Visual Intensity controls the strength of the applied styles and effects. It has no impact on the composition, perspective, or camera angle of the generated image." } ] },
+            { q: "What happens if you use `Generative Fill` on a selection in Photoshop without writing a prompt?", correct: 1, options: [ { text: "It shows an error message.", explanation: "Incorrect. An empty prompt is a valid and powerful command in Firefly's workflow. The system is designed to interpret this as a specific instruction rather than an error." }, { text: "It removes the object in the selection and fills the area based on surroundings.", explanation: "✅ Correct! This is the AI-powered equivalent of Photoshop's classic 'Content-Aware Fill.' An empty prompt tells Firefly to remove what's in the selection and intelligently generate new content that seamlessly matches the surrounding area." }, { text: "It fills the area with a random pattern.", explanation: "Incorrect. Unlike a simple fill tool, Firefly analyzes the pixels just outside the selection to generate a plausible and contextually aware replacement, rather than a generic or random pattern." }, { text: "It does nothing.", explanation: "Incorrect. The tool will execute a command even without text. In this case, the command is to remove the content within the selection and replace it with a logical background." } ] },
+            { q: "The Firefly feature that allows you to upload an image to influence the *layout and structure* of your generation is called:", correct: 0, options: [ { text: "Composition Reference", explanation: "✅ Correct! This feature specifically uses your uploaded image as a structural blueprint. Firefly will attempt to arrange the elements of its new generation in a layout that mirrors the composition of your reference image." }, { text: "Style Reference", explanation: "Incorrect. Style Reference is equally powerful but serves a different purpose. It analyzes the colors, textures, lighting, and overall artistic 'vibe' of your reference image, not its structural layout or the placement of objects within it." }, { text: "Generative Match", explanation: "Incorrect. While this sounds like a plausible name, it is not an actual feature within the Adobe Firefly toolset. The correct terms are Style Reference and Composition Reference." }, { text: "Image Prompt", explanation: "Incorrect. 'Image Prompt' is a term more commonly associated with other platforms like Midjourney. Adobe has intentionally separated this concept into two more granular tools (Style and Composition) to give artists more precise control." } ] }
+      ];
+      const faqs = {
+          "Adobe Firefly Deep Dive (15 FAQs)": [
+              { q: "What exactly is Adobe Firefly and how is it different from stock photos?", a: "Adobe Firefly is a <strong>generative AI tool</strong> that creates brand new, unique images from text descriptions called prompts. This is fundamentally different from stock photography, where you search a library of pre-existing images. With Firefly, you are the director, creating a custom visual on demand. This provides unparalleled creative freedom and specificity, allowing you to generate the exact asset you need rather than settling for the closest match in a stock library. For game designers, this means creating perfectly themed assets instead of trying to adapt existing ones." },
+              { q: "What does 'commercially safe' mean and why is it crucial for casino games?", a: "This is arguably Firefly's most important feature for professional use. 'Commercially safe' means Firefly's primary models are trained on Adobe's vast library of licensed Adobe Stock content, open-licensed work, and public domain images where the copyright has expired. This significantly reduces the legal risks of copyright infringement. For a casino game company creating a commercial product for real money, this is a massive advantage, as it provides a layer of legal indemnity and peace of mind that the assets you generate won't inadvertently contain someone else's protected intellectual property." },
+              { q: "How do Firefly 'credits' work, and what consumes them?", a: "Generative credits are the currency you use to perform actions in Firefly. Think of them as tokens. A standard image generation typically costs one credit. However, some actions, like using newer 'Ultra' models or future features like high-resolution upscaling, might consume credits at a different rate. These credits are part of your Adobe Creative Cloud subscription and are refreshed monthly. They are Adobe's way of managing the immense computational cost of running these AI models, ensuring fair access for all users based on their plan." },
+              { q: "Can I use the art I create for a real money-making slot game?", a: "<strong>Yes.</strong> According to Adobe's current terms of service, images generated with Firefly can be used for commercial purposes. The entire 'commercially safe' framework was designed specifically for professionals and businesses to use Firefly in their projects without the legal ambiguity that can sometimes surround other AI tools. This makes it an ideal choice for a regulated industry like online gaming, where intellectual property and legal clarity are paramount. Always check the latest Adobe terms to stay up to date." },
+              { q: "What's the absolute best model to use for generating high-quality game assets?", a: "For professional game assets, you should almost always default to the <strong>latest proprietary Adobe Firefly Image model</strong> (e.g., 'Firefly Image 4' or a future 'Firefly Image 5'). These models represent the pinnacle of Adobe's development in quality, realism, and creative control. More importantly, they carry the 'commercially safe' guarantee. While partner models can offer interesting stylistic variations, they may not have the same level of legal indemnity, making the official Adobe models the safer and generally more capable choice for production assets." },
+              { q: "How do I keep a character's face and costume consistent across multiple images?", a: "This is the holy grail of AI art and requires a two-pronged approach. First, use the <strong>Style Reference</strong> feature. Generate your ideal character once, and then use that image as the Style Reference for all subsequent generations. Second, maintain an extremely detailed and consistent text prompt. Use a text file to save the 'master prompt' for your character, detailing specifics like 'silver hair in a high ponytail, emerald green eyes, a small scar on her left cheek, wearing a leather bodice with gold trim.' Re-using this exact description combined with the Style Reference gives you the highest chance of achieving consistency." },
+              { q: "What’s the difference between `Style Reference` and `Composition Reference`?", a: "They are two distinct but powerful tools for controlling the AI's output. <strong>Style Reference</strong> learns the <em>artistic feel</em> of an image—its color palette, texture, lighting, brush strokes, and overall mood. It answers the question, 'What should this look like?' In contrast, <strong>Composition Reference</strong> learns the <em>structural layout</em> of an image—where the main subjects are placed, the camera angle, and the overall arrangement. It answers the question, 'How should this be structured?' You can even use them together: one image for the style, and a different one for the composition, giving you incredible creative control." },
+              { q: "My images look too generic. How do I develop a unique, signature art style?", a: "To break free from generic results, you need to give the AI more specific instructions. First, combine multiple tags from the <strong>Effects Panel</strong>; for example, don't just use 'Steampunk,' combine it with 'Art Deco' to create a unique fusion. Second, use more advanced artistic terms in your prompt, such as 'chiaroscuro lighting,' 'bold outlines,' or naming specific art movements. The most powerful method is using <strong>Style Reference</strong>. Find or create an image that has the exact aesthetic you love and use it as a reference to force Firefly into your desired unique style." },
+              { q: "What are the best practices for writing a 'negative prompt' to remove unwanted elements?", a: "Firefly has a dedicated 'Exclude from image' field, which functions as a negative prompt. The key is to be simple, direct, and conceptual. For instance, if you're getting unwanted text, don't write a long sentence; simply add keywords like <strong>'text, words, letters, typography'</strong>. If you are getting malformed hands on characters, add <strong>'mutated hands, extra fingers, poorly drawn hands'</strong>. Think of it as a list of 'banned ingredients' for your visual recipe. This is far more effective than trying to describe the absence of something in your main prompt." },
+              { q: "How can `Generative Fill` fix a flawed image without having to start over?", a: "<strong>Generative Fill</strong>, especially within Photoshop, is your ultimate revision tool. It allows for surgical precision. Instead of re-rolling an entire image because one small part is wrong (like a character's hand or a misplaced object), you can simply select that flawed area with the Lasso tool. Then, you can either leave the prompt blank to have Firefly intelligently remove and replace it based on the surroundings, or you can type a new prompt (e.g., 'a perfectly drawn hand holding a playing card') to regenerate just that tiny selection. This iterative process saves an enormous amount of time and effort." },
+              { q: "How can I use Firefly to generate tileable or seamless textures for 3D models?", a: "While Firefly doesn't currently have a one-click 'Make Tileable' button, you can get excellent results by including specific keywords in your prompt. Use phrases like <strong>'seamless texture,' 'repeating pattern,' 'tileable,'</strong> and describe the material (e.g., 'ancient stone floor tiles, seamless texture, repeating pattern'). After generating, the best practice is to bring the image into Photoshop and use the `Filter > Other > Offset` tool. This allows you to see the seams and use Generative Fill or the Clone Stamp tool to clean them up, creating a perfect, production-ready tileable texture." },
+              { q: "What are the best settings for creating transparent PNGs of symbols or characters?", a: "The most reliable method is a two-step process. First, in Firefly, generate your asset on a simple, high-contrast background. A prompt like <strong>'a golden crown, game asset, on a solid white background'</strong> works perfectly. This gives the AI a clear distinction between the subject and the background. Then, open the downloaded image in Photoshop. Use the one-click <strong>'Remove Background'</strong> action in the Properties panel. Photoshop's AI is incredibly effective at creating a precise mask, leaving you with a clean asset on a transparent layer that you can save as a PNG." },
+              { q: "How does Firefly handle complex concepts like specific emotional expressions or dynamic poses?", a: "It handles them through descriptive language, and its capabilities are constantly improving. For emotions, you need to be more evocative than simple words. Instead of 'happy face,' try <strong>'face showing an ecstatic, joyful expression, eyes wide with excitement.'</strong> For poses, be a cinematographer. Don't just say 'fighting warrior'; describe the action and the camera shot: <strong>'full body shot of a warrior lunging forward with a sword, seen from a dynamic low angle, motion blur.'</strong> The more detail you provide, the better the result will be." },
+              { q: "Can I train a custom Firefly model on my own game's art style?", a: "As of late 2025, Adobe has not released a feature for individual users to train their own custom models. This functionality is more common in open-source tools like Stable Diffusion. However, the professional workaround in Firefly is to lean heavily on the <strong>Style Reference</strong> feature. By creating a 'style guide' image that contains your key colors, textures, and character art, and using it consistently as your Style Reference, you can effectively guide Firefly to produce on-brand results without custom training. It's a powerful way to simulate a custom model's output." },
+              { q: "Beyond asset creation, how can Firefly speed up my mood boarding and concepting process?", a: "This is one of Firefly's hidden superpowers for art directors and designers. Before any detailed asset creation begins, you can use Firefly for rapid ideation. In just a few minutes, you can generate dozens of variations for a game's theme, a character's costume, or a background environment. For example, you could explore 'Mayan jungle casino,' 'steampunk poker room,' and 'art deco slot machine' visually in the time it would take to write a creative brief. This allows you to establish a strong, client-approved visual direction at the very start of a project, saving countless hours of manual concept art." }
+          ],
+          "Midjourney vs. Firefly (10 FAQs)": [
+              { q: "What is the Firefly equivalent of Midjourney's `--stylize` or `--s` command?", a: "The direct equivalent is the <strong>Visual Intensity</strong> slider in the Firefly control panel. It functions on the same principle: a low value (slider to the left) instructs the AI to adhere very closely to your prompt, much like a low `--stylize` value. A high value (slider to the right) gives the AI more creative freedom to interpret your prompt with its own aesthetic flair, similar to a high `--stylize` value. For artists coming from Midjourney, this slider will be your primary tool for controlling the artistic strength of the output." },
+              { q: "How do I control Aspect Ratio (`--ar`) in Firefly?", a: "Firefly makes this very user-friendly. Instead of a text command like `--ar 16:9`, there is a dedicated <strong>Aspect Ratio</strong> dropdown menu in the control panel. It includes presets for common ratios like `Square (1:1)`, `Portrait (9:16)`, and `Widescreen (16:9)`. This visual interface is often faster for artists who prefer not to memorize text commands and want to see their options clearly laid out. For non-standard ratios, you can use the Generative Expand feature in Photoshop." },
+              { q: "Does Firefly have a feature similar to Midjourney's `Pan`, `Zoom`, or `Vary (Region)`?", a: "<strong>Yes</strong>, but these powerful features are primarily integrated within Photoshop, which is a key part of the Adobe ecosystem workflow. <strong>`Generative Expand`</strong> is Firefly's version of Pan and Zoom Out, allowing you to extend the canvas in any direction. <strong>`Generative Fill`</strong> used on a specific selection is the direct equivalent of Vary (Region), giving you the power to re-roll and change just one part of the image while keeping the rest locked. This layer-based, non-destructive editing is a major workflow advantage." },
+              { q: "How do I achieve the effect of prompt weights (e.g., `King::2 cat::-1`) in Firefly?", a: "Firefly does not use the `::` numerical weighting syntax. Instead, it relies on natural language and prompt structure to understand emphasis. To increase the importance of an element, place it earlier in the prompt and use more descriptive adjectives. To de-emphasize something, place it later and describe it simply. For example, instead of weights, you would write: <strong>'A portrait of a majestic, powerful king on a golden throne. In the background, there is a small black cat.'</strong> The detailed description and primary placement give the king his 'weight'." },
+              { q: "What is Firefly's version of Midjourney's `--style raw` for photorealism?", a: "The direct equivalent is a two-part setting in the Firefly controls. First, you set the <strong>Content Type</strong> to <strong>Photo</strong>. This tells the model to access its photographic training data and principles. Second, you keep the <strong>Visual Intensity</strong> slider at a low to medium level. This combination instructs the AI to prioritize realism and avoid adding any strong artistic stylization, much like the purpose of Midjourney's `--style raw` command. It's the go-to setting for creating lifelike images." },
+              { q: "Is Firefly's 'commercially safe' model a major advantage over Midjourney for a casino company?", a: "<strong>Yes, unequivocally.</strong> For any corporate entity, especially in a regulated industry like gaming, this is Firefly's killer feature. The legal indemnity provided by Adobe, based on their model being trained on the licensed Adobe Stock library, is a massive risk-reduction tool. While Midjourney's terms allow commercial use with a paid plan, the less transparent nature of its training data presents a potential, if small, legal ambiguity. For a company's legal department, the clarity and safety of Firefly's approach is a significant and often decisive advantage." },
+              { q: "How does the `Style Reference` in Firefly compare to using an image prompt in Midjourney?", a: "They are similar in concept but Firefly offers more granular control. In Midjourney, a single image prompt influences the composition, color, and style all at once. Adobe has intelligently separated this into two more precise tools: <strong>Style Reference</strong>, which focuses purely on the aesthetic (color, texture, mood), and <strong>Composition Reference</strong>, which focuses purely on the structural layout. This separation allows an artist to, for example, take the style from a painting but the composition from a photograph, offering a higher degree of creative control than a single image prompt." },
+              { q: "Which platform is generally faster for iterating on a single concept?", a: "For initial ideation (generating four options at once), Midjourney's grid-based system is very fast. However, for <strong>refining and perfecting</strong> a single image, Firefly's integration with Photoshop is often much faster. The ability to use <strong>Generative Fill</strong> to fix a small error (like a character's hand) without re-rolling the entire image is a game-changing workflow advantage. This iterative, layer-based editing is something Midjourney's workflow cannot match, making Firefly superior for the final stages of asset production." },
+              { q: "Can Firefly replicate the specific artistic 'vibe' or aesthetic of the Midjourney models?", a: "It can get close, but it cannot perfectly replicate it. Each AI model platform has a unique 'fingerprint' based on its specific training data, algorithms, and post-processing. Midjourney's models often have a distinct, highly-detailed, and sometimes dramatic aesthetic. Firefly's models tend to be slightly more grounded and aligned with the clean, professional look of Adobe Stock. An expert can often tell which platform an image came from. The goal is not to replicate, but to master the unique strengths of the tool you are using." },
+              { q: "Is the prompting style different? Do I need to learn a new way of 'talking' to the AI?", a: "<strong>Yes, slightly.</strong> While both respond to keywords, they have different preferences. Midjourney often excels with a 'bag of keywords' approach, where you list stylistic terms separated by commas (e.g., `fantasy art, intricate, hyperdetailed, cinematic`). Firefly, on the other hand, responds exceptionally well to more natural, descriptive sentences, as if you were instructing a human artist. For example: <strong>'A fantasy art painting of a king, with intricate and hyperdetailed armor, in a cinematic style.'</strong> Thinking in full sentences can often yield better results in Firefly." }
+          ],
+          "Photoshop & Firefly Integration (10 FAQs)": [
+              { q: "What is the difference between using Firefly on the web versus inside Photoshop?", a: "Think of it as two parts of the same workflow. The <strong>Firefly web UI</strong> is your generative sandbox. It's best for creating entire images from scratch, experimenting with styles using Style Reference, and rapid brainstorming. The <strong>Photoshop integration</strong> is your surgical editing suite. It's for adding, removing, or expanding content within an existing, complex project. You use the web UI to create your core assets, and Photoshop to seamlessly integrate and refine them into your final composition." },
+              { q: "How does `Generative Fill` in Photoshop work, and is it powered by the same Firefly model?", a: "<strong>Yes</strong>, it is powered by the same family of core Firefly Image models. It works by analyzing the context of your image. When you make a selection and type a prompt, it considers the pixels just outside your selection to understand the lighting, perspective, and style. It then generates new content that matches that context and places it on a new, non-destructive layer. This seamless blending and layer-based workflow is what makes it so powerful for designers." },
+              { q: "Can I use a `Style Reference` inside Photoshop's Generative Fill?", a: "As of late 2025, this highly requested feature is not yet fully implemented in the main public version of Photoshop. The `Style Reference` tool remains a feature of the Firefly web UI. The current professional workflow is to generate assets that match your desired style in the web UI first, and then bring those assets into Photoshop for compositing and editing with Generative Fill. Adobe is known to be working on bridging this gap, so keep an eye on updates." },
+              { q: "What's the best way to move an asset from Firefly's web UI into my Photoshop project with layers?", a: "The most efficient workflow is to generate the asset on a plain, high-contrast background (like solid white or black) in the Firefly web UI. Download the highest resolution version of that image. Open it in Photoshop, and then use the one-click <strong>'Remove Background'</strong> button in the contextual Properties panel. Photoshop's AI selection tools are incredibly powerful and will typically give you a perfectly masked asset on its own transparent layer, ready to be dragged into your main project file." },
+              { q: "Can I select an area in Photoshop and write a prompt to *only* change that area?", a: "<strong>Yes</strong>, that is the exact purpose of <strong>Generative Fill</strong>. You can use any of Photoshop's selection tools (Lasso, Marquee, Object Selection Tool, etc.) to precisely define the area you want to alter. Once you have a selection, the contextual bar will appear with the Generative Fill button. Whatever prompt you enter will only affect the pixels inside your selection, leaving the rest of your image completely untouched. This allows for incredibly precise and targeted editing." },
+              { q: "How can I use Firefly to create complex backgrounds and then composite my Photoshop characters into them?", a: "This is a top-tier professional workflow that saves massive amounts of time. Use the Firefly web UI to generate a dozen different background concepts based on your theme, far faster than you could paint them. Choose the best one and bring it into your main Photoshop document as the base layer. Then, place your character, which you may have drawn or edited separately in Photoshop, on a layer above the background. Finally, use Photoshop's traditional tools like adjustment layers (Curves, Color Balance) and soft brushes to match the lighting and color, making the composite look perfectly seamless." },
+              { q: "What's the most efficient way to use `Generative Expand` to change the aspect ratio of a marketing banner?", a: "The most efficient way is to use the <strong>Crop Tool</strong> in Photoshop. Open your existing image (e.g., a square 1:1 asset). Select the Crop Tool, and then drag the crop handles outwards to the new, wider aspect ratio you need for your banner (e.g., 16:9). You will see empty space on the sides. In the contextual bar at the top, instead of choosing a fill color, select <strong>'Generative Expand'</strong> from the dropdown and click the checkmark. Firefly will automatically and intelligently fill in the empty areas with new, matching content." },
+              { q: "Can I use Firefly to generate UI elements like buttons and frames that match my game's aesthetic, and then refine them in Photoshop?", a: "<strong>Absolutely</strong>. This is an excellent use case. Use a prompt in the Firefly web UI like: <strong>'a set of game UI buttons, steampunk style, brass and copper, intricate gears, on a white background.'</strong> This will give you a 'sprite sheet' of multiple concepts. Bring this image into Photoshop, use the Marquee tool to select the best button designs, and copy them to new layers. You can then use Photoshop's tools to add text, apply layer styles like drop shadows, and organize them into a production-ready UI kit." },
+              { q: "Are there any color profile or resolution considerations when moving images from Firefly to a print-ready Photoshop file?", a: "<strong>Yes</strong>, this is an important technical consideration. All images generated by Firefly on the web are in the <strong>sRGB</strong> color profile, which is the standard for screens and digital displays. If you are creating assets for print (like a promotional poster or a game box), you must convert the document's color mode to <strong>CMYK</strong> inside Photoshop. It's also crucial to download the highest resolution image available from Firefly to ensure you have enough pixel data for a sharp, high-quality print." },
+              { q: "How can Firefly help create variations of a single asset (e.g., a 'Wild' symbol with different elemental effects) that I can then layer and animate in Photoshop?", a: "This is a brilliant animation workflow. First, generate your base 'Wild' symbol asset in the Firefly web UI. Bring it into Photoshop. Duplicate the layer several times. On each duplicate layer, select the symbol and use <strong>Generative Fill</strong> with different effect prompts: 'covered in magical fire,' 'encased in clear ice,' 'crackling with blue lightning.' Each effect will be generated on its own layer. You can then use Photoshop's Timeline panel to fade between these layers, creating a stunning elemental animation effect for your game." }
+          ]
+      };
+      const showcaseCards = [
+          { emoji: "🦁", title: "1. Majestic Reel Symbols", prompt: "A majestic lion head reel symbol, hyperrealistic, intricate gold filigree, cinematic lighting, dark background", image: "https://placehold.co/800x400/2d2a3f/ffd700?text=Lion+Symbol" },
+          { emoji: "🏴‍☠️", title: "2. Character Illustrations", prompt: "A charismatic pirate captain, stylized fantasy art, confident expression, side view, holding a glowing compass, detailed costume", image: "https://placehold.co/800x400/2d2a3f/ffd700?text=Pirate+Captain" },
+          { emoji: "💥", title: "3. Dynamic Wild Symbols", prompt: "An exploding star WILD symbol, neon punk style, vibrant pink and blue energy, motion blur, isolated on black", image: "https://placehold.co/800x400/2d2a3f/ffd700?text=WILD+Symbol" },
+          { emoji: "🗺️", title: "4. Ornate Scatter Symbols", prompt: "An ancient treasure map SCATTER symbol, watercolor style, rolled up parchment, wax seal, fantasy art", image: "https://placehold.co/800x400/2d2a3f/ffd700?text=Scatter+Symbol" },
+          { emoji: "🎁", title: "5. Bonus Round Assets", prompt: "A magical 'pick-me' treasure chest, cartoon style, wood and gold, glowing lock, slightly open revealing a mysterious light", image: "https://placehold.co/800x400/2d2a3f/ffd700?text=Treasure+Chest" },
+          { emoji: "💎", title: "6. Progressive Jackpot Icons", prompt: "A glittering pile of diamonds, photorealistic, macro photography, shallow depth of field, reflecting rainbow colors", image: "https://placehold.co/800x400/2d2a3f/ffd700?text=Jackpot+Icon" },
+          { emoji: "🏛️", title: "7. Thematic Background Art", prompt: "The lost city of Atlantis, underwater casino, epic background art, bioluminescent coral, dramatic lighting, wide angle", image: "https://placehold.co/800x400/2d2a3f/ffd700?text=Atlantis+Background" },
+          { emoji: "🏞️", title: "8. Atmospheric Landscapes", prompt: "A mysterious jungle at twilight, game background, atmospheric, volumetric fog, ancient ruins, fantasy landscape", image: "https://placehold.co/800x400/2d2a3f/ffd700?text=Jungle+Landscape" },
+          { emoji: "💰", title: "9. Treasure Room Scene", prompt: "An open treasure chest overflowing with gold coins and jewels, cinematic shot, warm light, high detail", image: "https://placehold.co/800x400/2d2a3f/ffd700?text=Treasure+Room" },
+          { emoji: "📜", title: "10. Game Title Logos", prompt: "Game title logo 'Pharaoh's Fortune', made of sandstone and gold, 3D text effect, on a dark background", image: "https://placehold.co/800x400/2d2a3f/ffd700?text=Game+Logo" },
+          { emoji: "🔘", title: "11. Stylized UI Buttons", prompt: "A 'Spin' button for a slot game, made of carved stone with glowing green runes, UI element, isolated", image: "https://placehold.co/800x400/2d2a3f/ffd700?text=Spin+Button" },
+          { emoji: "✨", title: "12. Payline Indicators", prompt: "An ornate, glowing magical line, payline indicator for a slot game, sparkling particles, abstract design", image: "https://placehold.co/800x400/2d2a3f/ffd700?text=Payline" },
+          { emoji: "🪙", title: "13. Currency Icons", prompt: "Stack of stylized gold coins, game icon, cartoon style, shiny highlights, slight angle", image: "https://placehold.co/800x400/2d2a3f/ffd700?text=Currency+Icon" },
+          { emoji: "🌀", title: "14. Game Feature Icons", prompt: "A 'Free Spins' game feature icon, a spinning golden arrow surrounded by sparks, UI icon, flat design", image: "https://placehold.co/800x400/2d2a3f/ffd700?text=Feature+Icon" },
+          { emoji: "⏳", title: "15. Loading Screen Art", prompt: "An epic illustration for a game loading screen, featuring a hero character overlooking a fantasy valley, title safe area", image: "https://placehold.co/800x400/2d2a3f/ffd700?text=Loading+Screen" },
+          { emoji: "🖼️", title: "16. Promotional Banner Image", prompt: "Promotional banner for a casino game, charismatic character on one side, game logo and jackpot on the other, dynamic composition", image: "https://placehold.co/800x400/2d2a3f/ffd700?text=Promo+Banner" },
+          { emoji: "📱", title: "17. App Store Icons", prompt: "A bold, eye-catching app store icon for a slot game, a stylized golden lion head, vibrant background", image: "https://placehold.co/800x400/2d2a3f/ffd700?text=App+Icon" },
+          { emoji: "📢", title: "18. Social Media Graphics", prompt: "A 'New Game Announcement' graphic for social media, featuring a mysterious character silhouette against a glowing slot machine", image: "https://placehold.co/800x400/2d2a3f/ffd700?text=Social+Graphic" },
+          { emoji: "📈", title: "19. Affiliate Marketing Banners", prompt: "An affiliate marketing banner, 728x90, with game art and a clear 'Play Now' button, high contrast", image: "https://placehold.co/800x400/2d2a3f/ffd700?text=Marketing+Banner" },
+          { emoji: "💥", title: "20. Transition Animations Concept", prompt: "A splash screen of gold coins exploding towards the camera, motion blur, high energy, concept for a transition animation", image: "https://placehold.co/800x400/2d2a3f/ffd700?text=Animation+Concept" }
+      ];
+      const glossaryTerms = [
+        { term: "Prompt", def: "The text description you provide to the AI to generate an image. This is your primary tool of creation." },
+        { term: "Generative AI", def: "A category of artificial intelligence that can create new, original content, such as images, text, or music, rather than just analyzing existing data." },
+        { term: "Model", def: "The underlying AI 'brain' that has been trained to generate images. Different models (e.g., Firefly Image 4) have different strengths and styles." },
+        { term: "Commercially Safe", def: "A term indicating that an AI model was trained on data (like Adobe Stock) that is legally cleared for you to use in your commercial projects." },
+        { term: "Content Type", def: "A primary setting in Firefly that directs the model to create either a 'Photo' (realistic) or an 'Art' (illustrative) style image." },
+        { term: "Visual Intensity", def: "A slider that controls how strongly the AI applies its artistic interpretation and selected styles. High intensity equals more stylized results." },
+        { term: "Style Reference", def: "A feature that allows you to upload an image to guide the AI in matching its artistic style, color, and mood." },
+        { term: "Composition Reference", def: "A feature that uses an uploaded image to guide the structural layout and arrangement of elements in the generated image." },
+        { term: "Effects", def: "A library of one-click style tags (e.g., 'Steampunk', 'Neon') that you can apply to your generation to quickly achieve a certain aesthetic." },
+        { term: "Color and Tone", def: "A menu of presets that allows you to control the overall color palette of your image (e.g., 'Cool Tone', 'Golden')." },
+        { term: "Lighting", def: "A menu of presets to control the lighting style of your scene (e.g., 'Dramatic Lighting', 'Studio Light')." },
+        { term: "Camera Angle", def: "A menu of presets to control the virtual camera's position and shot type (e.g., 'Closeup', 'Shot from below')." },
+        { term: "Negative Prompt", def: "A field (labeled 'Exclude from image' in Firefly) where you specify what you want to *remove* or *avoid* in the image." },
+        { term: "Generative Fill", def: "A tool (primarily in Photoshop) that allows you to add, remove, or replace content within a selected area of an image using a prompt." },
+        { term: "Generative Expand", def: "A tool in Photoshop that allows you to extend the canvas of an image, using AI to fill in the new areas seamlessly." },
+        { term: "Prompt Suggestions", def: "An optional feature that provides auto-complete ideas as you type your prompt, helping you discover new descriptive words." },
+        { term: "Seed", def: "A number that acts as a starting point for the generation. Using the same seed with the same prompt can produce a similar image, but Firefly does not currently allow manual seed control." },
+        { term: "Upscaling", def: "The process of increasing the resolution and detail of a generated image. Firefly includes options to enhance the quality of your downloads." }
+      ];
+      const gameQuestions = [
+          { image: "https://placehold.co/600x300/ef7d55/ffffff?text=Synthwave+Vegas", effect: "Synthwave" },
+          { image: "https://placehold.co/600x300/ef7d55/ffffff?text=Realistic+Poker", effect: "Hyperrealistic" },
+          { image: "https://placehold.co/600x300/ef7d55/ffffff?text=Clockwork+Cards", effect: "Steampunk" },
+          { image: "https://placehold.co/600x300/ef7d55/ffffff?text=Painted+Joker", effect: "Watercolor" }
+      ];
+      let gameCurrentIndex = 0;
+
+      // --- INITIALIZATION ---
+      function initializeAll() {
+        setupAccordions('faq-accordion-container', faqs);
+        setupQuiz('quiz-main', quizQuestions);
+        setupGlossary();
+        setupPromptShowcase();
+        setupPromptWizard();
+        setupMiniGame();
+        setupPoll();
+      }
+      
+      // --- INTERACTIVE COMPONENT SETUP ---
+       function setupPoll() {
+        const pollContainer = document.getElementById('poll');
+        if (!pollContainer) return;
+        const optionsContainer = pollContainer.querySelector('#poll-options');
+        let voted = false;
+
+        optionsContainer.addEventListener('click', (e) => {
+            if (voted) return;
+            const selectedOption = e.target.closest('.poll-option');
+            if (selectedOption) {
+                voted = true;
+                // Dummy results data
+                const results = { prompting: 45, consistency: 25, settings: 18, originality: 12 };
+                optionsContainer.querySelectorAll('.poll-option').forEach(opt => {
+                    const optionKey = opt.dataset.option;
+                    const resultDiv = opt.querySelector('.poll-result');
+                    const bar = resultDiv.querySelector('.poll-result-bar');
+                    const percentageEl = resultDiv.querySelector('.poll-percentage');
+                    
+                    setTimeout(() => {
+                        bar.style.width = `${results[optionKey]}%`;
+                        percentageEl.textContent = `${results[optionKey]}%`;
+                    }, 100);
+                });
+            }
+        });
+    }
+      
+      function setupPromptWizard() {
+          const wizard = document.getElementById('prompt-wizard');
+          if (!wizard) return;
+          const subjectEl = wizard.querySelector('#wizard-subject');
+          const styleEl = wizard.querySelector('#wizard-style');
+          const detailsEl = wizard.querySelector('#wizard-details');
+          const outputEl = wizard.querySelector('#wizard-code');
+
+          function generatePrompt() {
+              const subject = subjectEl.options[subjectEl.selectedIndex].text;
+              const style = styleEl.value;
+              const details = detailsEl.options[detailsEl.selectedIndex].text;
+              const fullPrompt = `${subject}, ${style}, ${details}`;
+              outputEl.textContent = fullPrompt;
+          }
+
+          [subjectEl, styleEl, detailsEl].forEach(el => el.addEventListener('input', generatePrompt));
+          generatePrompt();
+      }
+      
+      function setupMiniGame() {
+          const imageEl = document.getElementById('game-image-container');
+          const optionsContainer = document.getElementById('game-options');
+          const feedbackEl = document.getElementById('game-feedback');
+          if (!imageEl) return;
+
+          function loadQuestion() {
+              const q = gameQuestions[gameCurrentIndex];
+              imageEl.style.backgroundImage = `url(${q.image})`;
+              feedbackEl.textContent = '';
+              optionsContainer.querySelectorAll('.game-option-btn').forEach(btn => {
+                  btn.style.borderColor = 'var(--accent)';
+                  btn.style.backgroundColor = 'var(--surface)';
+              });
+          }
+
+          optionsContainer.addEventListener('click', function(e) {
+              if (e.target.classList.contains('game-option-btn')) {
+                  const selectedEffect = e.target.dataset.effect;
+                  const correctEffect = gameQuestions[gameCurrentIndex].effect;
+                  
+                  if (selectedEffect === correctEffect) {
+                      feedbackEl.textContent = 'Correct!';
+                      feedbackEl.style.color = 'var(--ok)';
+                      e.target.style.backgroundColor = 'var(--ok-soft)';
+                      e.target.style.borderColor = 'var(--ok)';
+                      setTimeout(() => {
+                          gameCurrentIndex = (gameCurrentIndex + 1) % gameQuestions.length;
+                          loadQuestion();
+                      }, 1500);
+                  } else {
+                      feedbackEl.textContent = `Not quite! The answer is ${correctEffect}.`;
+                      feedbackEl.style.color = 'var(--bad)';
+                      e.target.style.backgroundColor = 'var(--bad-soft)';
+                      e.target.style.borderColor = 'var(--bad)';
+                  }
+              }
+          });
+          loadQuestion();
+      }
+
+      function setupPromptShowcase() {
+         const imageEl = document.getElementById('showcase-image');
+         if (!imageEl) return;
+         const titleEl = document.getElementById('showcase-title');
+         const promptEl = document.getElementById('showcase-prompt-text');
+         const prevBtn = document.getElementById('showcase-prev');
+         const nextBtn = document.getElementById('showcase-next');
+         const counterEl = document.getElementById('showcase-counter');
+         const copyBtn = document.getElementById('showcase-copy-btn');
+         let currentIndex = 0;
+
+        function showCard(index) {
+            const card = showcaseCards[index];
+            imageEl.style.opacity = 0;
+            setTimeout(() => {
+                imageEl.src = card.image;
+                titleEl.textContent = `${card.emoji} ${card.title}`;
+                promptEl.textContent = card.prompt;
+                counterEl.textContent = `${index + 1} / ${showcaseCards.length}`;
+                imageEl.style.opacity = 1;
+            }, 300);
+        }
+
+        prevBtn.addEventListener('click', () => { currentIndex = (currentIndex - 1 + showcaseCards.length) % showcaseCards.length; showCard(currentIndex); });
+        nextBtn.addEventListener('click', () => { currentIndex = (currentIndex + 1) % showcaseCards.length; showCard(currentIndex); });
+        
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(showcaseCards[currentIndex].prompt).then(() => {
+                copyBtn.innerHTML = '✅ Copied!';
+                setTimeout(() => { copyBtn.innerHTML = '📋 Copy'; }, 2000);
+            });
+        });
+        showCard(0);
+       }
+
+      function setupAccordions(containerId, data) {
+          const container = document.getElementById(containerId);
+          if (!container) return;
+          let html = '';
+          for (const level in data) {
+              html += `<h3>${level}</h3><div class="accordion">`;
+              html += data[level].map((item) => `
+                  <div class="accordion-item">
+                      <button class="accordion-header" aria-expanded="false"><span class="accordion-title"><strong>Q:</strong> ${item.q}</span></button>
+                      <div class="accordion-content"><p><strong>A:</strong> ${item.a}</p></div>
+                  </div>`).join('');
+              html += `</div>`;
+          }
+          container.innerHTML = html;
+          container.querySelectorAll('.accordion-header').forEach(h => h.addEventListener('click', () => {
+              const expanded = h.getAttribute('aria-expanded') === 'true';
+              h.setAttribute('aria-expanded', !expanded);
+              h.nextElementSibling.style.display = expanded ? 'none' : 'block';
+          }));
+      }
+
+      function setupQuiz(containerId, questionsData) {
+        const quizSection = document.getElementById(containerId);
+        if (!quizSection) return;
+        const bodyContainer = quizSection.querySelector('#quiz-body-container');
+        const prevBtn = quizSection.querySelector('#mainPrevBtn');
+        const nextBtn = quizSection.querySelector('#mainNextBtn');
+        const currentQSpan = quizSection.querySelector('#mainCurrentQ');
+        if (!bodyContainer || !prevBtn || !nextBtn || !currentQSpan) return;
+        let currentQuestionIndex = 0;
+
+        function renderQuestion() {
+            const qData = questionsData[currentQuestionIndex];
+            let optionsHTML = qData.options.map((opt, index) => `
+                <div class="quiz-option" data-option-index="${index}">
+                    <label>
+                        <input type="radio" name="q${currentQuestionIndex}" value="${index}">
+                        <span>${opt.text}</span>
+                    </label>
+                    <div class="explanation">${opt.explanation}</div>
+                </div>`).join('');
+            bodyContainer.innerHTML = `<div class="quiz-body active"><p><strong>Q${currentQuestionIndex + 1}:</strong> ${qData.q}</p><div class="quiz-options">${optionsHTML}</div></div>`;
+            currentQSpan.textContent = currentQuestionIndex + 1;
+            prevBtn.disabled = currentQuestionIndex === 0;
+            nextBtn.disabled = currentQuestionIndex === questionsData.length - 1;
+            bodyContainer.querySelectorAll('.quiz-option input').forEach(radio => radio.addEventListener('change', handleOptionSelect));
+        }
+
+        function handleOptionSelect(e) {
+            const selectedOptionIndex = parseInt(e.target.value);
+            const qData = questionsData[currentQuestionIndex];
+            const parentQuestionDiv = e.target.closest('.quiz-body');
+            parentQuestionDiv.querySelectorAll('.quiz-option').forEach(optDiv => {
+                optDiv.classList.remove('selected', 'correct', 'wrong');
+                optDiv.querySelector('.explanation').style.display = 'none';
+            });
+            const selectedOptionDiv = e.target.closest('.quiz-option');
+            selectedOptionDiv.classList.add('selected');
+            selectedOptionDiv.querySelector('.explanation').style.display = 'block';
+            if (selectedOptionIndex === qData.correct) {
+                selectedOptionDiv.classList.add('correct');
+            } else {
+                selectedOptionDiv.classList.add('wrong');
+                parentQuestionDiv.querySelector(`.quiz-option[data-option-index="${qData.correct}"]`).classList.add('correct');
+            }
+        }
+        prevBtn.addEventListener('click', () => { if (currentQuestionIndex > 0) { currentQuestionIndex--; renderQuestion(); } });
+        nextBtn.addEventListener('click', () => { if (currentQuestionIndex < questionsData.length - 1) { currentQuestionIndex++; renderQuestion(); } });
+        renderQuestion();
+      }
+      
+      function setupGlossary() {
+        const cloud = document.getElementById('glossaryCloud');
+        if (!cloud) return;
+        cloud.innerHTML = glossaryTerms.map(kw => `<button class="glossary-chip" type="button"><span>${kw.term}</span></button>`).join('');
+        const tip = document.createElement('div');
+        tip.className = 'chip-tip';
+        tip.innerHTML = '<div class="arrow" aria-hidden="true"></div><div class="tip-content"></div>';
+        document.body.appendChild(tip);
+        const tipContent = tip.querySelector('.tip-content');
+        const tipArrow = tip.querySelector('.arrow');
+        
+        function positionTipFor(btn){
+          const rect = btn.getBoundingClientRect();
+          const tipRect = tip.getBoundingClientRect();
+          const top = rect.top - tipRect.height - 12;
+          const left = rect.left + rect.width/2 - tipRect.width/2;
+          tip.style.top = Math.max(8, top) + 'px';
+          tip.style.left = Math.max(8, left) + 'px';
+          tipArrow.style.top = (tipRect.height - 6) + 'px';
+          tipArrow.style.left = (tipRect.width / 2 - 6) + 'px';
+        }
+        cloud.querySelectorAll('.glossary-chip').forEach((btn,i)=>{
+          const def = glossaryTerms[i].def;
+          btn.addEventListener('mouseover', () => { tipContent.innerHTML = def; tip.classList.add('show'); positionTipFor(btn); });
+          btn.addEventListener('focus', () => { tipContent.innerHTML = def; tip.classList.add('show'); positionTipFor(btn); });
+          btn.addEventListener('mouseout', () => tip.classList.remove('show'));
+          btn.addEventListener('blur', () => tip.classList.remove('show'));
+        });
+      }
+
+      // --- RUN ---
+      initializeAll();
+    });
+  </script>
+</body>
+</html>
+" in the document, and I want to make some changes to it. Please make these changes for me.
+
+The changes I want to make are:
+Add the rtcquizzes.js file after line 1058
+and then add the following code after line 1111:
+const rtcQuizzes = [
+        {
+          context: "An art director needs to create a new game character that matches the specific, stylized 'painted' look of their existing game, 'Mystic Cards'. To ensure consistency, they upload a piece of the original game's key art into Firefly's <strong>Style Reference</strong> slot. After generating a character they like, they notice the background is a simple grey, but they need a 'magical forest' setting. They take the image into Photoshop to finish the asset.",
+          questions: [
+            { type: "MCQ", text: "Which Firefly feature was most important for matching the 'Mystic Cards' art style?", options: ["Composition Reference", "Style Reference", "Effects Panel", "Visual Intensity"], correct: 1 },
+            { type: "FTB", text: "To add the 'magical forest' in Photoshop, the artist would select the grey background and use the _______________ tool.", answer: "Generative Fill" },
+            { type: "TF", text: "Using a high 'Visual Intensity' would be the best way to make the character look photorealistic.", correct: false },
+          ]
+        },
+        {
+          context: "A designer is creating a promotional banner for a new slot game. They start with a square (1:1) character portrait but need a widescreen (16:9) banner. Inside Photoshop, they use the Crop Tool to expand the canvas to the new aspect ratio. They leave the prompt field blank and confirm the change.",
+          questions: [
+            { type: "FTB", text: "The specific tool used to intelligently fill the new, empty space on the banner is called Generative ____________.", answer: "Expand" },
+            { type: "TF", text: "Leaving the prompt field blank was a mistake; the tool requires a text prompt to function.", correct: false },
+            { type: "MCQ", text: "To add dramatic, high-contrast lighting to the final banner, which 'Lighting' effect would be most suitable?", options: ["Studio Light", "Golden Hour", "Dramatic Light", "Backlighting"], correct: 2 },
+          ]
+        },
+        {
+          context: "A visual artist is experimenting to create a unique UI button. They want to combine two distinct styles. In the Firefly web UI, they select 'Steampunk' from the 'Movements' category in the Effects panel, and 'Layered Paper' from the 'Techniques' category. They find the result interesting but a bit too chaotic.",
+          questions: [
+            { type: "MCQ", text: "Which slider should the artist lower to make the final image less chaotic and more faithful to their prompt?", options: ["Aspect Ratio", "Model Version", "Visual Intensity", "Camera Angle"], correct: 2 },
+            { type: "FTB", text: "The 'Steampunk' and 'Layered Paper' options are both found in the main ____________ panel.", answer: "Effects" },
+            { type: "TF", text: "To make the button look like it was photographed on a professional product stage, the artist should add the 'Studio Light' effect.", correct: true },
+          ]
+        }
+      ];
+
+      function setupRTCQuizzes() {
+        const container = document.getElementById('rtc-quiz-container');
+        if (!container) return;
+
+        let html = '';
+        rtcQuizzes.forEach((quiz, index) => {
+          html += `
+            <div class="interactive-box rtc-quiz-block" id="rtc-quiz-${index}">
+              <div class="rtc-context">${quiz.context}</div>
+              <form>
+          `;
+          quiz.questions.forEach((q, q_index) => {
+            html += `<div class="rtc-sub-question">`;
+            html += `<p>${q_index + 1}. ${q.text}</p>`;
+            if (q.type === 'MCQ') {
+              html += `<div class="quiz-options">`;
+              q.options.forEach((opt, o_index) => {
+                html += `
+                  <div class="quiz-option">
+                    <label>
+                      <input type="radio" name="rtc-${index}-q-${q_index}" value="${o_index}">
+                      <span>${opt}</span>
+                    </label>
+                  </div>
+                `;
+              });
+              html += `</div>`;
+            } else if (q.type === 'FTB') {
+              html += `<input type="text" name="rtc-${index}-q-${q_index}" placeholder="Type your answer...">`;
+            } else if (q.type === 'TF') {
+              html += `
+                <div class="quiz-options">
+                  <div class="quiz-option">
+                    <label><input type="radio" name="rtc-${index}-q-${q_index}" value="true"> <span>True</span></label>
+                  </div>
+                  <div class="quiz-option">
+                    <label><input type="radio" name="rtc-${index}-q-${q_index}" value="false"> <span>False</span></label>
+                  </div>
+                </div>
+              `;
+            }
+            html += `</div>`;
+          });
+          html += `
+              <button type="button" class="btn btn-submit-rtc">Check Answers</button>
+              <div class="rtc-feedback" style="margin-top: 15px;"></div>
+            </form>
+            </div>
+          `;
+        });
+        container.innerHTML = html;
+
+        container.querySelectorAll('.btn-submit-rtc').forEach((button, index) => {
+          button.addEventListener('click', () => {
+            const quizData = rtcQuizzes[index];
+            const form = button.closest('form');
+            const feedbackEl = form.querySelector('.rtc-feedback');
+            let correctCount = 0;
+
+            quizData.questions.forEach((q, q_index) => {
+              const inputs = form.elements[`rtc-${index}-q-${q_index}`];
+              let isCorrect = false;
+              if (q.type === 'MCQ') {
+                const selectedValue = parseInt(form.querySelector(`input[name="rtc-${index}-q-${q_index}"]:checked`)?.value);
+                isCorrect = selectedValue === q.correct;
+                const optionDivs = form.querySelectorAll(`.rtc-sub-question:nth-child(${q_index + 1}) .quiz-option`);
+                optionDivs.forEach((div, i) => {
+                    div.classList.remove('correct', 'wrong');
+                    if (i === q.correct) div.classList.add('correct');
+                    if (i === selectedValue && !isCorrect) div.classList.add('wrong');
+                });
+
+              } else if (q.type === 'FTB') {
+                const userAnswer = inputs.value.trim().toLowerCase();
+                const correctAnswer = q.answer.toLowerCase();
+                isCorrect = userAnswer === correctAnswer;
+                inputs.style.borderColor = isCorrect ? 'var(--ok)' : 'var(--bad)';
+              } else if (q.type === 'TF') {
+                 const selectedValue = form.querySelector(`input[name="rtc-${index}-q-${q_index}"]:checked`)?.value;
+                 isCorrect = (selectedValue === 'true') === q.correct;
+                 const optionDivs = form.querySelectorAll(`.rtc-sub-question:nth-child(${q_index + 1}) .quiz-option`);
+                 optionDivs.forEach(div => {
+                     const val = div.querySelector('input').value === 'true';
+                     div.classList.remove('correct', 'wrong');
+                     if (val === q.correct) div.classList.add('correct');
+                     if (selectedValue && val === (selectedValue === 'true') && !isCorrect) div.classList.add('wrong');
+                 });
+              }
+              if (isCorrect) correctCount++;
+            });
+
+            feedbackEl.style.color = (correctCount === quizData.questions.length) ? 'var(--ok)' : 'var(--bad)';
+            feedbackEl.innerHTML = `<strong>Result: You got ${correctCount} out of ${quizData.questions.length} correct.</strong> Review the highlights above.`;
+          });
+        });
+      }
+
+      // --- RUN ---
+      initializeAll();
+       setupRTCQuizzes();
+
