@@ -5,261 +5,402 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Art Training - Index Page</title>
   <style>
+    /* Google Font Import */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    /* CSS Reset and Base Styles */
+    :root {
+      --background-color: #f7faff;
+      --text-color: #4a5568;
+      --heading-color: #1a202c;
+      --card-bg: #ffffff;
+      --primary-color: #667eea;
+      --primary-hover: #5a67d8;
+      --border-color: #e2e8f0;
+      --shadow-light: rgba(0,0,0,0.06);
+      --shadow-heavy: rgba(0,0,0,0.1);
+    }
+
     body {
       font-family: 'Inter', sans-serif;
-      background: #f8f9fa;
-      color: #333;
+      background: var(--background-color);
+      color: var(--text-color);
       margin: 0;
-      padding: 20px;
+      padding: 40px 0; /* Vertical padding */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-      font-size: 2.2rem;
+
+    /* Main container for centered layout on desktops */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
     }
-    .top-byline {
+
+    /* Enhanced Hero Section Styling */
+    .hero-section {
       text-align: center;
+      margin-bottom: 60px;
+    }
+    .hero-section h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--heading-color);
+      margin-bottom: 12px;
+    }
+    .hero-section .top-byline {
+      font-size: 1.1rem;
+      color: #718096;
+      line-height: 1.6;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    /* Section Headers with Icons */
+    .section-header {
+      font-size: 1.8rem;
+      margin: 60px 0 15px;
+      color: #2d3748;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-header svg {
+        width: 28px;
+        height: 28px;
+        stroke: var(--primary-color);
+        stroke-width: 2;
+    }
+    .section-commentary {
       font-size: 1rem;
-      color: #555;
+      color: #718096;
       margin-bottom: 30px;
-      line-height: 1.5;
+      line-height: 1.6;
+      max-width: 800px;
     }
-    h2.section-header {
-      font-size: 1.6rem;
-      margin: 40px 0 10px;
-      text-align: left;
-      color: #222;
-    }
-    p.section-commentary {
-      font-size: 0.95rem;
-      color: #666;
-      margin-bottom: 20px;
-      line-height: 1.4;
-    }
+
+    /* Card Grid Layout */
     .card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
     }
+
+    /* Refined Card Design */
     .card {
-      background: #fff;
+      background: var(--card-bg);
       border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease;
+      padding: 24px;
+      box-shadow: 0 4px 12px var(--shadow-light);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      opacity: 0; /* Initially hidden for animation */
+      transform: translateY(20px);
+      animation: fadeIn 0.5s ease-out forwards;
     }
     .card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-8px);
+      box-shadow: 0 10px 20px var(--shadow-heavy);
     }
     .card h2 {
       font-size: 1.3rem;
-      margin-bottom: 8px;
-      color: #222;
+      margin: 0 0 8px 0;
+      color: #2d3748;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
     }
     .card p.byline {
       font-style: italic;
-      font-size: 0.95rem;
-      margin-bottom: 12px;
-      color: #666;
+      font-size: 0.9rem;
+      margin: 0 0 16px 0;
+      color: #718096;
     }
     .card p.desc {
-      font-size: 0.9rem;
-      line-height: 1.4;
-      margin-bottom: 12px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      flex-grow: 1; /* Pushes the button to the bottom */
     }
     .card a {
       display: inline-block;
       text-decoration: none;
       color: #fff;
-      background: #667eea;
-      padding: 8px 14px;
+      background: var(--primary-color);
+      padding: 10px 18px;
       border-radius: 8px;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
+      font-weight: 600;
       transition: background 0.3s ease;
+      align-self: flex-start;
     }
     .card a:hover {
-      background: #4c5bd4;
-    }
-    .tag {
-      display: inline-block;
-      padding: 2px 8px;
-      font-size: 0.7rem;
-      border-radius: 6px;
-      background: #e9ecef;
-      color: #555;
-      margin-left: 8px;
-    }
-    .placeholder {
-      background: #f1f3f5;
-      color: #777;
-      text-align: center;
-      border: 2px dashed #ccc;
-    }
-    footer {
-      text-align: center;
-      margin-top: 40px;
-      font-size: 0.85rem;
-      color: #777;
+      background: var(--primary-hover);
     }
 
-    /* Mobile Tweaks */
+    /* Color-Coded Tags */
+    .tag {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 12px;
+      flex-shrink: 0;
+      margin-left: 8px;
+    }
+    .tag.pdf { background: #fff0f0; color: #c53030; }
+    .tag.html { background: #ebf4ff; color: #4299e1; }
+
+    /* Placeholder Card */
+    .placeholder {
+      background: #f8f9fa;
+      color: #a0aec0;
+      text-align: center;
+      border: 2px dashed #cbd5e0;
+      justify-content: center;
+      align-items: center;
+    }
+    .placeholder h2 { justify-content: center; }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid var(--border-color);
+      font-size: 0.9rem;
+      color: #a0aec0;
+    }
+    
+    /* Animation Keyframes */
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Mobile Responsive Tweaks */
     @media (max-width: 600px) {
-      body {
-        padding: 10px;
-      }
-      h1 {
-        font-size: 1.6rem;
-      }
-      .card {
-        padding: 16px;
-      }
-      .card h2 {
-        font-size: 1.1rem;
-      }
-      .card p.desc {
-        font-size: 0.85rem;
-      }
+      body { padding: 20px 0; }
+      .container { padding: 0 15px; }
+      .hero-section h1 { font-size: 2rem; }
+      .section-header { font-size: 1.5rem; }
+      .card { padding: 20px; }
+      .card h2 { font-size: 1.1rem; }
     }
   </style>
 </head>
 <body>
-  <h1>📚 AI Art Training - Supporting Docs Index</h1>
-  <div class="top-byline">
-    Designed for Aristocrat Designers to master AI-driven art workflows.<br>
-    Explore structured training, guides, and interactive resources in one place.
+
+  <div class="container">
+
+    <header class="hero-section">
+      <h1>📚 AI Art Training - Supporting Docs Index</h1>
+      <p class="top-byline">
+        Designed for Aristocrat Designers to master AI-driven art workflows.<br>
+        Explore structured training, guides, and interactive resources in one place.
+      </p>
+    </header>
+
+    <main>
+      <!-- SECTION 1 -->
+      <section>
+        <h2 class="section-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            Foundations & Orientation
+        </h2>
+        <p class="section-commentary">Start here. These documents set the stage for Day 1, Hour 1 —
+          providing the training plan, a baseline diagnostic, and an interactive pre-test of imagination skills.</p>
+        <div class="card-grid">
+          <div class="card">
+            <h2>AI Art Training<span class="tag pdf">PDF</span></h2>
+            <p class="byline">Official Aristocrat training plan.</p>
+            <p class="desc">Comprehensive course structure and training goals designed for Aristocrat designers, with detailed breakdown of sessions and assignments.</p>
+            <a href="AI Art training for Aristocrat Designers.pdf" target="_blank">Open</a>
+          </div>
+          <div class="card">
+            <h2>AI Art Preassessment<span class="tag pdf">PDF</span></h2>
+            <p class="byline">Diagnostic to measure baseline designer knowledge.</p>
+            <p class="desc">A pre-training assessment of 15 questions focusing on Midjourney, Firefly, and prompt engineering to gauge participant readiness.</p>
+            <a href="AI Art Preassessment.pdf" target="_blank">Open</a>
+          </div>
+          <div class="card">
+            <h2>Imagination Quiz - Day 1<span class="tag html">HTML</span></h2>
+            <p class="byline">Interactive companion quiz for creative imagination.</p>
+            <p class="desc">An online HTML-based interactive quiz to amplify learners’ creativity and AI art understanding through the day 1.</p>
+            <a href="Pre-Assessment-AI-Art-Imagination-Training.html" target="_blank">Open</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2 -->
+      <section>
+        <h2 class="section-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            Core Workflows & Frameworks
+        </h2>
+        <p class="section-commentary">Once the foundations are set, dive into structured guides and reflective
+          practices that walk you step-by-step through AI-driven design processes.</p>
+        <div class="card-grid">
+          <div class="card">
+            <h2>Progressive Prompt Wizard<span class="tag html">HTML</span></h2>
+            <p class="byline">Experiment with evolving prompts step-by-step.</p>
+            <p class="desc">An interactive wizard that demonstrates how incremental prompt adjustments transform creative outputs for gaming design.</p>
+            <a href="Progressive ai prompt wizard.html" target="_blank">Open</a>
+          </div>
+          <div class="card">
+            <h2>5-Step Game Design with AI<span class="tag html">HTML</span></h2>
+            <p class="byline">A structured walkthrough of game design prompts.</p>
+            <p class="desc">This module guides designers through a 5-step framework for AI-assisted game design, covering ideation, testing, and refinement.</p>
+            <a href="5-step-game-design-ai-art.html" target="_blank">Open</a>
+          </div>
+          <div class="card">
+            <h2>PARAM Model for Midjourney<span class="tag html">HTML</span></h2>
+            <p class="byline">Structured 5-phase ideation framework.</p>
+            <p class="desc">Outlines the PARAM model (Prepare, Analyze, Reflect, Adjust, Master) with examples for casino game art and storyboards.</p>
+            <a href="PARAM Model for Midjourney Mastery in Game Design.html" target="_blank">Open</a>
+          </div>
+          <div class="card">
+            <h2>Interactive Design Guide<span class="tag html">HTML</span></h2>
+            <p class="byline">Hands-on exploration of interactive design.</p>
+            <p class="desc">Demonstrates how interactive and iterative approaches enhance AI-generated assets in the gaming industry context.</p>
+            <a href="ai_art_interactive_design_for_game_designers.html" target="_blank">Open</a>
+          </div>
+          <div class="card">
+            <h2>DeepThink Practitioner’s Guide<span class="tag html">HTML</span></h2>
+            <p class="byline">A reflective guide for deeper practice.</p>
+            <p class="desc">Explores advanced strategies and thought processes in AI-driven art, encouraging reflection and mastery of creative pipelines.</p>
+            <a href="DeepThink • AI Art Practitioner's Guide.html" target="_blank">Open</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3 -->
+      <section>
+        <h2 class="section-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            Tools & Reference Decks
+        </h2>
+        <p class="section-commentary">Here you’ll find side-by-side comparisons, parameter deep-dives,
+          and full decks that give you mastery over Midjourney, Firefly, and prompt experimentation.</p>
+        <div class="card-grid">
+          <div class="card">
+            <h2>Variable Prompting<span class="tag html">HTML</span></h2>
+            <p class="byline">Master the art of variation in prompts.</p>
+            <p class="desc">Shows how altering parameters and words shifts AI outputs, teaching designers to intentionally steer results toward creative goals.</p>
+            <a href="variable_prompting.html" target="_blank">Open</a>
+          </div>
+          <div class="card">
+            <h2>Midjourney vs. Firefly<span class="tag html">HTML</span></h2>
+            <p class="byline">Comparing two AI art ecosystems.</p>
+            <p class="desc">A side-by-side guide for gaming designers comparing Midjourney and Adobe Firefly workflows, strengths, and ideal use cases.</p>
+            <a href="Midjourney vs. Firefly for Gaming Deisgners.html" target="_blank">Open</a>
+          </div>
+          <div class="card">
+            <h2>Midjourney Main Parameters<span class="tag html">HTML</span></h2>
+            <p class="byline">Essential reference for Midjourney controls.</p>
+            <p class="desc">A structured overview of the main Midjourney parameters, helping designers understand control levers for image generation.</p>
+            <a href="Midjourney_main_parameters.html" target="_blank">Open</a>
+          </div>
+          <div class="card">
+            <h2>Midjourney Parameter Deck<span class="tag html">HTML</span></h2>
+            <p class="byline">Interactive parameter learning experience.</p>
+            <p class="desc">An immersive deck-style walkthrough of 40 Midjourney parameters with examples, pitfalls, and guidance for game design workflows.</p>
+            <a href="Midjourney Parameter Deck.html" target="_blank">Open</a>
+          </div>
+          <div class="card">
+            <h2>Ultimate AI Command Deck<span class="tag html">HTML</span></h2>
+            <p class="byline">Master every Midjourney & AI art command.</p>
+            <p class="desc">A complete interactive reference deck covering 50+ AI art commands, parameters, and workflows to maximize creative output.</p>
+            <a href="ultimate_ai_art_command_deck.html" target="_blank">Open</a>
+          </div>
+          <div class="card">
+            <h2>The Alchemist's Guide to Firefly<span class="tag html">HTML</span></h2>
+            <p class="byline">Casino game art creation with Firefly.</p>
+            <p class="desc">A comprehensive guide to mastering Adobe Firefly for online gaming and casino art, with wizards, galleries, and quizzes.</p>
+            <a href="adobe_firefly_for_online_gamers.html" target="_blank">Open</a>
+          </div>
+          <div class="card">
+            <h2>Gaming Prompt Imaginer<span class="tag html">HTML</span></h2>
+            <p class="byline">Interactive fantasy archetype prompt generator.</p>
+            <p class="desc">Choose characters, places, and moods to generate imaginative AI art prompts tailored for gaming and storytelling.</p>
+            <a href="Online Gaming AI Art Prompt Imaginer.html" target="_blank">Open</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4 -->
+      <section>
+        <h2 class="section-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+            Quizzes & Assessments
+        </h2>
+        <p class="section-commentary">Test your skills and track your growth. Begin with the Day 1 quiz,
+          and watch this space for post-assessments and additional challenges coming soon.</p>
+        <div class="card-grid">
+          <div class="card">
+            <h2>AI Art Explorer Day 1 Quiz<span class="tag html">HTML</span></h2>
+            <p class="byline">50-question mastery quiz.</p>
+            <p class="desc">An immersive quiz testing your understanding of AI art, Midjourney commands, and creative workflow strategies.</p>
+            <a href="AI Art Explorer Day 1 Quiz.html" target="_blank">Open</a>
+          </div>
+          <div class="card placeholder">
+            <h2>Coming Soon</h2>
+            <p class="byline">More quizzes & post-assessment</p>
+            <p class="desc">Stay tuned — additional quizzes and a final post-assessment will appear here to complete your training journey.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      © Credit: Cretorial Media Services Pvt Ltd
+    </footer>
+
   </div>
 
-  <!-- SECTION 1 -->
-  <h2 class="section-header">1. Foundations & Orientation</h2>
-  <p class="section-commentary">Start here. These documents set the stage for Day 1, Hour 1 —
-    providing the training plan, a baseline diagnostic, and an interactive pre-test of imagination skills.</p>
-  <div class="card-grid">
-    <div class="card">
-      <h2>AI Art Training for Aristocrat Designers <span class="tag">PDF</span></h2>
-      <p class="byline">Official Aristocrat training plan.</p>
-      <p class="desc">Comprehensive course structure and training goals designed for Aristocrat designers, with detailed breakdown of sessions and assignments.</p>
-      <a href="AI Art training for Aristocrat Designers.pdf" target="_blank">Open</a>
-    </div>
-    <div class="card">
-      <h2>AI Art Preassessment <span class="tag">PDF</span></h2>
-      <p class="byline">Diagnostic to measure baseline designer knowledge.</p>
-      <p class="desc">A pre-training assessment of 15 questions focusing on Midjourney, Firefly, and prompt engineering to gauge participant readiness.</p>
-      <a href="AI Art Preassessment.pdf" target="_blank">Open</a>
-    </div>
-    <div class="card">
-      <h2>Quiz AI Art & Imagination Training -Day 1 <span class="tag">HTML</span></h2>
-      <p class="byline">Interactive companion quiz for creative imagination.</p>
-      <p class="desc">An online HTML-based interactive quiz to amplify learners’ creativity and AI art understanding through the day 1.</p>
-      <a href="Pre-Assessment-AI-Art-Imagination-Training.html" target="_blank">Open</a>
-    </div>
-  </div>
+  <script>
+    // This script adds a subtle fade-in animation to elements as they are scrolled into view.
+    document.addEventListener("DOMContentLoaded", function() {
+      const animatedElements = document.querySelectorAll('.card');
 
-  <!-- SECTION 2 -->
-  <h2 class="section-header">2. Core Workflows & Frameworks</h2>
-  <p class="section-commentary">Once the foundations are set, dive into structured guides and reflective
-    practices that walk you step-by-step through AI-driven design processes.</p>
-  <div class="card-grid">
-    <div class="card">
-      <h2>Progressive AI Prompt Wizard <span class="tag">HTML</span></h2>
-      <p class="byline">Experiment with evolving prompts step-by-step.</p>
-      <p class="desc">An interactive wizard that demonstrates how incremental prompt adjustments transform creative outputs for gaming design.</p>
-      <a href="Progressive ai prompt wizard.html" target="_blank">Open</a>
-    </div>
-    <div class="card">
-      <h2>5-Step Game Design with AI Art <span class="tag">HTML</span></h2>
-      <p class="byline">A structured walkthrough of game design prompts.</p>
-      <p class="desc">This module guides designers through a 5-step framework for AI-assisted game design, covering ideation, testing, and refinement in interactive workflows.</p>
-      <a href="5-step-game-design-ai-art.html" target="_blank">Open</a>
-    </div>
-    <div class="card">
-      <h2>PARAM Model for Midjourney Mastery <span class="tag">HTML</span></h2>
-      <p class="byline">Structured 5-phase ideation framework.</p>
-      <p class="desc">Outlines the PARAM model (Prepare, Analyze, Reflect, Adjust, Master) with examples for casino game art and storyboard design.</p>
-      <a href="PARAM Model for Midjourney Mastery in Game Design.html" target="_blank">Open</a>
-    </div>
-    <div class="card">
-      <h2>Interactive Design for Game Designers <span class="tag">HTML</span></h2>
-      <p class="byline">Hands-on exploration of interactive design.</p>
-      <p class="desc">Demonstrates how interactive and iterative approaches enhance AI-generated assets in the gaming industry context.</p>
-      <a href="ai_art_interactive_design_for_game_designers.html" target="_blank">Open</a>
-    </div>
-    <div class="card">
-      <h2>DeepThink • AI Art Practitioner’s Guide <span class="tag">HTML</span></h2>
-      <p class="byline">A reflective guide for deeper practice.</p>
-      <p class="desc">Explores advanced strategies and thought processes in AI-driven art, encouraging reflection and mastery of creative pipelines.</p>
-      <a href="DeepThink • AI Art Practitioner's Guide.html" target="_blank">Open</a>
-    </div>
-  </div>
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              // The 'animation-delay' is staggered based on the element's index
+              // This creates a nice cascade effect if multiple cards appear at once
+              const delay = (entry.target.getAttribute('data-index') % 6) * 100; // Stagger up to 6 items
+              entry.target.style.animationDelay = `${delay}ms`;
+              entry.target.classList.add('in-view'); // A helper class if needed, though animation starts anyway
+              observer.unobserve(entry.target); // Stop observing once animated
+            }
+          });
+        }, {
+          threshold: 0.1 // Trigger when 10% of the element is visible
+        });
+        
+        animatedElements.forEach((el, index) => {
+            el.setAttribute('data-index', index); // Add index for staggering
+            observer.observe(el);
+        });
 
-  <!-- SECTION 3 -->
-  <h2 class="section-header">3. Tools & Reference Decks</h2>
-  <p class="section-commentary">Here you’ll find side-by-side comparisons, parameter deep-dives,
-    and full decks that give you mastery over Midjourney, Firefly, and prompt experimentation.</p>
-  <div class="card-grid">
-    <div class="card">
-      <h2>Variable Prompting <span class="tag">HTML</span></h2>
-      <p class="byline">Master the art of variation in prompts.</p>
-      <p class="desc">Shows how altering parameters and words shifts AI outputs, teaching designers to intentionally steer results toward creative goals.</p>
-      <a href="variable_prompting.html" target="_blank">Open</a>
-    </div>
-    <div class="card">
-      <h2>Midjourney vs. Firefly for Gaming Designers <span class="tag">HTML</span></h2>
-      <p class="byline">Comparing two AI art ecosystems.</p>
-      <p class="desc">A side-by-side guide for gaming designers comparing Midjourney and Adobe Firefly workflows, strengths, and ideal use cases.</p>
-      <a href="Midjourney vs. Firefly for Gaming Deisgners.html" target="_blank">Open</a>
-    </div>
-    <div class="card">
-      <h2>Midjourney Main Parameters <span class="tag">HTML</span></h2>
-      <p class="byline">Essential reference for Midjourney controls.</p>
-      <p class="desc">A structured overview of the main Midjourney parameters for creative professionals, helping designers understand control levers for image generation.</p>
-      <a href="Midjourney_main_parameters.html" target="_blank">Open</a>
-    </div>
-    <div class="card">
-      <h2>Midjourney Parameter Deck <span class="tag">HTML</span></h2>
-      <p class="byline">Interactive parameter learning experience.</p>
-      <p class="desc">An immersive deck-style walkthrough of 40 Midjourney parameters with examples, pitfalls, and guidance tailored for game design workflows.</p>
-      <a href="Midjourney Parameter Deck.html" target="_blank">Open</a>
-    </div>
-    <div class="card">
-      <h2>Ultimate AI Art Command Deck <span class="tag">HTML</span></h2>
-      <p class="byline">Master every Midjourney & AI art command.</p>
-      <p class="desc">A complete interactive reference deck covering 50+ AI art commands, parameters, and workflows to maximize creative output.</p>
-      <a href="ultimate_ai_art_command_deck.html" target="_blank">Open</a>
-    </div>
-    <div class="card">
-      <h2>The Alchemist's Guide to Adobe Firefly <span class="tag">HTML</span></h2>
-      <p class="byline">Casino game art creation with Firefly.</p>
-      <p class="desc">A comprehensive guide to mastering Adobe Firefly for online gaming and casino art, with wizards, galleries, and quizzes.</p>
-      <a href="adobe_firefly_for_online_gamers.html" target="_blank">Open</a>
-    </div>
-    <div class="card">
-      <h2>Online Gaming AI Art Prompt Imaginer <span class="tag">HTML</span></h2>
-      <p class="byline">Interactive fantasy archetype prompt generator.</p>
-      <p class="desc">Choose characters, places, and moods to generate imaginative AI art prompts tailored for gaming and storytelling.</p>
-      <a href="Online Gaming AI Art Prompt Imaginer.html" target="_blank">Open</a>
-    </div>
-  </div>
+      } else {
+        // Fallback for older browsers that don't support IntersectionObserver
+        // Simply make all cards visible immediately.
+        animatedElements.forEach(el => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        });
+      }
+    });
+  </script>
 
-  <!-- SECTION 4 -->
-  <h2 class="section-header">4. Quizzes & Assessments</h2>
-  <p class="section-commentary">Test your skills and track your growth. Begin with the Day 1 quiz,
-    and watch this space for post-assessments and additional challenges coming soon.</p>
-  <div class="card-grid">
-    <div class="card">
-      <h2>AI Art Explorer Day 1 Quiz <span class="tag">HTML</span></h2>
-      <p class="byline">50-question mastery quiz.</p>
-      <p class="desc">An immersive quiz testing your understanding of AI art, Midjourney commands, and creative workflow strategies.</p>
-      <a href="AI Art Explorer Day 1 Quiz.html" target="_blank">Open</a>
-    </div>
-    <div class="card placeholder">
-      <h2>Coming Soon</h2>
-      <p class="byline">More quizzes & post-assessment</p>
-      <p class="desc">Stay tuned — additional quizzes and a final post-assessment will appear here to complete your training journey.</p>
-    </div>
-  </div>
-
-  <footer>
-    © Credit: Cretorial Media Services Pvt Ltd
-  </footer>
 </body>
 </html>
