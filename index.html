@@ -24,6 +24,18 @@
       margin-bottom: 30px;
       line-height: 1.5;
     }
+    h2.section-header {
+      font-size: 1.6rem;
+      margin: 40px 0 10px;
+      text-align: left;
+      color: #222;
+    }
+    p.section-commentary {
+      font-size: 0.95rem;
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
     .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -77,11 +89,36 @@
       color: #555;
       margin-left: 8px;
     }
+    .placeholder {
+      background: #f1f3f5;
+      color: #777;
+      text-align: center;
+      border: 2px dashed #ccc;
+    }
     footer {
       text-align: center;
       margin-top: 40px;
       font-size: 0.85rem;
       color: #777;
+    }
+
+    /* Mobile Tweaks */
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+      h1 {
+        font-size: 1.6rem;
+      }
+      .card {
+        padding: 16px;
+      }
+      .card h2 {
+        font-size: 1.1rem;
+      }
+      .card p.desc {
+        font-size: 0.85rem;
+      }
     }
   </style>
 </head>
@@ -92,93 +129,132 @@
     Explore structured training, guides, and interactive resources in one place.
   </div>
 
+  <!-- SECTION 1 -->
+  <h2 class="section-header">1. Foundations & Orientation</h2>
+  <p class="section-commentary">Start here. These documents set the stage for Day 1, Hour 1 —
+    providing the training plan, a baseline diagnostic, and an interactive pre-test of imagination skills.</p>
   <div class="card-grid">
-    <!-- Information PDFs first -->
     <div class="card">
       <h2>AI Art Training for Aristocrat Designers <span class="tag">PDF</span></h2>
       <p class="byline">Official Aristocrat training plan.</p>
       <p class="desc">Comprehensive course structure and training goals designed for Aristocrat designers, with detailed breakdown of sessions and assignments.</p>
       <a href="AI Art training for Aristocrat Designers.pdf" target="_blank">Open</a>
     </div>
-
     <div class="card">
       <h2>AI Art Preassessment <span class="tag">PDF</span></h2>
       <p class="byline">Diagnostic to measure baseline designer knowledge.</p>
       <p class="desc">A pre-training assessment of 15 questions focusing on Midjourney, Firefly, and prompt engineering to gauge participant readiness.</p>
       <a href="AI Art Preassessment.pdf" target="_blank">Open</a>
     </div>
-
-    <!-- Progressive Wizard next -->
-    <div class="card">
-      <h2>Progressive AI Prompt Wizard <span class="tag">HTML</span></h2>
-      <p class="byline">Experiment with evolving prompts step-by-step.</p>
-      <p class="desc">An interactive wizard that demonstrates how incremental prompt adjustments transform creative outputs for gaming design.</p>
-      <a href="Progressive ai prompt wizard.html" target="_blank">Open</a>
-    </div>
-
-    <!-- Other modules -->
-    <div class="card">
-      <h2>5-Step Game Design with AI Art <span class="tag">HTML</span></h2>
-      <p class="byline">A structured walkthrough of game design prompts.</p>
-      <p class="desc">This module guides designers through a 5-step framework for AI-assisted game design, covering ideation, testing, and refinement in interactive workflows.</p>
-      <a href="5-step-game-design-ai-art.html" target="_blank">Open</a>
-    </div>
-
     <div class="card">
       <h2>Pre-Assessment AI Art & Imagination Training <span class="tag">HTML</span></h2>
       <p class="byline">Interactive pre-test for creative imagination.</p>
       <p class="desc">An online HTML-based pre-test to benchmark learners’ creativity and AI art understanding before starting the course.</p>
       <a href="Pre-Assessment-AI-Art-Imagination-Training.html" target="_blank">Open</a>
     </div>
+  </div>
 
+  <!-- SECTION 2 -->
+  <h2 class="section-header">2. Core Workflows & Frameworks</h2>
+  <p class="section-commentary">Once the foundations are set, dive into structured guides and reflective
+    practices that walk you step-by-step through AI-driven design processes.</p>
+  <div class="card-grid">
     <div class="card">
-      <h2>DeepThink: AI Art Practitioner’s Guide <span class="tag">HTML</span></h2>
-      <p class="byline">A reflective guide for deeper practice.</p>
-      <p class="desc">Explores advanced strategies and thought processes in AI-driven art, encouraging reflection and mastery of creative pipelines.</p>
-      <a href="DeepThink • AI Art Practitioner's Guide.html" target="_blank">Open</a>
+      <h2>Progressive AI Prompt Wizard <span class="tag">HTML</span></h2>
+      <p class="byline">Experiment with evolving prompts step-by-step.</p>
+      <p class="desc">An interactive wizard that demonstrates how incremental prompt adjustments transform creative outputs for gaming design.</p>
+      <a href="Progressive ai prompt wizard.html" target="_blank">Open</a>
     </div>
-
     <div class="card">
-      <h2>Variable Prompting <span class="tag">HTML</span></h2>
-      <p class="byline">Master the art of variation in prompts.</p>
-      <p class="desc">Shows how altering parameters and words shifts AI outputs, teaching designers to intentionally steer results toward creative goals.</p>
-      <a href="variable_prompting.html" target="_blank">Open</a>
+      <h2>5-Step Game Design with AI Art <span class="tag">HTML</span></h2>
+      <p class="byline">A structured walkthrough of game design prompts.</p>
+      <p class="desc">This module guides designers through a 5-step framework for AI-assisted game design, covering ideation, testing, and refinement in interactive workflows.</p>
+      <a href="5-step-game-design-ai-art.html" target="_blank">Open</a>
     </div>
-
-    <div class="card">
-      <h2>Midjourney vs. Firefly for Gaming Designers <span class="tag">HTML</span></h2>
-      <p class="byline">Comparing two AI art ecosystems.</p>
-      <p class="desc">A side-by-side guide for gaming designers comparing Midjourney and Adobe Firefly workflows, strengths, and ideal use cases.</p>
-      <a href="Midjourney vs. Firefly for Gaming Deisgners.html" target="_blank">Open</a>
-    </div>
-
     <div class="card">
       <h2>PARAM Model for Midjourney Mastery <span class="tag">HTML</span></h2>
       <p class="byline">Structured 5-phase ideation framework.</p>
       <p class="desc">Outlines the PARAM model (Prepare, Analyze, Reflect, Adjust, Master) with examples for casino game art and storyboard design.</p>
       <a href="PARAM Model for Midjourney Mastery in Game Design.html" target="_blank">Open</a>
     </div>
-
     <div class="card">
       <h2>Interactive Design for Game Designers <span class="tag">HTML</span></h2>
       <p class="byline">Hands-on exploration of interactive design.</p>
       <p class="desc">Demonstrates how interactive and iterative approaches enhance AI-generated assets in the gaming industry context.</p>
       <a href="ai_art_interactive_design_for_game_designers.html" target="_blank">Open</a>
     </div>
+    <div class="card">
+      <h2>DeepThink • AI Art Practitioner’s Guide <span class="tag">HTML</span></h2>
+      <p class="byline">A reflective guide for deeper practice.</p>
+      <p class="desc">Explores advanced strategies and thought processes in AI-driven art, encouraging reflection and mastery of creative pipelines.</p>
+      <a href="DeepThink • AI Art Practitioner's Guide.html" target="_blank">Open</a>
+    </div>
+  </div>
 
-    <!-- Newly added modules -->
+  <!-- SECTION 3 -->
+  <h2 class="section-header">3. Tools & Reference Decks</h2>
+  <p class="section-commentary">Here you’ll find side-by-side comparisons, parameter deep-dives,
+    and full decks that give you mastery over Midjourney, Firefly, and prompt experimentation.</p>
+  <div class="card-grid">
+    <div class="card">
+      <h2>Variable Prompting <span class="tag">HTML</span></h2>
+      <p class="byline">Master the art of variation in prompts.</p>
+      <p class="desc">Shows how altering parameters and words shifts AI outputs, teaching designers to intentionally steer results toward creative goals.</p>
+      <a href="variable_prompting.html" target="_blank">Open</a>
+    </div>
+    <div class="card">
+      <h2>Midjourney vs. Firefly for Gaming Designers <span class="tag">HTML</span></h2>
+      <p class="byline">Comparing two AI art ecosystems.</p>
+      <p class="desc">A side-by-side guide for gaming designers comparing Midjourney and Adobe Firefly workflows, strengths, and ideal use cases.</p>
+      <a href="Midjourney vs. Firefly for Gaming Deisgners.html" target="_blank">Open</a>
+    </div>
     <div class="card">
       <h2>Midjourney Main Parameters <span class="tag">HTML</span></h2>
       <p class="byline">Essential reference for Midjourney controls.</p>
       <p class="desc">A structured overview of the main Midjourney parameters for creative professionals, helping designers understand control levers for image generation.</p>
       <a href="Midjourney_main_parameters.html" target="_blank">Open</a>
     </div>
-
     <div class="card">
       <h2>Midjourney Parameter Deck <span class="tag">HTML</span></h2>
       <p class="byline">Interactive parameter learning experience.</p>
       <p class="desc">An immersive deck-style walkthrough of 40 Midjourney parameters with examples, pitfalls, and guidance tailored for game design workflows.</p>
       <a href="Midjourney Parameter Deck.html" target="_blank">Open</a>
+    </div>
+    <div class="card">
+      <h2>Ultimate AI Art Command Deck <span class="tag">HTML</span></h2>
+      <p class="byline">Master every Midjourney & AI art command.</p>
+      <p class="desc">A complete interactive reference deck covering 50+ AI art commands, parameters, and workflows to maximize creative output.</p>
+      <a href="ultimate_ai_art_command_deck.html" target="_blank">Open</a>
+    </div>
+    <div class="card">
+      <h2>The Alchemist's Guide to Adobe Firefly <span class="tag">HTML</span></h2>
+      <p class="byline">Casino game art creation with Firefly.</p>
+      <p class="desc">A comprehensive guide to mastering Adobe Firefly for online gaming and casino art, with wizards, galleries, and quizzes.</p>
+      <a href="adobe_firefly_for_online_gamers.html" target="_blank">Open</a>
+    </div>
+    <div class="card">
+      <h2>Online Gaming AI Art Prompt Imaginer <span class="tag">HTML</span></h2>
+      <p class="byline">Interactive fantasy archetype prompt generator.</p>
+      <p class="desc">Choose characters, places, and moods to generate imaginative AI art prompts tailored for gaming and storytelling.</p>
+      <a href="Online Gaming AI Art Prompt Imaginer.html" target="_blank">Open</a>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <h2 class="section-header">4. Quizzes & Assessments</h2>
+  <p class="section-commentary">Test your skills and track your growth. Begin with the Day 1 quiz,
+    and watch this space for post-assessments and additional challenges coming soon.</p>
+  <div class="card-grid">
+    <div class="card">
+      <h2>AI Art Explorer Day 1 Quiz <span class="tag">HTML</span></h2>
+      <p class="byline">50-question mastery quiz.</p>
+      <p class="desc">An immersive quiz testing your understanding of AI art, Midjourney commands, and creative workflow strategies.</p>
+      <a href="AI Art Explorer Day 1 Quiz.html" target="_blank">Open</a>
+    </div>
+    <div class="card placeholder">
+      <h2>Coming Soon</h2>
+      <p class="byline">More quizzes & post-assessment</p>
+      <p class="desc">Stay tuned — additional quizzes and a final post-assessment will appear here to complete your training journey.</p>
     </div>
   </div>
 
