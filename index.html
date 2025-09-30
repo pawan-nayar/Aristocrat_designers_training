@@ -143,6 +143,30 @@
       background: var(--primary-hover);
     }
 
+    /* New styles for the exercise buttons */
+    .exercise-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: auto; /* Pushes to the bottom */
+        width: 100%;
+    }
+
+    .exercise-buttons a {
+        flex-grow: 1;
+        text-align: center;
+        background: #f0f2f5 !important;
+        color: #4a5568 !important;
+        border: 1px solid #e2e8f0;
+        padding: 8px 10px !important;
+        font-size: 0.85rem !important;
+        font-weight: 600;
+    }
+
+    .exercise-buttons a:hover {
+        background: #e2e8f0 !important;
+        color: #2d3748 !important;
+    }
+
     /* Color-Coded Tags */
     .tag {
       display: inline-block;
@@ -155,6 +179,8 @@
     }
     .tag.pdf { background: #fff0f0; color: #c53030; }
     .tag.html { background: #ebf4ff; color: #4299e1; }
+    .tag.slides { background: #fefcbf; color: #d69e2e; }
+
 
     /* Placeholder Card */
     .placeholder {
@@ -240,8 +266,8 @@
             <h2>Day 1 Training Slides<span class="tag slides">Slides</span></h2>
             <p class="byline">First day of 5-day AI Art training.</p>
             <p class="desc">Slide deck covering orientation, creative foundations, and the start of the structured training journey.</p>
-            <a href="https://drive.google.com/file/d/1__G4QTwHsxgIf5wUGNKLD4xtcgqSZ8zV/view?usp=sharing" target="_blank">Open</a>
-  </div>
+            <a href="https://docs.google.com/presentation/d/1__G4QTwHsxgIf5wUGNKLD4xtcgqSZ8zV/edit?usp=sharing&ouid=106331988898952899498&rtpof=true&sd=true" target="_blank">Open</a>
+          </div>
         </div>
       </section>
 
@@ -254,6 +280,16 @@
         <p class="section-commentary">Once the foundations are set, dive into structured guides and reflective
           practices that walk you step-by-step through AI-driven design processes.</p>
         <div class="card-grid">
+            <div class="card">
+                <h2>Prompting Practice Drills<span class="tag html">HTML</span></h2>
+                <p class="byline">Hands-on exercises for core concepts.</p>
+                <p class="desc">A series of focused drills to build muscle memory in prompt construction, from basic syntax to advanced parameter control.</p>
+                <div class="exercise-buttons">
+                    <a href="AI Art Prompting - Practice Exercise 1.html" target="_blank">Exercise 1</a>
+                    <a href="AI Art Prompting - Practice Exercise 2.html" target="_blank">Exercise 2</a>
+                    <a href="AI Art Prompting - Practice Exercise 3.html" target="_blank">Exercise 3</a>
+                </div>
+            </div>
           <div class="card">
             <h2>Progressive Prompt Wizard<span class="tag html">HTML</span></h2>
             <p class="byline">Experiment with evolving prompts step-by-step.</p>
