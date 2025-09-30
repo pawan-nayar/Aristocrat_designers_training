@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Art Prompting - Midjourney Masterclass</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: rgb(29, 30, 34);
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgb(29, 30, 34);
+            color: white;
+            border-radius: 10px;
+        }
+        .header h1 { font-size: 2.2em; margin-bottom: 10px; }
+        .header p { font-size: 1.1em; opacity: 0.9; }
+        
+        .start-screen { text-align: center; padding: 40px 20px; }
+        .start-instructions {
+            text-align: left;
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            line-height: 1.6;
+            border-left: 5px solid #6f42c1;
+        }
+        .start-instructions ul { list-style-position: inside; margin-top: 10px; }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            background: #6f42c1;
+            color: white;
+        }
+        .btn:hover {
+            transform: translateY(-px);
+            box-shadow: 0 5px 15px rgba(111, 66, 193, 0.4);
+            background: #5a3d9a;
+        }
+        .hidden { display: none; }
+
+        .exam-paper { padding: 10px; }
+        .exam-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #333;
+            margin-bottom: 20px;
+        }
+        .exam-header h2 { font-size: 1.5em; }
+        .exam-header p { font-weight: bold; }
+
+        .section { margin-bottom: 30px; }
+        .section-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #6f42c1;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #f1f1f1;
+        }
+        .question-block {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            background: #fdfdfd;
+        }
+        .question-instruction {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .question-instruction .subtext {
+            font-weight: 400;
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+        .reference-block {
+             background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #6f42c1;
+            border-radius: 8px;
+            line-height: 1.7;
+        }
+        .param-title { font-weight: 700; font-size: 1.1em; margin-top: 15px; }
+        .param-desc { margin-top: 5px; }
+        .param-tip { font-style: italic; color: #555; margin-top: 8px; font-size: 0.9em; }
+        .version-note {
+            font-weight: bold;
+            color: #d63384;
+            margin-top: 5px;
+        }
+        .hop-block {
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .hop-title { font-weight: bold; font-size: 1.2em; color: #6f42c1; margin-bottom: 10px; }
+        .hop-task { margin-bottom: 10px; }
+        .hint {
+            font-style: italic;
+            color: #555;
+            background-color: #fdf8e1;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 8px;
+            font-size: 0.9em;
+            border-left: 3px solid #ffc107;
+        }
+        .result-prompt {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 4px;
+        }
+        code {
+             font-family: 'Roboto Mono', monospace;
+             background-color: #e9ecef;
+             padding: 2px 5px;
+             border-radius: 4px;
+             color: #333;
+        }
+    </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Start Screen -->
+    <div id="startScreen" class="start-screen">
+      <div class="header">
+        <h1>Midjourney Prompting Masterclass 🔮</h1>
+        <p>A 1-Hour Deep Dive Practice Session</p>
+      </div>
+      
+      <div class="start-instructions">
+        <h3>Welcome to Your 1-Hour Midjourney Training!</h3>
+        <ul>
+          <li><strong>Goal:</strong> To master Midjourney's parameters through hands-on, evolutionary prompting.</li>
+          <li><strong>How it Works:</strong>
+            <ol>
+              <li>Review the <strong>Parameter Deep Dive</strong> guide to understand each tool's function and version compatibility.</li>
+              <li>Choose <strong>ANY SIX</strong> of the 12 <strong>Prompt Evolution Projects</strong> to complete for your one-hour session.</li>
+            </ol>
+          </li>
+          <li><strong>Important Note on Process:</strong> The "hops" in each project are a <strong>suggested workflow</strong>, not a rigid set of steps. You are free to take as many hops as you want to refine your idea. The goal is to practice the iterative process of improvement.</li>
+        </ul>
+      </div>
+      
+      <button class="btn" onclick="startExam()">Begin Masterclass</button>
+    </div>
+
+    <!-- Main Content -->
+    <div id="examPaper" class="exam-paper hidden">
+        <div class="exam-header">
+            <div>
+                <h2>Midjourney Prompt Engineering</h2>
+                <p>Advanced Practice</p>
+            </div>
+            <div>
+                <p>Focus: Prompt Evolution</p>
+                <p>Time: ~60 Minutes</p>
+            </div>
+        </div>
+
+        <!-- REFERENCE GUIDE -->
+        <div class="section">
+            <h2 class="section-title">Part 1: Parameter Deep Dive</h2>
+            <div class="question-block">
+                <p class="question-instruction">This is your reference guide. Understand these tools to gain full control over your Midjourney creations.</p>
+                 <div class="reference-block">
+                    <p class="param-title">Core & Technical Parameters</p>
+                    <p class="param-desc"><strong><code>--ar</code>:</strong> Sets aspect ratio (e.g., <code>16:9</code>).<br>
+                    <strong><code>--v</code>:</strong> Sets model version (e.g., <code>6</code>, <code>7</code>).<br>
+                    <strong><code>--seed</code>:</strong> Reuses a composition for consistency.<br>
+                    <strong><code>--style raw</code>:</strong> Reduces Midjourney's default aesthetic for a more literal result.<br>
+                    <strong><code>--stylize [0-1000]</code>:</strong> Controls how artistic Midjourney gets. Low is literal, high is creative.<br>
+                    <strong><code>--chaos [0-100]</code>:</strong> Controls the variety and unpredictability of the initial image grid.<br>
+                    <strong><code>--quality [value]</code>:</strong> Adjusts rendering quality/time. (e.g., <code>.25, .5, 1</code>).<br>
+                    <strong><code>--stop [10-100]</code>:</strong> Stops generation early for a less-finished look (e.g., <code>--stop 50</code> for a painterly sketch).<br>
+                    <strong><code>--tile</code>:</strong> Creates a seamless, repeating pattern.
+                    </p>
+                </div>
+                <div class="reference-block">
+                    <p class="param-title">Reference Parameters</p>
+                     <p class="param-desc"><strong><code>--sref &lt;URL&gt;</code> (v6+):</strong> Applies a reference image's style. Use <code>--sw</code> to adjust strength.<br>
+                     <strong><code>--cref &lt;URL&gt;</code> (v6+):</strong> Makes a character look like a reference. Use <code>--cw</code> to adjust what is copied (face vs. full outfit).<br>
+                     <strong><code>--oref &lt;URL&gt;</code> (v7+):</strong> Inserts a specific object/creature from a reference. Use <code>--ow</code> to adjust strength.</p>
+                </div>
+                <div class="reference-block">
+                    <p class="param-title">Interactive & Advanced Tools</p>
+                     <p class="param-desc"><strong>Keyword Weights:</strong> Emphasize concepts like so: <code>a cat ::2 and a dog ::1</code>.<br>
+                     <strong>Interactive Tools:</strong> Use Pan, Zoom, and Vary (Region) after upscaling to expand or fix an image.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXERCISES -->
+        <div class="section">
+            <h2 class="section-title">Part 2: Prompt Evolution Projects (Choose any Six)</h2>
+            
+            <div class="question-block">
+                <p class="question-instruction">Project 1: Cinematic Character Design <span class="subtext">(Focus: <code>--cref</code>, <code>--cw</code>, <code>--sref</code>)</span></p>
+                <div class="hop-block"><p class="hop-title">Hop 1: Concept</p><p class="hop-task">Prompt a "suave gambler hero."</p><div class="result-prompt"><code>full-body portrait of a suave gambler hero in an elegant tuxedo, cinematic lighting --ar 2:3 --v 6</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 2: Lock Face</p><p class="hop-task">Use <code>--cref</code> with a reference image URL to lock in the hero's face.</p><div class="result-prompt"><code>... --cref &lt;URL_of_hero_face&gt;</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 3: Change Costume</p><p class="hop-task">Put the hero in "rugged adventurer's gear" but keep the face.</p><div class="hint">Use <code>--cw 0</code>.</div><div class="result-prompt"><code>...in rugged adventurer's gear... --cref &lt;URL_of_hero_face&gt; --cw 0</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 4: Apply Style</p><p class="hop-task">Apply a "film-noir" style from a reference image, making it dominate the look.</p><div class="hint">Use <code>--sref</code> and <code>--style raw</code>.</div><div class="result-prompt"><code>... --sref &lt;URL_of_film_noir_art&gt; --style raw</code></div></div>
+            </div>
+
+            <div class="question-block">
+                <p class="question-instruction">Project 2: Game Asset Consistency <span class="subtext">(Focus: <code>--oref</code>, <code>--ow</code>, <code>--v 7</code>)</span></p>
+                <div class="hop-block"><p class="hop-title">Hop 1: Design Asset</p><p class="hop-task">Create a "jeweled lucky coin" icon.</p><div class="hint">Use <code>--ar 1:1</code> and <code>--v 7</code>.</div><div class="result-prompt"><code>a jeweled lucky coin with a four-leaf clover --ar 1:1 --v 7</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 2: Place in Scene</p><p class="hop-task">Use <code>--oref</code> to place that exact coin into a new scene: "a coin spinning on a poker table."</p><div class="result-prompt"><code>a close-up of a coin spinning on a poker table --v 7 --oref &lt;URL_of_lucky_coin&gt;</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 3: Adjust Blending</p><p class="hop-task">The coin looks slightly pasted on. Use <code>--ow</code> to make it blend more naturally.</p><div class="hint">Lower the <code>--ow</code> value.</div><div class="result-prompt"><code>... --oref &lt;URL_of_lucky_coin&gt; --ow 80</code></div></div>
+            </div>
+
+            <div class="question-block">
+                <p class="question-instruction">Project 3: Exploring Creativity <span class="subtext">(Focus: <code>--chaos</code>, <code>--stylize</code>)</span></p>
+                <div class="hop-block"><p class="hop-title">Hop 1: The Base Prompt</p><p class="hop-task">Start with a simple concept: "knight on horseback."</p><div class="result-prompt"><code>knight on horseback --ar 3:2</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 2: Introduce Low Chaos</p><p class="hop-task">Add a small amount of variation to the initial grid.</p><div class="result-prompt"><code>knight on horseback --ar 3:2 --chaos 10</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 3: Embrace High Chaos</p><p class="hop-task">Push the creativity with high chaos for experimental, unexpected results.</p><div class="result-prompt"><code>knight on horseback --ar 3:2 --chaos 80</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 4: Add High Stylization</p><p class="hop-task">Combine high chaos with high stylization to give Midjourney maximum artistic freedom.</p><div class="hint">A high <code>--stylize</code> value (e.g., 750) encourages beautiful, artistic results.</div><div class="result-prompt"><code>knight on horseback --ar 3:2 --chaos 80 --stylize 750</code></div></div>
+            </div>
+
+            <div class="question-block">
+                <p class="question-instruction">Project 4: Controlling Composition <span class="subtext">(Focus: Keyword Weights)</span></p>
+                <div class="hop-block"><p class="hop-title">Hop 1: A Balanced Scene</p><p class="hop-task">Create a scene with three elements: "a dragon, a knight, and a castle."</p><div class="result-prompt"><code>a dragon fighting a knight in front of a castle --ar 16:9</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 2: Emphasize the Dragon</p><p class="hop-task">Use keyword weights to make the dragon the dominant subject.</p><div class="hint">Use the syntax <code>dragon::2</code>.</div><div class="result-prompt"><code>a dragon::2 fighting a knight in front of a castle --ar 16:9</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 3: Shift Focus to the Knight</p><p class="hop-task">Now make the knight the main focus, with the dragon as a secondary element.</p><div class="result-prompt"><code>a dragon::1 fighting a knight::2 in front of a castle --ar 16:9</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 4: Make the Castle a Backdrop</p><p class="hop-task">Keep the focus on the fight and de-emphasize the castle, making it more of a background detail.</p><div class="hint">Give the castle a lower weight, like <code>0.5</code>.</div><div class="result-prompt"><code>a dragon::1.5 fighting a knight::1.5 in front of a castle::0.5 --ar 16:9</code></div></div>
+            </div>
+            
+            <div class="question-block">
+                <p class="question-instruction">Project 5: Creating Seamless Textures <span class="subtext">(Focus: <code>--tile</code>, <code>--stop</code>)</span></p>
+                <div class="hop-block"><p class="hop-title">Hop 1: The Core Element</p><p class="hop-task">Describe a texture: "Victorian damask floral pattern."</p><div class="result-prompt"><code>Victorian damask floral pattern --ar 1:1</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 2: Make it Seamless</p><p class="hop-task">Add the parameter to make the pattern tileable.</p><div class="result-prompt"><code>Victorian damask floral pattern --ar 1:1 --tile</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 3: Stylize the Texture</p><p class="hop-task">Let's try a different style. Create a seamless pattern of "bioluminescent jungle vines."</p><div class="result-prompt"><code>bioluminescent jungle vines, glowing neon flora --ar 1:1 --tile</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 4: Create a Sketch Version</p><p class="hop-task">Generate an unfinished, sketch-like version of the vine pattern.</p><div class="hint">Use the <code>--stop</code> parameter.</div><div class="result-prompt"><code>bioluminescent jungle vines, glowing neon flora --ar 1:1 --tile --stop 50</code></div></div>
+            </div>
+            
+            <div class="question-block">
+                <p class="question-instruction">Project 6: The "Poet/Gamer" Prompt Method <span class="subtext">(Focus: Rich, Descriptive Language)</span></p>
+                <div class="hop-block"><p class="hop-title">Hop 1: Core Symbol</p><p class="hop-task">Start with a symbol: "Neon Tiger."</p><div class="result-prompt"><code>Neon Tiger --ar 1:1</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 2: Add Gamer Description</p><p class="hop-task">Add action and feeling: "When this symbol lands, reels tremble as neon stripes roar alive."</p><div class="result-prompt"><code>Neon Tiger, reels tremble as neon stripes roar alive --ar 1:1</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 3: Add Poet Description</p><p class="hop-task">Add evocative language: "A beast of circuitry and night, prowling across the dreamscape of machines."</p><div class="result-prompt"><code>Neon Tiger, a beast of circuitry and night, prowling across the dreamscape of machines, reels tremble as neon stripes roar alive --ar 1:1</code></div></div>
+            </div>
+
+            <div class="question-block">
+                <p class="question-instruction">Project 7: Technical Rendering Control <span class="subtext">(Focus: <code>--quality</code>, <code>--stop</code>)</span></p>
+                <div class="hop-block"><p class="hop-title">Hop 1: The Detailed Scene</p><p class="hop-task">Create a complex scene: "ultra-realistic close-up of a roulette wheel spinning."</p><div class="result-prompt"><code>ultra-realistic close-up of a roulette wheel spinning, sharp focus, cinematic detail --ar 1:1 --v 6</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 2: Fast Draft Quality</p><p class="hop-task">Render a quick, low-quality version for fast iteration.</p><div class="hint">Use <code>--quality .25</code> or <code>--q .25</code>.</div><div class="result-prompt"><code>... --q .25</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 3: High Quality Render</p><p class="hop-task">Now render it at the default, high quality setting.</p><div class="result-prompt"><code>... --q 1</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 4: Painterly Stop</p><p class="hop-task">Render the image again, but stop it midway to create an artistic, painterly effect.</p><div class="result-prompt"><code>... --q 1 --stop 70</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 5: Sketchy Stop</p><p class="hop-task">Finally, create a very early, sketch-like version of the scene.</p><div class="result-prompt"><code>... --q 1 --stop 30</code></div></div>
+            </div>
+            
+             <div class="question-block">
+                <p class="question-instruction">Project 8: World Building with Pan & Zoom <span class="subtext">(Focus: Interactive Tools)</span></p>
+                <div class="hop-block"><p class="hop-title">Hop 1: The Focal Point</p><p class="hop-task">Create a single "ornate ancient temple slot machine."</p><div class="hint">Use <code>--ar 9:16</code> to emphasize its height.</div><div class="result-prompt"><code>an ornate ancient temple slot machine, hieroglyphic details --ar 9:16</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 2: Reveal Surroundings</p><p class="hop-task">After upscaling, which tool reveals the environment around the machine?</p><div class="result-prompt"><strong>Answer:</strong> The "Zoom Out" buttons.</div></div>
+                <div class="hop-block"><p class="hop-title">Hop 3: Expand the World</p><p class="hop-task">Now with a wider view, which tool extends the scene to the right to show a "long hallway"?</p><div class="result-prompt"><strong>Answer:</strong> The "Pan Right" (➡️) button.</div></div>
+                 <div class="hop-block"><p class="hop-title">Hop 4: Add a Detail</p><p class="hop-task">After panning, a section of the wall is blank. How would you use Vary (Region) to add "ancient hieroglyphs carved into the wall"?</p><div class="result-prompt"><strong>Answer:</strong> Upscale the panned image, click "Vary (Region)", select the blank wall, and prompt "ancient hieroglyphs carved into the wall."</div></div>
+            </div>
+
+            <div class="question-block">
+                <p class="question-instruction">Project 9: Designing Modern Reel Symbols <span class="subtext">(Focus: Creative Asset Ideation)</span></p>
+                <div class="hop-block"><p class="hop-title">Hop 1: The Classic</p><p class="hop-task">Start with "a lucky seven."</p><div class="result-prompt"><code>a lucky seven symbol --ar 1:1</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 2: The Modern Twist</p><p class="hop-task">Reimagine it as a "Holographic 7."</p><div class="result-prompt"><code>a holographic lucky seven symbol --ar 1:1</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 3: Add Style & Detail</p><p class="hop-task">Add "glowing with neon projection beams, cyberpunk holographic effect, futuristic casino reel win icon."</p><div class="result-prompt"><code>a holographic lucky seven symbol, glowing with neon projection beams, cyberpunk holographic effect, futuristic casino reel win icon --ar 1:1</code></div></div>
+            </div>
+            
+            <div class="question-block">
+                <p class="question-instruction">Project 10: Immersive Backgrounds <span class="subtext">(Focus: Environment Design)</span></p>
+                <div class="hop-block"><p class="hop-title">Hop 1: The Theme</p><p class="hop-task">Choose a theme: "Steampunk City."</p><div class="result-prompt"><code>Steampunk City --ar 16:9</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 2: Add Key Elements</p><p class="hop-task">Add specific elements: "Gears, Smoke, Iron Bridges, Clocktowers, Airships."</p><div class="result-prompt"><code>Steampunk City with giant gears, smoke stacks, iron bridges, towering clocktowers, and brass airships --ar 16:9</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 3: Define the Art Style</p><p class="hop-task">Specify the look: "epic fantasy concept art, matte painting."</p><div class="result-prompt"><code>epic fantasy concept art matte painting of a Steampunk City with giant gears... --ar 16:9</code></div></div>
+            </div>
+
+            <div class="question-block">
+                <p class="question-instruction">Project 11: Dynamic Posing <span class="subtext">(Focus: Posing Keywords, <code>--cref</code>)</span></p>
+                <div class="hop-block"><p class="hop-title">Hop 1: The Character</p><p class="hop-task">Establish a "female cyberpunk street samurai" using a <code>--cref</code> for her face.</p><div class="result-prompt"><code>portrait of a female cyberpunk street samurai, neon-lit alley --ar 2:3 --v 6 --cref &lt;URL_of_samurai_face&gt;</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 2: Action Pose</p><p class="hop-task">Show the same character in a "side view, drawing her katana."</p><div class="result-prompt"><code>side view of a female cyberpunk street samurai drawing her katana... --cref &lt;URL_of_samurai_face&gt;</code></div></div>
+                 <div class="hop-block"><p class="hop-title">Hop 3: Atmospheric Pose</p><p class="hop-task">Now show her from behind, as a "silhouette, walking away, backside view."</p><div class="result-prompt"><code>silhouette of a female cyberpunk street samurai, walking away, backside view... --cref &lt;URL_of_samurai_face&gt; --cw 0</code></div></div>
+            </div>
+            
+            <div class="question-block">
+                <p class="question-instruction">Project 12: Stylistic Blending <span class="subtext">(Focus: Multiple <code>--sref</code> with Weights)</span></p>
+                <div class="hop-block"><p class="hop-title">Hop 1: The Subject</p><p class="hop-task">Start with "a portrait of a stoic queen."</p><div class="result-prompt"><code>a portrait of a stoic queen --ar 4:5 --v 6</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 2: Blend Two Styles</p><p class="hop-task">Use two <code>--sref</code> URLs to blend "Art Nouveau" and "cyberpunk" styles.</p><div class="result-prompt"><code>... --sref &lt;URL_of_Art_Nouveau&gt; &lt;URL_of_cyberpunk&gt;</code></div></div>
+                <div class="hop-block"><p class="hop-title">Hop 3: Adjust the Blend</p><p class="hop-task">Give the Art Nouveau style more influence than the cyberpunk style.</p><div class="hint">Use style weights: <code>&lt;URL1&gt;::2 &lt;URL2&gt;::1</code>.</div><div class="result-prompt"><code>... --sref &lt;URL_of_Art_Nouveau&gt;::2 &lt;URL_of_cyberpunk&gt;::1</code></div></div>
+            </div>
+        </div>
+        
+        <div class="header" style="margin-top: 40px;">
+            <p>End of Practice Session</p>
+        </div>
+    </div>
+    
+  </div>
+
+  <script>
+    function startExam() {
+      document.getElementById('startScreen').classList.add('hidden');
+      document.getElementById('examPaper').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
+

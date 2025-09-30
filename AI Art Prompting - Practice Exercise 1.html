@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Art Prompting - Practice Exercise</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: rgb(31, 38, 43);
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgb(31, 38, 43);
+            color: white;
+            border-radius: 10px;
+        }
+        .header h1 { font-size: 2.2em; margin-bottom: 10px; }
+        .header p { font-size: 1.1em; opacity: 0.9; }
+        
+        .start-screen { text-align: center; padding: 40px 20px; }
+        .start-instructions {
+            text-align: left;
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            line-height: 1.6;
+            border-left: 5px solid #007bff;
+        }
+        .start-instructions ul { list-style-position: inside; margin-top: 10px; }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            background: #007bff;
+            color: white;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+            background: #0056b3;
+        }
+        .hidden { display: none; }
+
+        .exam-paper { padding: 10px; }
+        .exam-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #333;
+            margin-bottom: 20px;
+        }
+        .exam-header h2 { font-size: 1.5em; }
+        .exam-header p { font-weight: bold; }
+
+        .section { margin-bottom: 30px; }
+        .section-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #007bff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #f1f1f1;
+        }
+        .question-block {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            background: #fdfdfd;
+        }
+        .question-instruction {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .passage {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+            border-radius: 8px;
+            line-height: 1.7;
+        }
+        .question-list li, .sub-question {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        .hint {
+            font-style: italic;
+            color: #555;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 8px;
+            font-size: 0.9em;
+            border-left: 3px solid #17a2b8;
+        }
+    </style>
+</head>
+<body>
+  <div class="container">
+    <div id="startScreen" class="start-screen">
+      <div class="header">
+        <h1>AI Art Prompting 🎨</h1>
+        <p>A 45-Minute Practice Exercise</p>
+      </div>
+      
+      <div class="start-instructions">
+        <h3>Instructions</h3>
+        <ul>
+          <li><strong>Goal:</strong> This is not a test. It's a practice session to help you write better AI art prompts.</li>
+          <li><strong>Estimated Time:</strong> 45 Minutes.</li>
+          <li>First, read the foundational text on prompt anatomy.</li>
+          <li>Then, attempt the practice questions to apply what you've learned.</li>
+          <li>Use the hints if you get stuck! The goal is to learn, not to guess.</li>
+        </ul>
+      </div>
+      
+      <button class="btn" onclick="startExam()">Begin Exercise</button>
+    </div>
+
+    <div id="examPaper" class="exam-paper hidden">
+        <div class="exam-header">
+            <div>
+                <h2>AI Art Prompt Engineering</h2>
+                <p>Practice Session</p>
+            </div>
+            <div>
+                <p>Focus: Learning & Application</p>
+                <p>Time: ~45 Minutes</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Part 1: The Anatomy of a Great Prompt</h2>
+            <div class="question-block">
+                <p class="question-instruction">Read the following text carefully. It will be the basis for the exercises in Part 2.</p>
+                <div class="passage">
+                    <p>Creating stunning images with AI art generators like Midjourney or DALL-E is less about magic and more about clear communication. The quality of your output is directly tied to the quality of your input—your prompt. A well-crafted prompt acts as a detailed blueprint for the AI. Let's break down the essential components.</p>
+                    <p><strong>1. The Subject:</strong> This is the 'what' of your image. It's the main noun, the character, or the object you want to see. Start with a clear and simple subject. Instead of just "dog," be specific: "a fluffy Samoyed puppy." Specificity is your best friend.</p>
+                    <p><strong>2. The Style & Medium:</strong> This is the 'how.' It defines the artistic look and feel. Do you want a photo or a painting? If a painting, what kind? Examples include: <em>photorealistic, oil painting, watercolor sketch, digital art, anime style, 3D render, Impressionism.</em> This component dramatically changes the outcome.</p>
+                    <p><strong>3. Composition & Framing:</strong> This component directs the 'camera.' It tells the AI how to frame the subject. Is it a close-up, a full-body shot, or a wide landscape? Key terms include: <em>portrait, close-up shot, full shot, side view, top-down shot, wide angle shot.</em> This gives you control over the perspective.</p>
+                    <p><strong>4. Lighting:</strong> Lighting creates mood. It can transform a simple scene into something dramatic or serene. Be descriptive. Use terms like: <em>cinematic lighting, soft morning light, neon glow, dramatic backlighting, moody shadows.</em></p>
+                    <p><strong>5. Color Palette:</strong> While the AI often chooses colors well, you can guide it for a specific aesthetic. You can specify a mood or list the colors directly. Examples: <em>warm color palette, pastel colors, monochromatic blue, vibrant and saturated colors.</em></p>
+                    <p><strong>Putting It All Together (An Example):</strong><br>
+                    - Basic Idea: <em>"A robot in a forest."</em><br>
+                    - Layered Prompt: <em>"A photorealistic full shot of a friendly, vintage robot walking through a misty redwood forest, soft morning light filtering through the canopy, warm color palette of greens and browns."</em><br>
+                    Each added layer gives the AI more precise instructions, moving from a vague idea to a specific, evocative scene.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Part 2: Practice Questions</h2>
+            <div class="question-block">
+                <p class="question-instruction">Based on your understanding of the text, answer the following questions.</p>
+                <ol class="question-list">
+                    <li>
+                        <strong>Identify the Components:</strong> Read the prompt below and identify its <strong>Subject</strong> and <strong>Lighting</strong> component.
+                        <br><em>Prompt: "A close-up portrait of an old wizard reading a book, moody shadows cast from a single candle."</em>
+                        <div class="hint"><strong>Hint:</strong> The 'Subject' is the main character or object of the image. The 'Lighting' describes the source and feel of the light.</div>
+                    </li>
+                    <li>
+                        <strong>Explain the Purpose:</strong> Why is it important to specify a 'Style & Medium' in a prompt?
+                        <div class="hint"><strong>Hint:</strong> Think about the difference between telling an artist to "draw a house" versus "paint a watercolor of a house." What does the extra information provide?</div>
+                    </li>
+                    <li>
+                        <strong>Improve a Prompt:</strong> The following prompt is too simple: <em>"A car on a road."</em><br>Rewrite this prompt to make it much more detailed and interesting by adding a **Style**, **Composition**, and **Lighting** component.
+                        <div class="hint"><strong>Hint:</strong> What kind of car? What does the road look like? What time of day is it? Is it a photo or a drawing?</div>
+                    </li>
+                    <li>
+                        <strong>Deconstruct a Prompt:</strong> Break down the complex prompt below into its four main components: Subject, Style, Lighting, and Composition.
+                        <br><em>Prompt: "Digital art of a futuristic city skyline at twilight, cinematic lighting, wide angle shot."</em>
+                        <div class="hint"><strong>Hint:</strong> Go through the prompt phrase by phrase and match each part to one of the categories from the text.</div>
+                    </li>
+                    <li>
+                        <strong>Creative Application:</strong> Imagine you want to create an image of a 'magical library'. Write a complete prompt for this idea, making sure to include at least four of the five components discussed in the text (Subject, Style, Composition, Lighting, Color Palette).
+                        <div class="hint"><strong>Hint:</strong> Start with the subject. Then, decide if you want it to look like a realistic photo, a fantasy painting, or something else. How is the room lit? Are we looking at one bookshelf or the whole room?</div>
+                    </li>
+                     <li>
+                        <strong>Troubleshooting:</strong> An AI keeps generating images of an apple with a computer logo on it. You just want a simple piece of fruit. What kind of specific subject description could you use to avoid the brand logo?
+                        <div class="hint"><strong>Hint:</strong> The text emphasizes being specific. How can you describe the fruit in a way that is purely natural and organic?</div>
+                    </li>
+                </ol>
+            </div>
+             <div class="question-block">
+                <h3 style="margin-bottom: 15px; color: #007bff;">Key Takeaways & Summary</h3>
+                <p>Great job on completing the exercise! Here are the main points to remember:</p>
+                <ul style="list-style-type: disc; margin-left: 20px; line-height: 1.8;">
+                    <li><strong>Be Specific:</strong> Vague prompts lead to generic images. The more detail you provide, the closer the AI will get to your vision.</li>
+                    <li><strong>Layer Your Details:</strong> Start with a simple subject and add layers of detail like style, lighting, and composition.</li>
+                    <li><strong>Experiment:</strong> There's no single "correct" prompt. The best way to learn is to practice, mix and match components, and see what the AI creates. Think of it as a creative conversation.</li>
+                </ul>
+             </div>
+        </div>
+        
+        <div class="header" style="margin-top: 40px;">
+            <p>End of Practice Exercise</p>
+        </div>
+    </div>
+    
+  </div>
+
+  <script>
+    function startExam() {
+      document.getElementById('startScreen').classList.add('hidden');
+      document.getElementById('examPaper').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
