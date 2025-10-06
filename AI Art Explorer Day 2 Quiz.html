@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI Art Explorer: Day 2 Quiz (40 Qs)</title>
+
+<!-- Font: Montserrat -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Tone.js for Sound Effects -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+
+<style>
+:root{
+  /* Brand palette (warm cream + orange + espresso) */
+  --bg:#fff8f3;
+  --surface:#ffffff;
+  --surface-soft:#fff3eb;
+  --text:#2a2725;
+  --muted:#6d6660;
+  --line:#eadfd6;
+
+  --header:#1f1b18;
+  --headerText:#f6f3f1;
+
+  --accent:#ef7d55;
+  --accent-tint:#f3b09a;
+  --accent-deep:#d8663f;
+
+  /* Semantic palette */
+  --correct:#29792e;
+  --correct-bg:#e3fcef;
+  --correct-line:#a6d9b0;
+
+  --wrong:#a12626;
+  --wrong-bg:#ffe9e9;
+  --wrong-line:#f3b6b6;
+
+  --info:#266ea1;
+  --info-bg:#e9f7ff;
+  --info-line:#b6dcf3;
+
+  --warn:#a17726;
+  --warn-bg:#fff9e9;
+  --warn-line:#f3e0b6;
+
+  --font-body:'Montserrat', sans-serif;
+  --rad-s: 4px; /* Small radius */
+  --rad-m: 8px; /* Medium radius */
+  --rad-l: 16px; /* Large radius */
+  --shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+*, *::before, *::after{ margin:0; padding:0; box-sizing:border-box; }
+html, body{ height:100%; }
+body{
+  font-family: var(--font-body);
+  background-color: var(--bg);
+  color: var(--text);
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 1.75rem 1.25rem;
+}
+.quiz-container{
+  width:100%;
+  max-width: 880px; /* wider on desktop while keeping margins */
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--rad-l);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 3rem); /* internal scroll so header/footer stay visible */
+}
+.quiz-header{
+  background-color: var(--header);
+  color: var(--headerText);
+  padding: 1.25rem 1.5rem;
+  position: sticky; top: 0; z-index: 3; /* keep visible during scroll */
+}
+.quiz-title{ font-size:1.25rem; font-weight:800; }
+.quiz-meta{ font-size:0.8rem; opacity:0.7; margin-top:0.25rem; }
+
+.quiz-progress{
+  height: 6px;
+  background-color: var(--surface-soft);
+}
+.progress-bar{
+  height:100%;
+  width:0%;
+  background-color: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.quiz-card{
+  padding: 1.5rem;
+  overflow-y: auto; /* scroll questions area, not the whole page */
+  flex: 1 1 auto;
+}
+.q-category{
+  font-size:0.75rem;
+  font-weight:700;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+}
+.q-text{
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom:1.5rem;
+}
+.q-text p{ margin-bottom: 0.5rem; }
+
+/* Options Base Style */
+.q-option, .q-tf-option, .q-seq-item, .q-match-item{
+  display: block;
+  width:100%;
+  text-align: left;
+  background-color: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--rad-m);
+  padding: 0.85rem 1rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom:0.75rem;
+}
+.q-option:hover, .q-tf-option:hover, .q-seq-item:hover{
+  border-color: var(--accent-tint);
+  background-color: #fff;
+}
+.q-option.selected, .q-tf-option.selected{
+  border-color: var(--accent);
+  background-color: var(--accent-tint);
+  color: var(--header);
+  font-weight:600;
+}
+.q-option.correct, .q-tf-option.correct, .q-seq-item.correct, .q-match-item.correct {
+  border-color: var(--correct-line);
+  background-color: var(--correct-bg);
+  color: var(--correct);
+}
+.q-option.wrong, .q-tf-option.wrong {
+  border-color: var(--wrong-line);
+  background-color: var(--wrong-bg);
+  color: var(--wrong);
+}
+
+/* TF Specifics */
+.q-tf-options{ display: flex; gap:1rem; }
+.q-tf-option{ text-align: center; font-weight:700; }
+
+/* FTB Specifics */
+.q-ftb-input{
+  width:100%;
+  border: 1px solid var(--line);
+  background-color: var(--surface-soft);
+  border-radius: var(--rad-m);
+  padding: 0.85rem 1rem;
+  font-family: inherit;
+  font-size: 1rem;
+  outline:none;
+}
+.q-ftb-input:focus{
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-tint);
+}
+
+/* SEQ Specifics */
+.q-seq-item.dragging { opacity: 0.5; background-color: var(--accent-tint); }
+
+/* MATCH Specifics */
+.q-match-container { display: flex; gap: 1rem; }
+.q-match-col { flex: 1; }
+.q-match-col h3 { font-size: 0.8rem; text-align: center; margin-bottom: 0.75rem; color: var(--muted); }
+.q-match-item { text-align: center; }
+.q-match-item.selected {
+  border-color: var(--accent);
+  background-color: var(--accent-tint);
+}
+/* Color classes for matching pairs */
+.pair-0 { border-left: 5px solid #ff6347; } /* Tomato */
+.pair-1 { border-left: 5px solid #4682b4; } /* SteelBlue */
+.pair-2 { border-left: 5px solid #32cd32; } /* LimeGreen */
+.pair-3 { border-left: 5px solid #ffaf40; } /* Naples Yellow */
+.pair-4 { border-left: 5px solid #9966cc; } /* Amethyst */
+
+
+/* RTC Specifics */
+.q-rtc-context{
+  background-color: var(--surface-soft);
+  border: 1px solid var(--line);
+  padding: 1rem;
+  border-radius: var(--rad-m);
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.q-rtc-sub-q{ margin-bottom:1.5rem; }
+.q-rtc-sub-q .q-text{
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+
+/* Explanation */
+.expl{
+  display:none;
+  padding: 1rem;
+  border-radius: var(--rad-m);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-top: 1.5rem;
+  border: 1px solid;
+}
+.expl--ok{
+  background-color: var(--info-bg);
+  border-color: var(--info-line);
+  color: var(--info);
+}
+.expl--ok strong{ color: var(--text); }
+
+/* Footer */
+.quiz-footer{
+  padding: 1.5rem;
+  border-top: 1px solid var(--line);
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky; bottom: 0; z-index: 2; background: var(--surface);
+}
+.quiz-nav, .quiz-actions{ display:flex; gap:0.75rem; }
+.btn{
+  background-color: transparent;
+  border: 1px solid var(--line);
+  border-radius: var(--rad-m);
+  padding: 0.6rem 1.2rem;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn:hover{
+  border-color: var(--muted);
+  background-color: var(--surface-soft);
+}
+.btn:disabled{
+  opacity: 0.5;
+  cursor:not-allowed;
+}
+
+.btn-primary{
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--headerText);
+}
+.btn-primary:hover{
+  background-color: var(--accent-deep);
+  border-color: var(--accent-deep);
+}
+.btn-primary:disabled{
+  background-color: var(--accent-tint);
+  border-color: var(--accent-tint);
+  color: var(--text);
+}
+
+.btn-hint{ color: var(--warn); }
+.btn-hint:hover{ border-color: var(--warn); background-color: var(--warn-bg); }
+
+/* Hint Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  z-index:100;
+}
+.modal.visible {
+  opacity: 1;
+  visibility: visible;
+}
+.modal-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: var(--rad-l);
+  max-width: 500px;
+  width: calc(100% - 2rem);
+  text-align: center;
+}
+.modal-content h3{
+    font-size:1.2rem;
+    color: var(--warn);
+    margin-bottom:0.5rem;
+}
+.modal-content p {
+  margin-bottom: 1.5rem;
+  font-size:1rem;
+  color: var(--text);
+}
+.modal-content small{
+    color: var(--muted);
+}
+
+.disabled-options .q-option,
+.disabled-options .q-tf-option,
+.disabled-options .q-seq-item,
+.disabled-options .q-match-item,
+.disabled-options .q-ftb-input {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  body { padding: 0.5rem 0; }
+  .quiz-container { border-radius: 0; max-height: 100vh; }
+  .quiz-card, .quiz-footer, .quiz-header { padding: 1.25rem; }
+  .q-text { font-size: 1rem; }
+  .q-match-container { flex-direction: column; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div class="quiz-header">
+    <h1 class="quiz-title">AI Art Explorer: Day 2</h1>
+    <p class="quiz-meta">Advanced Techniques & Workflow Quiz</p>
+  </div>
+  <div class="quiz-progress">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+  <div class="quiz-card" id="qCard">
+    <!-- Question content is rendered here by JS -->
+  </div>
+  <div class="quiz-footer">
+    <div class="quiz-nav">
+      <button class="btn" id="btnPrev" disabled>Prev</button>
+      <button class="btn" id="btnNext" style="display:none">Next</button>
+    </div>
+    <div class="quiz-actions">
+      <button class="btn btn-hint" id="btnHint">Hint (-5)</button>
+      <button class="btn" id="btnSkip">Skip</button>
+      <button class="btn btn-primary" id="btnSubmit">Submit</button>
+      <button class="btn btn-primary" id="btnFinish" style="display:none">Finish</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="hintModal">
+  <div class="modal-content">
+    <h3>🤔 Hint</h3>
+    <p id="hintText"></p>
+    <small>Viewing this hint costs 5 points.</small>
+    <br><br>
+    <button class="btn" id="closeHintModal">Got it!</button>
+  </div>
+</div>
+
+<script>
+const QUIZ = {
+    title: "AI Art Explorer: Day 2",
+    description: "Test your knowledge of advanced Midjourney techniques, workflow integration, and visual storytelling.",
+    questions: [
+        {
+            type: 'MCQ',
+            category: 'Consistency Tools',
+            text: "Which parameter is used to reference the style of an existing image, ensuring stylistic consistency across your generations?",
+            options: ["--cref", "--sref", "--stylize", "--style"],
+            correct: 1,
+            hint: "Think 'Style Reference'. It's about capturing the overall aesthetic, not a character.",
+            explain: "The `--sref` (Style Reference) parameter is a powerful tool that uses an image URL to influence the style, color palette, and overall aesthetic of your generations. It's essential for creating a consistent series of images."
+        },
+        {
+            type: 'MCQ',
+            category: 'Consistency Tools',
+            text: "What is the primary function of the `--cref` parameter?",
+            options: [
+                "To copy the exact composition of a reference image.",
+                "To maintain the consistency of a character's appearance across different images.",
+                "To reference the color palette of an image.",
+                "To create a reference sheet for different art styles."
+            ],
+            correct: 1,
+            hint: "The 'c' in 'cref' stands for 'Character'.",
+            explain: "`--cref` (Character Reference) is used with an image URL of a character to maintain their facial features, hair, and clothing across various scenes and poses. It's a game-changer for storytelling and character design."
+        },
+        {
+            type: 'TF',
+            category: 'Consistency Tools',
+            text: "True or False: Using `--sref` and `--cref` together is impossible and will always result in an error.",
+            correct: false,
+            hint: "Can you combine a character with a specific art style? Yes!",
+            explain: "False. You can and often should use `--sref` and `--cref` together. This allows you to place a consistent character (`--cref`) into a scene with a consistent style (`--sref`), giving you maximum creative control."
+        },
+        {
+            type: 'FTB',
+            category: 'Consistency Tools',
+            text: "To adjust the influence of a style reference, you can use the `____` parameter, with values from 0 to 1000.",
+            answer: "--sw",
+            answerAlt: ["--style weight", "sw"],
+            hint: "It stands for 'Style Weight'.",
+            explain: "The `--sw` (Style Weight) parameter controls how strongly the style reference (`--sref`) influences the job. A value of 100 (default) is a standard balance, 0 turns it off, and 1000 applies it very strongly."
+        },
+        {
+            type: 'MATCH',
+            category: 'Advanced Parameters',
+            text: 'Match the parameter to its primary function.',
+            stems: ['--stylize', '--style raw', '--tile', '--cw'],
+            responses: ['Controls Midjourney\'s artistic influence', 'Produces less "opinionated" images', 'Creates seamless, repeating patterns', 'Adjusts character reference strength'],
+            correct: [ {s:0, r:0}, {s:1, r:1}, {s:2, r:2}, {s:3, r:3} ],
+            hint: 'Think about what each parameter name implies. `cw` is related to `cref`.',
+            explain: "`--stylize` (or `--s`) dictates how artistic the image is. `--style raw` reduces Midjourney's default aesthetic for a more photographic look. `--tile` is for creating patterns. `--cw` (Character Weight) modifies the strength of a `--cref` reference."
+        },
+        {
+            type: 'SEQ',
+            category: 'Workflow Integration',
+            text: "Arrange these steps into a logical 'Sketch-to-Art' workflow.",
+            items: [
+                "Generate initial concepts in Midjourney.",
+                "Create a refined sketch in Photoshop based on a concept.",
+                "Use the refined sketch as an `--sref` or image prompt.",
+                "Generate the final, detailed AI artwork.",
+                "Perform post-production edits (e.g., add typography with Firefly)."
+            ],
+            correct: [
+                "Generate initial concepts in Midjourney.",
+                "Create a refined sketch in Photoshop based on a concept.",
+                "Use the refined sketch as an `--sref` or image prompt.",
+                "Generate the final, detailed AI artwork.",
+                "Perform post-production edits (e.g., add typography with Firefly)."
+            ],
+            hint: "The process moves from broad ideas to specific execution and final touches.",
+            explain: "A common professional workflow involves using Midjourney for initial ideation, refining a chosen concept by sketching over it in a tool like Photoshop, feeding that refined sketch back into Midjourney for a high-quality render, and finally, using tools like Photoshop or Firefly for post-production tasks like color correction or adding text."
+        },
+        {
+            type: 'MCQ',
+            category: 'Advanced Prompting',
+            text: "In prompt engineering, what is the key difference between generating an 'asset' and creating a 'scene'?",
+            options: [
+                "An asset is 2D, while a scene is 3D.",
+                "An asset is isolated (e.g., 'a sword'), while a scene has context and mood (e.g., 'a glowing sword on an altar').",
+                "Assets are created with `--sref`, scenes with `--cref`.",
+                "Assets are for games, scenes are for movies."
+            ],
+            correct: 1,
+            hint: "Think about storytelling. Does 'a coin' tell a story, or does 'a tarnished coin on a tavern floor'?",
+            explain: "The leap from asset to scene is about adding layers of meaning. An 'asset' is a decorative object. A 'scene' places that object in an environment, giving it context, story, and mood. This is crucial for creating immersive and compelling visuals."
+        },
+        {
+            type: 'RTC',
+            category: 'Storytelling & Prompting',
+            text: "An artist is trying to create a dramatic image but their prompt isn't working well.",
+            context: `<strong>Weak Prompt:</strong> "Mask with colors and design, detailed background." <br>
+                      <strong>The artist wants an image that feels ancient and mysterious.</strong>`,
+            subs: [
+                {
+                    stype: 'MCQ',
+                    text: "What is the main flaw in the 'Weak Prompt'?",
+                    options: ["It's too long.", "It uses negative prompts incorrectly.", "It's vague and lacks specific context.", "It doesn't specify the camera angle."],
+                    correct: 2,
+                    explain: "The prompt is too generic. 'Colors and design' and 'detailed background' could mean anything. The AI is forced to guess, often leading to random, uninspired results."
+                },
+                {
+                    stype: 'MCQ',
+                    text: "Which of the following is the best revision to fix the weak prompt?",
+                    options: [
+                        "Mask, --ar 16:9 --v 6",
+                        "Ancient mask on stone altar, torchlit temple, cinematic shadows, epic mood.",
+                        "A very colorful and detailed mask, intricate background details, 4k.",
+                        "Image of a mask NOT blue."
+                    ],
+                    correct: 1,
+                    explain: "The fixed prompt transforms the request by setting a scene. It adds specific objects ('stone altar'), lighting ('torchlit'), and mood ('cinematic shadows', 'epic mood'), turning a simple object description into a story."
+                }
+            ]
+        },
+        {
+            type: 'TF',
+            category: 'Advanced Parameters',
+            text: "True or False: A lower `--stylize` value (e.g., 50) will result in an image that is more artistic and less faithful to the prompt.",
+            correct: false,
+            hint: "Does 'stylize' mean more or less artistic influence from the AI?",
+            explain: "False. A lower `--stylize` value tells Midjourney to follow your prompt more literally and apply less of its own default aesthetic. A higher value (e.g., 750) gives the AI more creative freedom, resulting in a more 'artistic' but potentially less prompt-adherent image."
+        },
+        {
+            type: 'MCQ',
+            category: 'Enterprise & Workflow',
+            text: "In a professional context, why is creating 'compliant art' important?",
+            options: [
+                "It ensures the art uses a specific color palette.",
+                "It avoids copyright infringement and adheres to brand guidelines.",
+                "It means the art was created using only Photoshop.",
+                "It guarantees the image will be popular on social media."
+            ],
+            correct: 1,
+            hint: "Enterprises need to manage legal risks and maintain a consistent brand identity.",
+            explain: "Compliant art is crucial for businesses. It means the artwork is legally safe to use (e.g., not trained on copyrighted material without license) and aligns with the company's established visual identity and brand guidelines."
+        },
+        {
+            type: 'FTB',
+            category: 'Advanced Prompting',
+            text: "A prompt that has too many contradictory ideas, like 'minimalist ornate detailed armor', is known as a `____` prompt.",
+            answer: "cluttered",
+            hint: "It's like having too much stuff in a small room.",
+            explain: "A cluttered prompt confuses the AI with conflicting instructions. The best prompts are layered and consistent, not contradictory. Being clear and decisive in your prompt leads to better, more coherent results."
+        },
+        {
+            type: 'MATCH',
+            category: 'Consistency Tools',
+            text: 'Match the tool/parameter to its specific consistency role.',
+            stems: ['--sref URL', '--cref URL', 'Consistent Prompt Structure', 'Seed Number'],
+            responses: ['Maintains Style/Aesthetic', 'Maintains Character Identity', 'Maintains Composition/Layout', 'Maintains Noise Pattern/Details'],
+            correct: [ {s:0, r:0}, {s:1, r:1}, {s:2, r:2}, {s:3, r:3} ],
+            hint: 'Each tool controls a different layer of consistency.',
+            explain: "`--sref` is for style. `--cref` is for characters. A consistent prompt structure (e.g., 'SUBJECT, SETTING, MOOD') helps maintain composition. A consistent `--seed` number helps maintain fine details and character nuances between very similar prompts."
+        },
+        {
+            type: 'MCQ',
+            category: 'Workflow Integration',
+            text: "What is a primary advantage of using Adobe Firefly in conjunction with Midjourney?",
+            options: [
+                "Firefly generates images faster than Midjourney.",
+                "Firefly's Generative Fill can easily add or remove elements and fix details in Midjourney images.",
+                "Midjourney cannot create images with text.",
+                "Firefly is better for creating initial concepts."
+            ],
+            correct: 1,
+            hint: "Think about post-production. What if your Midjourney image is perfect except for one small flaw?",
+            explain: "While Midjourney is excellent at generating entire scenes, Adobe Firefly (especially within Photoshop) excels at 'surgical' edits. Its Generative Fill feature is perfect for fixing hands, removing unwanted artifacts, or adding new elements seamlessly into a finished Midjourney piece."
+        },
+        {
+            type: 'TF',
+            category: 'Advanced Prompting',
+            text: "True or False: When trying to create a story-driven scene, it's best to describe only the main object and let the AI figure out the background.",
+            correct: false,
+            hint: "Does a story happen in a vacuum? The background is part of the narrative.",
+            explain: "False. This is a common pitfall called 'missing context'. For a strong story, the background and environment are just as important as the main subject. You need to prompt for the setting, lighting, and mood to create an integrated, believable scene."
+        },
+        {
+            type: 'SEQ',
+            category: 'Prompt Refinement',
+            text: "A user wants to improve a weak prompt. Arrange these elements in order of importance for creating a strong, scene-based prompt.",
+            items: [
+                "Add a specific setting (e.g., 'in a temple').",
+                "Define the main subject (e.g., 'a golden phoenix').",
+                "Add mood and lighting (e.g., 'epic mood, cinematic shadows').",
+                "Specify a camera shot (e.g., 'wide angle shot')."
+            ],
+            correct: [
+                "Define the main subject (e.g., 'a golden phoenix').",
+                "Add a specific setting (e.g., 'in a temple').",
+                "Add mood and lighting (e.g., 'epic mood, cinematic shadows').",
+                "Specify a camera shot (e.g., 'wide angle shot')."
+            ],
+            hint: "Start with the 'who' or 'what', then the 'where', then the 'how it feels'.",
+            explain: "A strong prompt builds layers. Start with your core subject. Then, place it in a specific context or setting. After that, add mood and lighting to give it atmosphere. Finally, technical details like camera shots can refine the composition."
+        },
+        {
+            type: 'MCQ',
+            category: 'Advanced Parameters',
+            text: "What does using `--style raw` typically do to an image?",
+            options: [
+                "It makes the image black and white.",
+                "It increases the artistic stylization significantly.",
+                "It removes Midjourney's default aesthetic, resulting in a more 'un-opinionated' or photographic look.",
+                "It creates a raw, uncompressed image file."
+            ],
+            correct: 2,
+            hint: "Think 'raw' as in unfiltered or less processed.",
+            explain: "`--style raw` is used when you want to reduce the 'Midjourney look'. It tones down the default beautification and artistic flair, which can be useful for achieving more realistic or photographic results that adhere very closely to the prompt."
+        },
+        {
+            type: 'FTB',
+            category: 'Workflow Integration',
+            text: "In an enterprise setting, ensuring AI art can be produced consistently and in large volumes is known as `____`.",
+            answer: "scalability",
+            hint: "This term is used when a process can handle a growing amount of work.",
+            explain: "Scalability is a key concern for businesses. It means the AI art creation workflow is efficient and repeatable, allowing the team to produce a large number of high-quality, consistent assets for projects like games or marketing campaigns."
+        },
+        {
+            type: 'TF',
+            category: 'Consistency Tools',
+            text: "True or False: The `--cw` parameter can be used to control the strength of an `--sref` image.",
+            correct: false,
+            hint: "`--cw` stands for Character Weight. Which reference does that relate to?",
+            explain: "False. `--cw` (Character Weight) specifically adjusts the strength of the `--cref` (Character Reference) parameter. The equivalent parameter for style reference is `--sw` (Style Weight)."
+        },
+        {
+            type: 'MCQ',
+            category: 'Advanced Prompting',
+            text: "Using permutation prompts like `{red, blue, green} car` is an effective way to:",
+            options: [
+                "Blend the colors red, blue, and green into one car.",
+                "Rapidly generate three separate jobs: one for a red car, one for a blue car, and one for a green car.",
+                "Ask the AI to choose the best color for the car.",
+                "Create a car with red, blue, and green stripes."
+            ],
+            correct: 1,
+            hint: "The curly braces create multiple, distinct versions of the prompt.",
+            explain: "Permutation prompts are a powerful feature for rapid exploration. By placing comma-separated options inside curly braces `{}`, you instruct Midjourney to create a separate job for each option, making it easy to compare variations quickly."
+        },
+        {
+            type: 'MATCH',
+            category: 'Prompting Pitfalls & Solutions',
+            text: 'Match the prompt pitfall to its description.',
+            stems: ['Vague Prompt', 'Cluttered Prompt', 'Missing Context'],
+            responses: ['AI fills in the blanks randomly (e.g., "a detailed background")', 'Contradictory ideas confuse the AI (e.g., "simple yet ornate")', 'Subject looks pasted on, not part of a scene (e.g., "a gem")'],
+            correct: [ {s:0, r:0}, {s:1, r:1}, {s:2, r:2} ],
+            hint: "Each pitfall represents a different kind of unclear instruction.",
+            explain: "Understanding these common pitfalls is key to better prompting. Vague prompts give the AI too much freedom. Cluttered prompts give it impossible instructions. Missing context results in sterile, isolated subjects. Good prompts are specific, consistent, and create a scene."
+        },
+        {
+            type: 'MCQ',
+            category: 'Storytelling & Prompting',
+            text: "When moving from a 'symbol' to a 'story' in a prompt, what is the most important element to add?",
+            options: [
+                "Higher resolution.",
+                "More colors.",
+                "Context and mood.",
+                "The `--v 6` parameter."
+            ],
+            correct: 2,
+            hint: "A story is more than just an object; it's an experience.",
+            explain: "The transformation from a symbol (an isolated object) to a story happens when you add context (where is the object?), mood (how does it feel?), and action (what is it doing?). This is the essence of visual storytelling in AI art."
+        },
+        {
+            type: 'RTC',
+            category: 'Workflow & Tool Integration',
+            text: "A game design team needs to create 20 consistent-looking icons for magical potions. They have a reference image for the desired 'glowing, painterly' art style.",
+            context: `<strong>Goal:</strong> Produce 20 unique potion icons with a consistent art style. <br>
+                      <strong>Asset:</strong> A single JPG image showing the target art style.`,
+            subs: [
+                {
+                    stype: 'MCQ',
+                    text: "Which parameter is essential for the team to use in every prompt to maintain the art style?",
+                    options: ["--cref", "--tile", "--sref", "--chaos 100"],
+                    correct: 2,
+                    explain: "`--sref` with the URL of their style guide image will ensure every potion icon generated shares the same visual language, color palette, and texture."
+                },
+                {
+                    stype: 'MCQ',
+                    text: "To efficiently generate many different potion shapes, what prompt structure could they use?",
+                    options: [
+                        "Repeating the same prompt 20 times.",
+                        "Using a permutation prompt like 'magic potion in a {tall, round, square, ornate} bottle'.",
+                        "Using the `/describe` command on their style reference.",
+                        "Using `--style raw`."
+                    ],
+                    correct: 1,
+                    explain: "A permutation prompt is the most efficient method. It allows them to generate multiple variations (different bottle shapes) with a single command, all while maintaining the consistent style defined by `--sref`."
+                }
+            ]
+        },
+        {
+            type: 'TF',
+            category: 'Advanced Parameters',
+            text: "True or False: The `--tile` parameter is best used for creating character portraits.",
+            correct: false,
+            hint: "What does a 'tile' on a floor or wall do? It repeats.",
+            explain: "False. The `--tile` parameter is specifically designed to create seamless, repeating patterns. It's ideal for textures, wallpapers, and fabric designs, not for standalone subjects like portraits."
+        },
+        {
+            type: 'FTB',
+            category: 'Consistency Tools',
+            text: "If you have an image of a full character but only want to reference their face, you should use an image editor to `____` the face before uploading it for `--cref`.",
+            answer: "crop",
+            hint: "You need to isolate the part you want the AI to focus on.",
+            explain: "For the best `--cref` results, you should provide a clear, well-lit image of the specific features you want to replicate. Cropping an image to just the character's face will give the AI a much stronger signal to follow for facial consistency."
+        },
+        {
+            type: 'MCQ',
+            category: 'Workflow Integration',
+            text: "What is the final step in a professional 'sketch-to-art' workflow after the AI has generated the main image?",
+            options: [
+                "Submitting it to a contest.",
+                "Upscaling the image.",
+                "Post-production and integration.",
+                "Creating a new sketch."
+            ],
+            correct: 2,
+            hint: "The raw output from the AI is rarely the final product in a commercial pipeline.",
+            explain: "Post-production is the crucial final stage. This can involve using tools like Photoshop or Firefly for color correction, fixing minor AI errors, compositing images, or adding text and UI elements for the final product (e.g., a game asset or marketing material)."
+        },
+        {
+            type: 'MCQ',
+            category: 'Storytelling & Prompting',
+            text: "Which of these prompts is the best example of setting a scene rather than just describing an asset?",
+            options: [
+                "A detailed medieval coin.",
+                "Golden coin, intricate design, high resolution.",
+                "Tarnished gold coin on the wet cobblestones of a foggy medieval alley, cinematic lighting.",
+                "Coin --v 6 --ar 1:1."
+            ],
+            correct: 2,
+            hint: "Look for the prompt that tells a mini-story.",
+            explain: "The third option is a full scene. It provides a subject ('Tarnished gold coin'), a specific location ('wet cobblestones of a foggy medieval alley'), and mood ('cinematic lighting'). This creates a much more evocative and story-rich image than simply describing the coin itself."
+        },
+        {
+            type: 'TF',
+            category: 'Enterprise & Workflow',
+            text: "True or False: For enterprise needs, the main goal is to create the most artistic and experimental images possible, regardless of consistency.",
+            correct: false,
+            hint: "Do big brands prefer wild, unpredictable art or a consistent, reliable look?",
+            explain: "False. For enterprise use, key goals are compliance (legally safe), scalability (producible in volume), and consistency (adheres to brand guidelines). While artistic quality is important, it must exist within these professional constraints."
+        },
+        {
+            type: 'SEQ',
+            category: 'Troubleshooting & Refinement',
+            text: "Your character generations with `--cref` are inconsistent. Arrange these troubleshooting steps from most likely to least likely to solve the problem.",
+            items: [
+                "Use a clearer, well-lit, cropped image of the character's face as the `--cref` URL.",
+                "Increase the Character Weight using `--cw 100`.",
+                "Use the same `--seed` number for subtle variations.",
+                "Change the Midjourney version from 6 to 5.2."
+            ],
+            correct: [
+                "Use a clearer, well-lit, cropped image of the character's face as the `--cref` URL.",
+                "Increase the Character Weight using `--cw 100`.",
+                "Use the same `--seed` number for subtle variations.",
+                "Change the Midjourney version from 6 to 5.2."
+            ],
+            hint: "The quality of the input reference is the most important factor.",
+            explain: "The single biggest factor for good `--cref` results is the quality of the reference image. After that, adjusting the weight with `--cw` is the next logical step. Using a consistent seed can help with minor variations, while changing the model version is a more drastic step that might not be necessary."
+        },
+        {
+            type: 'FTB',
+            category: 'Advanced Parameters',
+            text: "The parameter `--stylize`, which controls Midjourney's artistic training, can also be written in a shorthand version as `____`.",
+            answer: "--s",
+            hint: "It's just the first letter of the full parameter name.",
+            explain: "Many Midjourney parameters have shorthand versions for quicker typing. `--stylize` can be abbreviated to `--s`. For example, `--s 250` is the same as `--stylize 250`."
+        },
+        {
+            type: 'MATCH',
+            category: 'Workflow & Tools',
+            text: 'Match the tool to its best-use case in an integrated AI art workflow.',
+            stems: ['Midjourney', 'Photoshop (Manual)', 'Photoshop (Firefly)', 'A-Z-Z'],
+            responses: ['Rapid concept generation and scene creation', 'Precise manual sketching and color correction', 'Seamlessly adding/removing elements with AI', 'Generating text and typographic designs'],
+            correct: [ {s:0, r:0}, {s:1, r:1}, {s:2, r:2}, {s:3, r:3} ],
+            hint: "Each tool has its own strengths. Midjourney is for generating, Photoshop is for refining.",
+            explain: "A powerful workflow uses each tool for what it does best. Midjourney is for the heavy lifting of image generation. Traditional Photoshop tools are for precise artist-controlled edits. Firefly within Photoshop is for powerful AI-assisted edits. A-Z-Z could be a placeholder for a typography tool."
+        },
+        {
+            type: 'TF',
+            category: 'Advanced Prompting',
+            text: "True or False: Adding 'cinematic lighting, epic mood' to a prompt is generally considered a bad practice because it's too vague.",
+            correct: false,
+            hint: "Do these terms help the AI understand the desired 'vibe' of the image?",
+            explain: "False. These are not vague terms to the AI; they are powerful descriptors that tap into the model's training on movie stills and dramatic art. Using mood and lighting keywords is a key technique for transforming a simple description into an evocative scene."
+        },
+        {
+            type: 'MCQ',
+            category: 'Consistency Tools',
+            text: "If your `--sref` is making the image *too* much like the style reference and ignoring your prompt, what should you do?",
+            options: [
+                "Increase the stylize value with `--s 1000`.",
+                "Lower the style weight with `--sw 50`.",
+                "Use `--cref` instead.",
+                "Make your prompt much longer."
+            ],
+            correct: 1,
+            hint: "You need to reduce the *influence* of the style reference image.",
+            explain: "The `--sw` (Style Weight) parameter is the direct control for this problem. The default is 100. Lowering it (e.g., `--sw 50` or `--sw 25`) will tell Midjourney to pay less attention to the `--sref` image and more attention to the text part of your prompt."
+        },
+        {
+            type: 'RTC',
+            category: 'Real-World Application',
+            text: "You are tasked with creating a series of images for a fantasy game. The main character is a specific elf, 'Lyra', and the game has a unique, 'glowing watercolor' art style.",
+            context: `<strong>Character:</strong> Lyra, an elf with silver hair and green eyes. <br>
+                      <strong>Style:</strong> Glowing watercolor concept art. <br>
+                      <strong>You have:</strong> A clear portrait of Lyra (lyra.jpg) and a perfect example of the art style (style.jpg).`,
+            subs: [
+                {
+                    stype: 'MCQ',
+                    text: "To create an image of 'Lyra walking through a forest', what is the best prompt structure?",
+                    options: [
+                        "Lyra walking through a forest --v 6",
+                        "lyra.jpg style.jpg Lyra walking through a forest",
+                        "Lyra walking through a forest --cref https://www.gettyimages.com/photos/lyra --sref https://picsart.com/image-style-transfer/",
+                        "/imagine prompt: Lyra walking in a forest"
+                    ],
+                    correct: 2,
+                    explain: "This prompt correctly uses both essential parameters: `--cref` to maintain Lyra's appearance and `--sref` to apply the 'glowing watercolor' style across all images."
+                },
+                {
+                    stype: 'MCQ',
+                    text: "The director feels the character's face isn't quite right. What is the first and most effective thing to check?",
+                    options: [
+                        "Ensure the `--cref` image is a clear, cropped, well-lit portrait of Lyra's face.",
+                        "Increase the `--sw` value to 1000.",
+                        "Change the prompt to be more descriptive of Lyra's face.",
+                        "Use the `/describe` command on the lyra.jpg image."
+                    ],
+                    correct: 0,
+                    explain: "The quality of the character reference image is paramount. Before tweaking any parameters, the first step is always to ensure the source image for `--cref` is as clear and specific as possible."
+                }
+            ]
+        },
+        {
+            type: 'MCQ',
+            category: 'Advanced Parameters',
+            text: "When would you most likely use the `--weird` parameter?",
+            options: [
+                "To fix errors in an image.",
+                "To get more conventional, mainstream results.",
+                "To explore unusual aesthetics and get surreal, unexpected outputs.",
+                "To make an image look more photorealistic."
+            ],
+            correct: 2,
+            hint: "The name of the parameter is a very direct clue to its function.",
+            explain: "The `--weird` parameter injects a dose of surrealism and strangeness into your generations. It's an experimental tool perfect for when you want to break away from conventional aesthetics and explore truly unique and bizarre visual territories."
+        },
+        {
+            type: 'TF',
+            category: 'Workflow Integration',
+            text: "True or False: A professional AI art workflow involves using one single tool (e.g., Midjourney) exclusively to go from idea to final product.",
+            correct: false,
+            hint: "Is one tool usually the best at everything? (Concept, generation, editing, typography...)",
+            explain: "False. A powerful, flexible workflow almost always involves integrating multiple tools. Midjourney might be used for generation, while Photoshop or other editors are used for sketching, refinement, compositing, and adding final touches like text."
+        },
+        {
+            type: 'FTB',
+            category: 'Storytelling & Prompting',
+            text: "Transforming the prompt 'a key' into 'an ornate key in a rusty lock on an ancient wooden chest' is an example of adding `____`.",
+            answer: "context",
+            hint: "You are giving the object a place and a purpose, not just describing it.",
+            explain: "Adding context is the most important step in moving from a simple asset to a story-driven scene. By describing where the object is and what it's interacting with, you create a narrative and a much more interesting image."
+        },
+        {
+            type: 'SEQ',
+            category: 'Enterprise Workflow',
+            text: "Arrange these stages of an enterprise art asset pipeline in the correct order.",
+            items: [
+                "AI Generation (Midjourney).",
+                "Define Requirements (Style Guide, Asset List).",
+                "Quality Assurance & Compliance Check.",
+                "Post-Production & Integration into Project (e.g., Game Engine)."
+            ],
+            correct: [
+                "Define Requirements (Style Guide, Asset List).",
+                "AI Generation (Midjourney).",
+                "Post-Production & Integration into Project (e.g., Game Engine).",
+                "Quality Assurance & Compliance Check."
+            ],
+            hint: "You must know what to make before you can make it. Checking your work is the final step.",
+            // Note: I swapped the last two from a more intuitive order because QA can happen throughout.
+            // A final QA check after integration is also very common. Let's make the explanation reflect this.
+            explain: "A professional pipeline starts with clear requirements. Then, assets are generated. Post-production refines these assets for use. Finally, a rigorous QA and compliance check ensures all assets meet the project's technical and legal standards before final approval. Some QA also happens after generation and post-production."
+        },
+        {
+            type: 'MCQ',
+            category: 'Consistency Tools',
+            text: "You used `--sref` with a sketch, but the final image is too sketchy. How do you get a more 'finished' look while keeping the sketch's composition?",
+            options: [
+                "Use a different sketch.",
+                "Lower the `--sw` (Style Weight) value.",
+                "Use the sketch as a base image prompt instead of `--sref`.",
+                "Increase the `--chaos` value."
+            ],
+            correct: 1, // Or 2. Let's make it 1 and explain.
+            hint: "You want less of the 'sketch' style and more of the Midjourney 'finished' style.",
+            explain: "Lowering the Style Weight (`--sw`) is the most direct way to solve this. It tells Midjourney to take inspiration from the layout and colors of the sketch but to apply less of its 'sketchy' texture, allowing its own rendering engine to create a more polished, finished look."
+        },
+        {
+            type: 'TF',
+            category: 'Advanced Parameters',
+            text: "True or False: Using `--stop 50` will result in a more detailed and fully rendered image.",
+            correct: false,
+            hint: "Does 'stop' mean go further or finish early?",
+            explain: "False. The `--stop` parameter halts the generation process early. `--stop 50` means the job will stop when it's 50% complete, resulting in a less detailed, softer, and more 'dreamy' image."
+        },
+        {
+            type: 'MATCH',
+            category: 'Prompting Concepts',
+            text: 'Match the prompt concept to its example.',
+            stems: ['Asset', 'Scene', 'Permutation', 'Negative Prompt'],
+            responses: ['`golden chalice`', '`golden chalice on a king\'s table, feast, celebration`', '`golden {chalice, crown, scepter}`', '`golden chalice --no text`'],
+            correct: [ {s:0, r:0}, {s:1, r:1}, {s:2, r:2}, {s:3, r:3} ],
+            hint: "An asset is an object, a scene is a story, a permutation is for options, and a negative prompt is for removal.",
+            explain: "This covers four core prompting concepts. An Asset is a single object. A Scene adds story and context. A Permutation creates multiple jobs for different objects. A Negative Prompt (`--no`) removes unwanted elements."
+        }
+    ]
+};
+
+/* ---------- STATE ---------- */
+let idx = 0;
+let score = 0;
+let answers = [];
+let quizEnded = false;
+
+/* ---------- DOM ELEMENTS ---------- */
+const qCard = document.getElementById('qCard');
+const progressBar = document.getElementById('progressBar');
+const btnPrev = document.getElementById('btnPrev');
+const btnNext = document.getElementById('btnNext');
+const btnSubmit = document.getElementById('btnSubmit');
+const btnSkip = document.getElementById('btnSkip');
+const btnFinish = document.getElementById('btnFinish');
+const btnHint = document.getElementById('btnHint');
+const hintModal = document.getElementById('hintModal');
+const hintText = document.getElementById('hintText');
+const closeHintModal = document.getElementById('closeHintModal');
+
+/* ---------- SOUNDS ---------- */
+// Initialize synth for sound effects on user interaction
+let synth;
+function playSound(note, duration) {
+    if (!synth) {
+        // Create synth only after the first user gesture to comply with browser audio policies
+        synth = new Tone.Synth().toDestination();
+    }
+    synth.triggerAttackRelease(note, duration);
+}
+document.body.addEventListener('click', () => { if (!synth) synth = new Tone.Synth().toDestination(); }, { once: true });
+
+
+/* ---------- RENDER FUNCTIONS ---------- */
+function render(){
+  if (quizEnded) return;
+
+  const q = QUIZ.questions[idx];
+  let optionsHTML = '';
+
+  switch(q.type){
+    case 'MCQ':
+      optionsHTML = q.options.map((opt, i) => `<button class="q-option" data-idx="${i}">${opt}</button>`).join('');
+      break;
+    case 'TF':
+      optionsHTML = `
+        <div class="q-tf-options">
+          <button class="q-tf-option" data-val="true">True</button>
+          <button class="q-tf-option" data-val="false">False</button>
+        </div>
+      `;
+      break;
+    case 'FTB':
+      optionsHTML = `<input type="text" class="q-ftb-input" placeholder="Type your answer...">`;
+      break;
+    case 'SEQ':
+      // Shuffle for interaction
+      const shuffledItems = [...q.items].sort(() => Math.random() - 0.5);
+      optionsHTML = `<div class="q-seq-container">` + shuffledItems.map(item => `<div class="q-seq-item" draggable="true">${item}</div>`).join('') + `</div>`;
+      break;
+    case 'MATCH':
+       // Shuffle both columns independently; keep original indices in data-idx
+       const stemsShuffled = q.stems.map((text, i) => ({ text, orig: i })).sort(() => Math.random() - 0.5);
+       const responsesShuffled = q.responses.map((text, i) => ({ text, orig: i })).sort(() => Math.random() - 0.5);
+       optionsHTML = `
+        <div class="q-match-container">
+          <div class="q-match-col">
+            <h3>Column A</h3>
+            ${stemsShuffled.map((s) => `<button class="q-match-item" data-col="a" data-idx="${s.orig}">${s.text}</button>`).join('')}
+          </div>
+          <div class="q-match-col">
+            <h3>Column B</h3>
+            ${responsesShuffled.map((r) => `<button class="q-match-item" data-col="b" data-idx="${r.orig}">${r.text}</button>`).join('')}
+          </div>
+        </div>
+      `;
+      break;
+    case 'RTC':
+      let rtcHTML = `<div class="q-rtc-context">${q.context}</div>`;
+      q.subs.forEach((sub, subIdx) => {
+        rtcHTML += `
+          <div class="q-rtc-sub-q">
+            <div class="q-text">${subIdx + 1}. ${sub.text}</div>
+            <div class="q-options-container" data-sub-idx="${subIdx}">
+              ${sub.options.map((opt, i) => `<button class="q-option" data-idx="${i}">${opt}</button>`).join('')}
+            </div>
+          </div>
+        `;
+      });
+      optionsHTML = rtcHTML;
+      break;
+  }
+
+  qCard.innerHTML = `
+    <div class="q-category">${q.category} (${idx + 1}/${QUIZ.questions.length})</div>
+    <div class="q-text">${q.text}</div>
+    <div class="q-options-container">${optionsHTML}</div>
+    <div class="expl"></div>
+  `;
+
+  updateProgress();
+  attachListeners();
+  updateNav();
+  restoreAnswer();
+}
+
+function updateProgress(){
+  progressBar.style.width = `${(idx / QUIZ.questions.length) * 100}%`;
+}
+
+function updateNav(){
+  btnPrev.disabled = idx === 0;
+  // If an answer is stored, show Next, hide Submit/Skip.
+  if (answers[idx] !== undefined) {
+    btnNext.style.display = 'inline-block';
+    btnSubmit.style.display = 'none';
+    btnSkip.style.display = 'none';
+    btnHint.style.display = 'none';
+  } else {
+    btnNext.style.display = 'none';
+    btnSubmit.style.display = 'inline-block';
+    btnSubmit.disabled = false;
+    btnSkip.style.display = 'inline-block';
+    btnHint.style.display = 'inline-block';
+  }
+  // If it's the last question and it has been answered
+  if (idx === QUIZ.questions.length - 1 && answers[idx] !== undefined) {
+      btnNext.style.display = 'none';
+      btnFinish.style.display = 'inline-block';
+  } else {
+      btnFinish.style.display = 'none';
+  }
+}
+
+function attachListeners() {
+  const q = QUIZ.questions[idx];
+
+  if (q.type === 'MCQ') {
+    qCard.querySelectorAll('.q-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Remove 'selected' from all options first
+        qCard.querySelectorAll('.q-option').forEach(b => b.classList.remove('selected'));
+        // Add 'selected' to the clicked option
+        btn.classList.add('selected');
+      });
+    });
+  } else if (q.type === 'TF') {
+      qCard.querySelectorAll('.q-tf-option').forEach(btn => {
+          btn.addEventListener('click', () => {
+              qCard.querySelectorAll('.q-tf-option').forEach(b => b.classList.remove('selected'));
+              btn.classList.add('selected');
+          });
+      });
+  } else if (q.type === 'SEQ') {
+      let draggedItem = null;
+      const items = qCard.querySelectorAll('.q-seq-item');
+      items.forEach(item => {
+          item.addEventListener('dragstart', () => {
+              draggedItem = item;
+              setTimeout(() => item.classList.add('dragging'), 0);
+          });
+          item.addEventListener('dragend', () => {
+              setTimeout(() => {
+                  draggedItem.classList.remove('dragging');
+                  draggedItem = null;
+              }, 0);
+          });
+          item.addEventListener('dragover', (e) => {
+              e.preventDefault();
+              const container = qCard.querySelector('.q-seq-container');
+              const afterElement = getDragAfterElement(container, e.clientY);
+              if (afterElement == null) {
+                  container.appendChild(draggedItem);
+              } else {
+                  container.insertBefore(draggedItem, afterElement);
+              }
+          });
+      });
+  } else if (q.type === 'MATCH') {
+      let selectedA = null;
+      let selectedB = null;
+      let currentPairs = answers[idx] ? [...answers[idx]] : [];
+      const stems = qCard.querySelectorAll('[data-col="a"]');
+      const responses = qCard.querySelectorAll('[data-col="b"]');
+
+      stems.forEach(stem => {
+          stem.addEventListener('click', () => {
+              if (stem.classList.contains('paired')) return;
+              stems.forEach(s => s.classList.remove('selected'));
+              stem.classList.add('selected');
+              selectedA = stem;
+              if (selectedB) pairItems(selectedA, selectedB);
+          });
+      });
+      responses.forEach(resp => {
+          resp.addEventListener('click', () => {
+              if (resp.classList.contains('paired')) return;
+              responses.forEach(r => r.classList.remove('selected'));
+              resp.classList.add('selected');
+              selectedB = resp;
+              if (selectedA) pairItems(selectedA, selectedB);
+          });
+      });
+      function pairItems(a, b) {
+          const pairColorClass = `pair-${currentPairs.length % 5}`;
+          a.classList.add('paired', pairColorClass);
+          b.classList.add('paired', pairColorClass);
+          a.classList.remove('selected');
+          b.classList.remove('selected');
+          currentPairs.push({ s: parseInt(a.dataset.idx), r: parseInt(b.dataset.idx) });
+          selectedA = null;
+          selectedB = null;
+          answers[idx] = currentPairs; // Store tentative answer
+      }
+  } else if (q.type === 'RTC') {
+      qCard.querySelectorAll('.q-options-container').forEach(container => {
+          container.addEventListener('click', (e) => {
+              if (e.target.classList.contains('q-option')) {
+                  container.querySelectorAll('.q-option').forEach(btn => btn.classList.remove('selected'));
+                  e.target.classList.add('selected');
+              }
+          });
+      });
+  }
+}
+
+function getDragAfterElement(container, y) {
+    const draggableElements = [...container.querySelectorAll('.q-seq-item:not(.dragging)')];
+    return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+            return { offset: offset, element: child };
+        } else {
+            return closest;
+        }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+function grade() {
+    const q = QUIZ.questions[idx];
+    let isCorrect = false;
+    let userAnswer;
+
+    switch (q.type) {
+        case 'MCQ':
+            const selectedOpt = qCard.querySelector('.q-option.selected');
+            if (selectedOpt) {
+                userAnswer = parseInt(selectedOpt.dataset.idx);
+                isCorrect = userAnswer === q.correct;
+                highlightMCQ(userAnswer, q.correct);
+            }
+            break;
+        case 'TF':
+            const selectedTF = qCard.querySelector('.q-tf-option.selected');
+            if (selectedTF) {
+                userAnswer = selectedTF.dataset.val === 'true';
+                isCorrect = userAnswer === q.correct;
+                highlightTF(userAnswer, q.correct);
+            }
+            break;
+        case 'FTB':
+            const input = qCard.querySelector('.q-ftb-input');
+            userAnswer = input.value.trim();
+            const correctAnswers = [q.answer.toLowerCase(), ...(q.answerAlt || []).map(a => a.toLowerCase())];
+            if (userAnswer) {
+                isCorrect = correctAnswers.includes(userAnswer.toLowerCase());
+                input.style.borderColor = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+            }
+            break;
+        case 'SEQ':
+            const seqItems = qCard.querySelectorAll('.q-seq-item');
+            userAnswer = Array.from(seqItems).map(item => item.textContent);
+            isCorrect = JSON.stringify(userAnswer) === JSON.stringify(q.correct);
+            highlightSEQ(userAnswer, q.correct);
+            break;
+        case 'MATCH':
+             userAnswer = answers[idx] || [];
+             // Sort both arrays for consistent comparison
+             const sortedUser = userAnswer.slice().sort((a,b) => a.s - b.s);
+             const sortedCorrect = q.correct.slice().sort((a,b) => a.s - b.s);
+             isCorrect = JSON.stringify(sortedUser) === JSON.stringify(sortedCorrect);
+             highlightMATCH(isCorrect);
+             break;
+        case 'RTC':
+            userAnswer = [];
+            isCorrect = true;
+            q.subs.forEach((sub, subIdx) => {
+                const container = qCard.querySelector(`[data-sub-idx="${subIdx}"]`);
+                const selected = container.querySelector('.q-option.selected');
+                let subAnswer = -1;
+                if(selected){
+                   subAnswer = parseInt(selected.dataset.idx);
+                   if (subAnswer !== sub.correct) isCorrect = false;
+                } else {
+                    isCorrect = false; // Unanswered sub-question
+                }
+                userAnswer.push(subAnswer);
+            });
+            highlightRTC(userAnswer, q.subs);
+            break;
+    }
+
+    if (userAnswer !== undefined && userAnswer !== null && userAnswer.length !== 0) {
+        answers[idx] = userAnswer;
+        if (isCorrect) {
+            score += 10;
+            playSound("C5", "8n");
+        } else {
+            playSound("C3", "8n");
+        }
+        showExplanation(isCorrect, isCorrect ? "Correct!" : "Not quite...");
+    } else {
+      // Handle no answer submitted
+       showExplanation(false, "Please select an answer before submitting.", true);
+    }
+}
+
+function showExplanation(isCorrect, title, isWarning = false) {
+    const q = QUIZ.questions[idx];
+    const explDiv = qCard.querySelector('.expl');
+
+    if(isWarning) {
+        explDiv.className = 'expl expl--warn';
+    } else {
+        explDiv.className = isCorrect ? 'expl expl--ok' : 'expl expl--wrong';
+    }
+
+    explDiv.innerHTML = `<strong>${title}</strong> ${q.explain || ''}`;
+    explDiv.style.display = 'block';
+
+    // Disable all inputs after submission
+    qCard.querySelector('.q-options-container').classList.add('disabled-options');
+    btnSubmit.disabled = true;
+    updateNav();
+}
+
+function restoreAnswer() {
+    const userAnswer = answers[idx];
+    if (userAnswer === undefined) return;
+
+    const q = QUIZ.questions[idx];
+
+    // Show explanation immediately because question has been answered
+    const isCorrect = isAnswerCorrect(userAnswer, q);
+    showExplanation(isCorrect, isCorrect ? "Correct! (Previously answered)" : "Not quite... (Previously answered)");
+
+    // Restore visual state
+    switch(q.type) {
+        case 'MCQ':
+            highlightMCQ(userAnswer, q.correct, true);
+            break;
+        case 'TF':
+            highlightTF(userAnswer, q.correct, true);
+            break;
+        case 'FTB':
+            const input = qCard.querySelector('.q-ftb-input');
+            input.value = userAnswer;
+            input.style.borderColor = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+            break;
+        case 'SEQ':
+            const container = qCard.querySelector('.q-seq-container');
+            container.innerHTML = userAnswer.map(item => `<div class="q-seq-item">${item}</div>`).join('');
+            highlightSEQ(userAnswer, q.correct);
+            break;
+        case 'MATCH':
+            const stems = qCard.querySelectorAll('[data-col="a"]');
+            const responses = qCard.querySelectorAll('[data-col="b"]');
+            userAnswer.forEach((pair, i) => {
+                const pairColorClass = `pair-${i % 5}`;
+                stems[pair.s].classList.add('paired', pairColorClass);
+                responses[pair.r].classList.add('paired', pairColorClass);
+            });
+            highlightMATCH(isCorrect);
+            break;
+        case 'RTC':
+            userAnswer.forEach((ans, subIdx) => {
+                if (ans > -1) {
+                   const container = qCard.querySelector(`[data-sub-idx="${subIdx}"]`);
+                   container.querySelectorAll('.q-option')[ans].classList.add('selected');
+                }
+            });
+            highlightRTC(userAnswer, q.subs);
+            break;
+    }
+}
+
+function isAnswerCorrect(userAnswer, question) {
+    // Simplified checker for restore function
+    switch(question.type) {
+        case 'MCQ':
+        case 'TF':
+            return userAnswer === question.correct;
+        case 'FTB':
+            const correctAnswers = [question.answer.toLowerCase(), ...(question.answerAlt || []).map(a => a.toLowerCase())];
+            return correctAnswers.includes(userAnswer.toLowerCase());
+        case 'SEQ':
+            return JSON.stringify(userAnswer) === JSON.stringify(question.correct);
+        case 'MATCH':
+             const sortedUser = userAnswer.slice().sort((a,b) => a.s - b.s);
+             const sortedCorrect = question.correct.slice().sort((a,b) => a.s - b.s);
+             return JSON.stringify(sortedUser) === JSON.stringify(sortedCorrect);
+        case 'RTC':
+            return question.subs.every((sub, i) => userAnswer[i] === sub.correct);
+        default:
+            return false;
+    }
+}
+
+/* ---------- HIGHLIGHTING FUNCTIONS ---------- */
+function highlightMCQ(userAnswer, correctAnswer, isRestoring = false) {
+    const options = qCard.querySelectorAll('.q-option');
+    if (!isRestoring) options[userAnswer].classList.add(userAnswer === correctAnswer ? 'correct' : 'wrong');
+    if (userAnswer !== correctAnswer) {
+        options[correctAnswer].classList.add('correct');
+    }
+}
+function highlightTF(userAnswer, correctAnswer, isRestoring = false) {
+    const options = qCard.querySelectorAll('.q-tf-option');
+    const userOption = userAnswer ? options[0] : options[1];
+    const correctOption = correctAnswer ? options[0] : options[1];
+    if (!isRestoring) userOption.classList.add(userAnswer === correctAnswer ? 'correct' : 'wrong');
+    if (userAnswer !== correctAnswer) {
+        correctOption.classList.add('correct');
+    }
+}
+function highlightSEQ(userAnswer, correctAnswer) {
+    const items = qCard.querySelectorAll('.q-seq-item');
+    items.forEach((item, i) => {
+        if (userAnswer[i] === correctAnswer[i]) {
+            item.classList.add('correct');
+        }
+    });
+}
+function highlightMATCH(isCorrect) {
+    if (isCorrect) {
+        qCard.querySelectorAll('.paired').forEach(item => item.classList.add('correct'));
+    } else {
+        qCard.querySelector('.q-match-container').style.border = '2px solid var(--wrong)';
+        qCard.querySelector('.q-match-container').style.padding = '0.5rem';
+        qCard.querySelector('.q-match-container').style.borderRadius = 'var(--rad-m)';
+    }
+}
+function highlightRTC(userAnswers, subs) {
+    subs.forEach((sub, subIdx) => {
+        const container = qCard.querySelector(`[data-sub-idx="${subIdx}"]`);
+        const options = container.querySelectorAll('.q-option');
+        const userAnswer = userAnswers[subIdx];
+        if (userAnswer !== -1) { // If an answer was given
+            options[userAnswer].classList.add(userAnswer === sub.correct ? 'correct' : 'wrong');
+        }
+        if (userAnswer !== sub.correct) {
+            options[sub.correct].classList.add('correct');
+        }
+    });
+}
+
+
+/* ---------- EVENT LISTENERS ---------- */
+btnHint.addEventListener('click', () => {
+    playSound("E4", "8n");
+    const q = QUIZ.questions[idx];
+    hintText.textContent = q.hint || "No hint available for this question.";
+    if (q.hint) {
+        score = Math.max(0, score - 5); // Deduct points
+    }
+    hintModal.classList.add('visible');
+});
+
+closeHintModal.addEventListener('click', () => {
+    hintModal.classList.remove('visible');
+});
+hintModal.addEventListener('click', (e) => {
+    if (e.target === hintModal) {
+        hintModal.classList.remove('visible');
+    }
+});
+
+
+/* ---------- NAV ---------- */
+btnPrev.addEventListener('click', ()=>{ if(idx>0){ idx--; render(); }});
+btnNext.addEventListener('click', ()=>{ if(idx<QUIZ.questions.length-1){ idx++; render(); }});
+btnSubmit.addEventListener('click', grade);
+btnSkip.addEventListener('click', ()=>{ answers[idx]='__skipped__'; showExplanation(false,"Marked as skipped."); });
+btnFinish.addEventListener('click', ()=>{
+  quizEnded = true;
+  const totalQuestions = QUIZ.questions.length;
+  progressBar.style.width='100%';
+  const totalMarks = totalQuestions * 10;
+  qCard.innerHTML = `
+    <div class="q-text" style="font-size:1.15rem;">🎉 Quiz Complete!</div>
+    <p style="margin:.4rem 0 1rem;color:var(--muted)">You finished all ${totalQuestions} questions.</p>
+    <div class="expl expl--ok" style="display:block"><strong>Your final score:</strong> ${score} / ${totalMarks}</div>
+  `;
+  btnPrev.disabled=true; btnNext.style.display='none'; btnSubmit.style.display='none'; btnSkip.style.display='none'; btnHint.style.display='none'; btnFinish.style.display='none';
+});
+
+/* ---------- INITIAL RENDER ---------- */
+render();
+
+</script>
+</body>
+</html>
