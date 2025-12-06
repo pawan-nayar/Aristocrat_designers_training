@@ -31,7 +31,8 @@
         a:hover { text-decoration: underline; }
 
         /* ================= Header / Footer / Breadcrumbs ================= */
-        .site-header { background: var(--header-bg); color: var(--header-fg); padding: 14px 24px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .site-header { background: var(--header-bg); color: var(--header-fg); padding: 14px 24px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .site-header .logo { font-weight: 700; font-size: 1.2rem; color: #fff; white-space: nowrap; }
         .breadcrumbs { margin-bottom: 24px; font-size: 0.9rem; color: #6c757d; }
         .site-footer { text-align: center; margin-top: 50px; padding: 40px; background: var(--muted); border-top: 1px solid var(--border); }
 
@@ -68,17 +69,23 @@
         .accordion-header[aria-expanded="true"] i { transform: rotate(180deg); }
         .accordion-content { padding: 0 20px; background: #fff; max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out, padding 0.3s ease-out; }
 
-        .quiz-container { padding: 20px; border: 1px solid var(--border); border-radius: 12px; background: #fff; margin-top: 24px; }
-        .quiz-navigation { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+        /* Quiz - Commandment #10: Touch explicit, not inferred */
+        .quiz-container { padding: 24px; border: 2px solid var(--border); border-radius: 12px; background: #fff; margin-top: 24px; }
+        .quiz-navigation { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); gap: 16px; }
+        .quiz-navigation .btn { min-width: 48px; min-height: 48px; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
+        .question-counter { font-weight: 600; color: var(--accent-2); font-size: 1rem; }
         .quiz-body { display: none; } .quiz-body.active { display: block; }
-        .quiz-options { display: grid; gap: 12px; }
-        .quiz-option label { display: block; padding: 14px; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; background: var(--muted); }
-        .quiz-option .explanation { display: none; margin-top: 10px; padding: 15px; border-radius: 6px; }
+        .quiz-options { display: grid; gap: 14px; }
+        .quiz-option label { display: flex; align-items: center; gap: 12px; padding: 16px 18px; border: 2px solid var(--border); border-radius: 10px; cursor: pointer; background: var(--muted); min-height: 56px; transition: all 0.2s ease; }
+        .quiz-option label:active { transform: scale(0.98); background: #e9ecef; }
+        .quiz-option input[type="radio"] { flex-shrink: 0; width: 20px; height: 20px; }
+        .quiz-option .explanation { display: none; margin-top: 12px; padding: 16px; border-radius: 8px; }
         .quiz-option.selected.correct label { background: var(--ok-soft); border-color: var(--ok); }
         .quiz-option.selected.wrong label { background: var(--bad-soft); border-color: var(--bad); }
         .quiz-option.correct .explanation { border-left: 4px solid var(--ok); background: var(--ok-soft); }
         .quiz-option.wrong .explanation { border-left: 4px solid var(--bad); background: var(--bad-soft); }
-        .final-score { text-align: center; font-size: 1.5rem; font-weight: bold; padding: 30px; }
+        .final-score { text-align: center; font-size: clamp(1.2rem, 4vw, 1.5rem); font-weight: bold; padding: 30px 20px; }
+        .final-score .btn { margin-top: 20px; min-height: 56px; padding: 16px 32px; font-size: 1.1rem; }
         
         .glossary-cloud { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; justify-content: center; }
         .glossary-chip { position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 999px; background: #fff7ed; border: 1px solid #ffd8a8; color: var(--accent-2); font-weight: 600; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
@@ -86,6 +93,13 @@
         .chip-tip { position: fixed; z-index: 1001; min-width: 240px; max-width: min(92vw, 420px); background: var(--header-bg); color: #fff; padding: 12px 14px; border-radius: 12px; box-shadow: 0 12px 28px rgba(0,0,0, .2); opacity: 0; visibility: hidden; transition: opacity 0.15s, visibility 0.15s; line-height: 1.45; }
         .chip-tip.show { opacity: 1; visibility: visible; }
         .chip-tip .arrow { position: absolute; width: 12px; height: 12px; background: var(--header-bg); transform: rotate(45deg); }
+        
+        /* ================= Hamburger Menu ================= */
+        .hamburger{display:none;background:none;border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:8px;padding:12px 14px;font-size:1.1rem;cursor:pointer;line-height:1;transition:background 0.2s;min-width:48px;min-height:48px}
+        .hamburger:hover,.hamburger[aria-expanded="true"]{background:rgba(255,255,255,0.15)}
+        .site-nav{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+        .site-nav a{color:#ced4da;padding:8px 12px}
+        .site-nav a:hover{color:#fff}
 
         /* ================= Table Styles ================= */
         .table-wrap { position: relative; border: 1px solid var(--border); border-radius: 12px; background: #fff; margin: 24px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
@@ -94,12 +108,119 @@
         table.data-table th, table.data-table td { padding: 14px 16px; border: 1px solid var(--border); text-align: left; vertical-align: top; }
         table.data-table thead th { background: var(--muted); font-weight: 600; white-space: nowrap; }
         table.data-table tbody tr:nth-child(even) { background: #fff7ed; } /* Light orange zebra stripe */
+        
+        /* ================= MOBILE RESPONSIVE: COMMANDMENTS 1-13 ================= */
+        /* Medium devices */
+        @media (max-width: 768px) {
+          /* Hamburger menu pattern */
+          .site-header { flex-wrap: nowrap; display: flex; align-items: center; }
+          .hamburger { display: inline-flex; align-items: center; justify-content: center; margin-left: auto; }
+          .site-nav {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 16px;
+            flex-direction: column;
+            gap: 0;
+            background: var(--header-bg);
+            padding: 8px 0;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+            min-width: 200px;
+            z-index: 999;
+          }
+          .site-nav.open { display: flex; }
+          .site-nav a { display: block; padding: 14px 18px; color: #f8f9fa; white-space: nowrap; min-height: 48px; }
+          .site-nav a + a { border-top: 1px solid rgba(255,255,255,0.15); }
+          
+          /* Commandment #2: Mobile is re-prioritization, not compression */
+          .container { padding: 20px 16px; }
+          h1 { font-size: clamp(1.8rem, 6vw, 2.4rem); }
+          h2 { font-size: clamp(1.4rem, 5vw, 1.8rem); margin: 36px 0 16px; }
+          h3 { font-size: clamp(1.15rem, 4vw, 1.4rem); }
+          
+          /* Cards EXPAND vertically on mobile, not shrink */
+          .highlight-card, .tips-card, .intro { padding: 20px; margin: 20px 0; }
+          .tips-card ul { padding-left: 0.8em; }
+          
+          /* Commandment #12: Interactive elements in thumb zones */
+          .quiz-navigation { padding: 16px 0 20px; }
+          .quiz-navigation .btn { min-width: 56px; min-height: 56px; font-size: 1.3rem; padding: 14px 18px; border-radius: 12px; }
+          .quiz-option label { padding: 18px 16px; min-height: 60px; font-size: 1rem; }
+          
+          /* Glossary: cluster, don't scatter */
+          .glossary-cloud { gap: 10px; justify-content: flex-start; }
+          .glossary-chip { padding: 14px 18px; font-size: 0.95rem; min-height: 48px; }
+          
+          /* Accordion touch-friendly */
+          .accordion-header { padding: 18px 20px; min-height: 60px; font-size: 1rem; }
+          .accordion-content { padding: 20px; }
+          
+          /* Tables: horizontal scroll with visible affordance */
+          .table-wrap { margin: 20px -16px; border-radius: 0; border-left: none; border-right: none; }
+          .table-scroll::after { content: '→ Swipe'; position: absolute; right: 8px; top: 8px; background: var(--accent); color: #fff; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; opacity: 0.9; }
+          table.data-table td, table.data-table th { padding: 14px 12px; font-size: 0.9rem; }
+          table.data-table td code { font-size: 0.8rem; word-break: break-word; white-space: normal; }
+        }
+        
+        /* Small devices */
+        @media (max-width: 600px) {
+          /* Commandment #5: Never collapse text hierarchy */
+          h1 { font-size: clamp(1.6rem, 7vw, 2rem); line-height: 1.25; }
+          .byline { font-size: clamp(1rem, 4vw, 1.15rem); }
+          p { font-size: 1rem; line-height: 1.75; }
+          
+          /* Commandment #10: Touch must be explicit */
+          .btn { min-width: 48px; min-height: 48px; padding: 14px 20px; font-size: 1rem; }
+          .quiz-navigation .btn { min-width: 60px; min-height: 60px; }
+          
+          /* Commandment #13: Eliminate vertical wastelands */
+          section { margin-bottom: 32px; }
+          .intro { margin: 16px 0 24px; }
+          
+          /* Quiz body expands */
+          .quiz-container { padding: 16px; }
+          .quiz-body h3 { font-size: 1.1rem; margin-bottom: 12px; }
+        }
+        
+        /* Extra small devices */
+        @media (max-width: 480px) {
+          .container { padding: 16px 12px; }
+          .site-header { padding: 12px 16px; }
+          
+          /* Commandment #11: Never miniaturize */
+          .highlight-card, .tips-card { padding: 18px 16px; }
+          .tips-card h4 { font-size: 1.1rem; }
+          
+          /* Glossary stacks on small screens */
+          .glossary-cloud { flex-direction: column; align-items: stretch; }
+          .glossary-chip { justify-content: center; padding: 16px 20px; font-size: 1rem; }
+          .chip-tip { left: 8px !important; right: 8px !important; max-width: none; width: auto; }
+          
+          /* Accordion full-width touch */
+          .accordion-header { padding: 20px 16px; }
+          
+          /* Lists readable */
+          ul { margin-left: 16px; padding-left: 0.5em; }
+          li { padding-left: 0.3em; margin-bottom: 14px; line-height: 1.6; }
+          
+          /* Code blocks wrap properly */
+          code { font-size: 0.85rem; word-break: break-word; }
+        }
     </style>
 </head>
 <body>
 
 <header class="site-header">
-    <div style="font-weight: 700; font-size: 1.2rem;">AI Game Design Academy</div>
+    <div class="logo">AI Game Design Academy</div>
+    <button class="hamburger" id="hamburger-btn" aria-expanded="false" aria-controls="primary-nav">☰</button>
+    <nav id="primary-nav" class="site-nav">
+        <a href="#landscape">2025 Landscape</a>
+        <a href="#firefly">Firefly</a>
+        <a href="#midjourney">Midjourney</a>
+        <a href="#prompts">Prompts</a>
+        <a href="#quiz">Quiz</a>
+    </nav>
 </header>
 
 <div class="container">
@@ -275,33 +396,57 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
       const quizQuestions = [
-        { q: "In 2025, Adobe Firefly is best described as:", correct: 1, options: [ {text:"A standalone image model like Midjourney."}, {text:"A unified hub integrating Adobe, Google, and OpenAI models."}, {text:"A mobile-only application for simple edits."}, {text:"A tool exclusively for video generation."} ] },
-        { q: "What is the primary strength of Midjourney V7?", correct: 0, options: [ {text:"Rapid style exploration and blue-sky concepting."}, {text:"Bulk asset creation for 10,000+ images."}, {text:"Enterprise-level licensing and indemnification."}, {text:"Direct integration with Photoshop and After Effects."} ] },
-        { q: "Which new Midjourney V7 parameter replaces `--cref` for character consistency?", correct: 3, options: [ {text:"`--sref`"}, {text:"`--c_ref`"}, {text:"`--char`"}, {text:"`--oref`"} ] },
-        { q: "A game studio needs to create 500 variations of a reel symbol with different backgrounds for a marketing campaign. Which tool is best suited for this task?", correct: 1, options: [ {text:"Midjourney's `--repeat` command."}, {text:"Firefly's Bulk Create API."}, {text:"Photoshop's batch processing actions."}, {text:"The Midjourney Editor."} ] },
-        { q: "According to the 2025 workflow, where should a designer start when creating a new game concept?", correct: 2, options: [ {text:"In Photoshop, to set up the template."}, {text:"In Firefly, to ensure brand safety from the start."}, {text:"In Midjourney, to explore a wide range of visual styles."}, {text:"In the Firefly mobile app, to capture references."} ] },
-        { q: "What is a major advantage of using the Firefly platform for a large, risk-averse game studio?", correct: 0, options: [ {text:"Its training data is commercially safe and indemnified."}, {text:"It generates more artistic and surreal images."}, {text:"It is primarily operated through Discord."}, {text:"It has a parameter for increasing chaos."} ] },
-        { q: "The new Midjourney V7 Editor is best used for:", correct: 2, options: [ {text:"Replacing the need for Photoshop entirely."}, {text:"Automating asset localization."}, {text:"Quick compositional adjustments like Pan and Vary Region."}, {text:"Managing your subscription credits."} ] },
-        { q: "Which of these classic Midjourney syntaxes is noted as being deprecated or unsupported in V7?", correct: 3, options: [ {text:"Image prompts with `--iw`"}, {text:"Using `--no` to exclude things"}, {text:"Using `--sref` for style"}, {text:"Multi-prompt weighting with `::`"} ] },
-        { q: "A designer on the casino floor spots a glare on their new cabinet art. What is the fastest 2025 workflow to fix this?", correct: 1, options: [ {text:"Go back to the office and re-render in Midjourney."}, {text:"Use the Firefly mobile app's Generative Fill and sync to Creative Cloud."}, {text:"Manually edit the photo in a different mobile app."}, {text:"Wait for the next software update."} ] },
-        { q: "To get a clean image with minimal noise or film grain in Midjourney V7, you should:", correct: 0, options: [ {text:"Combine `--style raw`, low `--stylize`, and use `--no film grain`."}, {text:"Use a very high `--stylize` value."}, {text:"Use the `--clean` parameter."}, {text:"Increase the `--q` value to 5."} ] },
-        { q: "In the integrated workflow, what is the primary role of Photoshop?", correct: 2, options: [ {text:"Initial idea generation."}, {text:"Bulk resizing of assets."}, {text:"Surgical edits like precise Generative Fill and final compositing."}, {text:"Managing API credits."} ] },
-        { q: "Firefly's 2025 platform allows a user to do what for the first time within the Adobe ecosystem?", correct: 3, options: [ {text:"Generate an image from text."}, {text:"Upscale an image to a higher resolution."}, {text:"Reference another image for style."}, {text:"Choose to use models from Google or OpenAI for a task."} ] }
+        { q: "In 2025, Adobe Firefly is best described as:", correct: 1, 
+          explanation: "Firefly 2025 is a unified creative hub that integrates Adobe's own models plus third-party engines like Google Imagen/Veo and OpenAI DALL-E—all under one credit system with enterprise safety.",
+          options: [ {text:"A standalone image model like Midjourney."}, {text:"A unified hub integrating Adobe, Google, and OpenAI models."}, {text:"A mobile-only application for simple edits."}, {text:"A tool exclusively for video generation."} ] },
+        { q: "What is the primary strength of Midjourney V7?", correct: 0, 
+          explanation: "Midjourney V7 excels at rapid style exploration and 'blue-sky' concepting—generating dozens of artistic style frames and moodboards faster than any other tool.",
+          options: [ {text:"Rapid style exploration and blue-sky concepting."}, {text:"Bulk asset creation for 10,000+ images."}, {text:"Enterprise-level licensing and indemnification."}, {text:"Direct integration with Photoshop and After Effects."} ] },
+        { q: "Which new Midjourney V7 parameter replaces `--cref` for character consistency?", correct: 3, 
+          explanation: "Omni Reference (--oref) is V7's powerful successor to --cref. It maintains stronger character and object consistency across different scenes and poses.",
+          options: [ {text:"`--sref`"}, {text:"`--c_ref`"}, {text:"`--char`"}, {text:"`--oref`"} ] },
+        { q: "A game studio needs to create 500 variations of a reel symbol with different backgrounds for a marketing campaign. Which tool is best suited for this task?", correct: 1, 
+          explanation: "Firefly's Bulk Create API automates mass production of thousands of asset variations—perfect for symbol sets with different backgrounds, resizes, and recolors.",
+          options: [ {text:"Midjourney's `--repeat` command."}, {text:"Firefly's Bulk Create API."}, {text:"Photoshop's batch processing actions."}, {text:"The Midjourney Editor."} ] },
+        { q: "According to the 2025 workflow, where should a designer start when creating a new game concept?", correct: 2, 
+          explanation: "Start in Midjourney for blue-sky concepting to explore the visual soul of your game. Generate style frames and moodboards before moving to production tools.",
+          options: [ {text:"In Photoshop, to set up the template."}, {text:"In Firefly, to ensure brand safety from the start."}, {text:"In Midjourney, to explore a wide range of visual styles."}, {text:"In the Firefly mobile app, to capture references."} ] },
+        { q: "What is a major advantage of using the Firefly platform for a large, risk-averse game studio?", correct: 0, 
+          explanation: "Adobe's Firefly offers full indemnification—legal protection against copyright claims. Its training data is commercially safe, making it ideal for enterprise studios.",
+          options: [ {text:"Its training data is commercially safe and indemnified."}, {text:"It generates more artistic and surreal images."}, {text:"It is primarily operated through Discord."}, {text:"It has a parameter for increasing chaos."} ] },
+        { q: "The new Midjourney V7 Editor is best used for:", correct: 2, 
+          explanation: "The web-based Editor provides Pan, Zoom, and Vary (Region) tools for quick compositional adjustments—refining images before exporting to Photoshop for final work.",
+          options: [ {text:"Replacing the need for Photoshop entirely."}, {text:"Automating asset localization."}, {text:"Quick compositional adjustments like Pan and Vary Region."}, {text:"Managing your subscription credits."} ] },
+        { q: "Which of these classic Midjourney syntaxes is noted as being deprecated or unsupported in V7?", correct: 3, 
+          explanation: "Multi-prompt weighting with :: syntax (like dragon::2 gold::1) is deprecated in V7. Use descriptive language for emphasis and --no for exclusions instead.",
+          options: [ {text:"Image prompts with `--iw`"}, {text:"Using `--no` to exclude things"}, {text:"Using `--sref` for style"}, {text:"Multi-prompt weighting with `::`"} ] },
+        { q: "A designer on the casino floor spots a glare on their new cabinet art. What is the fastest 2025 workflow to fix this?", correct: 1, 
+          explanation: "The Firefly mobile app lets you capture, edit with Generative Fill on-the-spot, and sync instantly to Creative Cloud—creating an agile feedback loop for on-site reviews.",
+          options: [ {text:"Go back to the office and re-render in Midjourney."}, {text:"Use the Firefly mobile app's Generative Fill and sync to Creative Cloud."}, {text:"Manually edit the photo in a different mobile app."}, {text:"Wait for the next software update."} ] },
+        { q: "To get a clean image with minimal noise or film grain in Midjourney V7, you should:", correct: 0, 
+          explanation: "Combine multiple parameters: --style raw (reduces AI's opinion), low --stylize value, low --chaos, and negative prompts like --no film grain, noise, speckle.",
+          options: [ {text:"Combine `--style raw`, low `--stylize`, and use `--no film grain`."}, {text:"Use a very high `--stylize` value."}, {text:"Use the `--clean` parameter."}, {text:"Increase the `--q` value to 5."} ] },
+        { q: "In the integrated workflow, what is the primary role of Photoshop?", correct: 2, 
+          explanation: "Photoshop handles surgical edits—precise Generative Fill to fix details, final compositing, and production-ready finishing. It bridges concepting and final assets.",
+          options: [ {text:"Initial idea generation."}, {text:"Bulk resizing of assets."}, {text:"Surgical edits like precise Generative Fill and final compositing."}, {text:"Managing API credits."} ] },
+        { q: "Firefly's 2025 platform allows a user to do what for the first time within the Adobe ecosystem?", correct: 3, 
+          explanation: "For the first time, designers can choose third-party models (Google Imagen/Veo, OpenAI) directly within Adobe's interface—all under one credit system.",
+          options: [ {text:"Generate an image from text."}, {text:"Upscale an image to a higher resolution."}, {text:"Reference another image for style."}, {text:"Choose to use models from Google or OpenAI for a task."} ] }
       ];
 
       const faqs = [
-        { q: "Which tool is better in 2025: Midjourney or Firefly?", a: "Neither is 'better'—they excel at different tasks. Use Midjourney for initial, high-speed style exploration and concept art. Use Firefly for production work, including surgical edits, bulk creation, and ensuring brand-safe, commercially indemnified assets." },
-        { q: "What is Omni Reference (`--oref`) in Midjourney V7?", a: "It's the powerful successor to Character Reference (`--cref`). You provide an image URL of a character, and `--oref` ensures that character appears consistently across different scenes and poses. It's essential for creating reliable game IP." },
-        { q: "Can I still use multi-prompt weights like `dragon::2 gold::1` in Midjourney V7?", a: "No, the notes indicate this syntax is deprecated and not officially supported in V7. For emphasis, you should use more descriptive language in your prompt. For exclusion, use `--no`. For blending images, use image prompts with the `--iw` parameter." },
-        { q: "What does it mean that Firefly is a 'multi-model platform'?", a: "It means that within the Firefly interface, you are not limited to using only Adobe's Firefly Image model. You can choose to use other powerful models, like Google's Imagen/Veo or OpenAI's DALL-E, for specific tasks, all under a single Adobe credit system." },
-        { q: "How does the Firefly mobile app change the game design workflow?", a: "It creates a powerful loop between on-site reviews and the digital studio. A designer can take a picture of a physical cabinet, use AI to edit it on the spot (e.g., remove glare, expand the background), and have the changes sync instantly to their team's Creative Cloud library." },
-        { q: "Are Midjourney V7 images safe to use for commercial games?", a: "Under a paid plan, you have commercial rights to the images you create. However, because Midjourney's training data is not public, some large, risk-averse studios may prefer Firefly, which offers full indemnification (legal protection) for its outputs." },
-        { q: "What's the best way to get a clean, noiseless image in Midjourney V7?", a: "There's no single 'denoise' button. You must use a combination of parameters: <code>--style raw</code> (to reduce AI's opinion), a low <code>--stylize</code> value (e.g., <code>--s 50</code>), a low <code>--chaos</code> value (e.g., <code>--c 5</code>), and negative prompts like <code>--no film grain, noise, speckle</code>." },
-        { q: "How do I control perspective in Midjourney V7?", a: "You drive perspective primarily through descriptive language in your prompt. Use camera and photography terms like '14mm ultra-wide lens,' 'low-angle shot,' 'from a bird's eye view,' or 'single vanishing point.' Afterward, you can use the new web Editor to fine-tune the composition with Pan and Zoom." },
-        { q: "What is Firefly's 'Bulk Create' feature?", a: "It's an enterprise-level automation tool that uses APIs to generate thousands of variations of an image. For game studios, this means you can automatically create a full set of reel symbols on different backgrounds, or resize key art for every marketing platform, saving immense amounts of time." },
-        { q: "If Midjourney V7 is better at hands, is there any reason to use Firefly for characters?", a: "Yes. While Midjourney is great for *concepting* characters, Firefly's integration with Photoshop is superior for *refining* them. You might design a character in Midjourney, then bring it into Photoshop and use Firefly's Generative Fill for precise edits, like changing an item of clothing or fixing a minor artifact." },
-        { q: "What are Style Reference versions (`--sv`) in Midjourney V7?", a: "When you use a style reference (`--sref`), the `--sv` parameter lets you choose which version of the style-matching algorithm to use. The default is the latest, but you might use an older version if you have a style code that was generated with it, ensuring consistency." },
-        { q: "Can I use Google's Veo video model in Midjourney?", a: "No. According to the notes, Google's Imagen/Veo models are integrated into the Adobe Firefly platform. Midjourney has its own native video generation capabilities, which are separate." }
+        { q: "Which tool is better in 2025: Midjourney or Firefly?", a: "Neither is 'better'—they're complementary. <strong>Pro workflow:</strong> Start in Midjourney for 20-30 rapid style explorations, pick your strongest 2-3 concepts, then move to Firefly/Photoshop for surgical refinement and bulk production. This dual-tool approach gives you creative freedom AND enterprise-grade deliverables." },
+        { q: "What is Omni Reference (`--oref`) in Midjourney V7?", a: "It's the successor to <code>--cref</code> for character consistency. <strong>Game design tip:</strong> Upload your hero character once, then use <code>--oref [URL] --ow 80</code> to generate that character in 15+ different poses and scenes. Essential for building symbol sets, promotional materials, and style guides around a single IP." },
+        { q: "Can I still use multi-prompt weights like `dragon::2 gold::1` in Midjourney V7?", a: "No—this syntax is deprecated in V7. <strong>Better alternatives:</strong> For emphasis, write 'golden dragon, emphasis on scales and fire breathing.' For exclusions, use <code>--no wings, cartoon</code>. For image blending, combine two image URLs with <code>--iw 1.5</code>. These methods give cleaner, more predictable results." },
+        { q: "What does it mean that Firefly is a 'multi-model platform'?", a: "You can now choose which AI engine to use per task—Adobe's Firefly Image 3, Google Imagen/Veo, or OpenAI DALL-E. <strong>Practical example:</strong> Use Veo for a 5-second cinematic dragon reveal video, then switch to Firefly Image 3 for brand-safe marketing stills—all within one interface, one credit system, one legal umbrella." },
+        { q: "How does the Firefly mobile app change the game design workflow?", a: "It eliminates the office-to-floor delay. <strong>Real scenario:</strong> During a cabinet review, spot a glare issue, photograph it, use Generative Fill to fix it in 30 seconds, and the updated image syncs to your team's Creative Cloud instantly. Stakeholders see fixes in real-time, not next week." },
+        { q: "Are Midjourney V7 images safe to use for commercial games?", a: "Paid plans grant commercial rights, but there's no indemnification. <strong>Risk assessment:</strong> For internal concepting and moodboards—absolutely safe. For final assets in a AAA release—many legal teams prefer Firefly's full indemnification. <strong>Hybrid solution:</strong> Concept in Midjourney, recreate final assets in Firefly or commission from the art team." },
+        { q: "What's the best way to get a clean, noiseless image in Midjourney V7?", a: "Combine multiple parameters: <code>--style raw --s 50 --c 5 --no film grain, noise, texture, speckle</code>. <strong>Pro tip:</strong> Add 'clean studio lighting, product photography' to your prompt. For slot symbols, this combination produces crisp, production-ready images that need minimal post-processing in Photoshop." },
+        { q: "How do I control perspective in Midjourney V7?", a: "Use camera terminology: '85mm portrait lens,' '14mm ultra-wide,' 'low-angle hero shot,' 'bird's eye view,' 'Dutch angle.' <strong>Slot design tip:</strong> For reel symbols, use 'front-facing, flat perspective, centered composition.' For key art, try 'dramatic low-angle, single vanishing point, epic scale.' Then refine with Pan/Zoom in the Editor." },
+        { q: "What is Firefly's 'Bulk Create' feature?", a: "An API-powered automation tool for mass asset production. <strong>Slot studio example:</strong> Upload one 'WILD' symbol, define 50 background variations (volcano, ocean, forest, etc.), and Bulk Create generates all 50 versions automatically. Pair with DAM integration to auto-distribute to marketing, localization, and QA teams simultaneously." },
+        { q: "If Midjourney V7 is better at hands, is there any reason to use Firefly for characters?", a: "Absolutely. <strong>Optimal workflow:</strong> Generate your character in Midjourney V7 (now with better hands!), then import to Photoshop. Use Firefly's Generative Fill to swap out specific details—change a weapon, adjust clothing color, fix a minor artifact. Midjourney for concepting, Firefly for precision surgery." },
+        { q: "What are Style Reference versions (`--sv`) in Midjourney V7?", a: "When using <code>--sref</code> with a saved style code, <code>--sv</code> specifies which algorithm version generated it. <strong>Workflow tip:</strong> Document your style codes with their version numbers. If you have a V6 style code that defined your game's aesthetic, use <code>--sv 6</code> to maintain consistency when generating new assets in V7." },
+        { q: "Can I use Google's Veo video model in Midjourney?", a: "No—Veo is exclusive to Adobe's Firefly platform. <strong>Video workflow:</strong> For cinematic reveals and promotional videos, use Firefly + Veo. Midjourney has its own video capabilities for quick motion tests. For a slot game trailer, you might concept frames in Midjourney, then produce final video in Firefly with Veo." }
       ];
 
       const glossaryData = [
@@ -346,7 +491,9 @@
                        classes += " correct";
                     }
                     if(isSelected) {
-                        explanationHTML = `<div class="explanation" style="display:block;">${userAnswers[currentQuestionIndex].isCorrect ? '✅ Correct!' : '❌ Incorrect.'} The correct answer is explained in the text.</div>`;
+                        const icon = userAnswers[currentQuestionIndex].isCorrect ? '✅' : '❌';
+                        const status = userAnswers[currentQuestionIndex].isCorrect ? 'Correct!' : 'Incorrect.';
+                        explanationHTML = `<div class="explanation" style="display:block;"><strong>${icon} ${status}</strong> ${qData.explanation}</div>`;
                     }
                 }
                 return `<div class="${classes}" data-option-index="${index}"><label><input type="radio" name="q${currentQuestionIndex}" value="${index}" ${userAnswers[currentQuestionIndex] !== null ? 'disabled' : ''}><span>${opt.text}</span></label>${explanationHTML}</div>`;
@@ -473,7 +620,36 @@
             window.addEventListener('resize', () => { if (openBtn) hideTip(); }, true);
         }
 
+        // --- HAMBURGER MENU TOGGLE ---
+        function setupHamburger() {
+            const hamburger = document.getElementById('hamburger-btn');
+            const nav = document.getElementById('primary-nav');
+            if (!hamburger || !nav) return;
+            
+            hamburger.addEventListener('click', function() {
+                const isOpen = nav.classList.toggle('open');
+                hamburger.setAttribute('aria-expanded', String(isOpen));
+            });
+            
+            // Close menu when clicking a link
+            nav.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    nav.classList.remove('open');
+                    hamburger.setAttribute('aria-expanded', 'false');
+                });
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!hamburger.contains(e.target) && !nav.contains(e.target)) {
+                    nav.classList.remove('open');
+                    hamburger.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+
         // --- INITIALIZE ALL COMPONENTS ---
+        setupHamburger();
         setupQuiz('quiz', quizQuestions);
         setupFAQs();
         setupAccordions();

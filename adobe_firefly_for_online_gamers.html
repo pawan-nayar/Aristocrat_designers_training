@@ -81,9 +81,11 @@
     .showcase-prompt-text { font-family: 'Courier New', Courier, monospace; color: #ced4da; font-size: 0.95rem; line-height: 1.6; }
     .showcase-nav { position: absolute; top: 40%; transform: translateY(-50%); background-color: rgba(239,125,85,0.8); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; }
     .showcase-nav:hover { background-color: var(--accent-2); }
-    #showcase-prev { left: -20px; }
-    #showcase-next { right: -20px; }
+    #showcase-prev, #showcase-prev-mobile { left: -20px; }
+    #showcase-next, #showcase-next-mobile { right: -20px; }
     .showcase-footer { text-align: center; margin-top: 15px; color: #6d6660; font-weight: 600; }
+    .showcase-nav-mobile { display: none; }
+    .showcase-nav-desktop { display: flex; }
 
     /* --- Poll, Wizard & Mini-Game Styles --- */
     .wizard-grid, .poll-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
@@ -122,11 +124,611 @@
 
     /* --- Glossary Styles --- */
     .glossary-cloud{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px;justify-content:center}
-    .glossary-chip{position:relative;display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:var(--surface-soft);border:1px solid var(--border);color:var(--accent-2);font-weight:600;cursor:pointer;}
-    .glossary-chip:hover, .glossary-chip:focus{background:rgba(239,125,85,0.2);}
-    .chip-tip{position:fixed;z-index:101;min-width:240px;max-width:min(92vw,420px);background:var(--accent);color:#fff;padding:12px 14px;border-radius:12px;box-shadow:0 12px 28px rgba(239,125,85,0.35);opacity:0;visibility:hidden;transition:.15s;line-height:1.45}
-    .chip-tip.show{opacity:1;visibility:visible}
-    .chip-tip .arrow{position:absolute;width:12px;height:12px;background:var(--accent);transform:rotate(45deg)}
+    .glossary-chip{position:relative;display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:var(--surface);border:2px solid var(--border);color:var(--accent-2);font-weight:600;cursor:pointer;transition:all 0.2s ease;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+    .glossary-chip:hover, .glossary-chip:focus{background:var(--accent);color:#fff;border-color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 12px rgba(239,125,85,0.3);}
+    .glossary-chip:active{transform:scale(0.98);}
+    .glossary-chip .chip-term{font-size:0.95rem;}
+    .chip-tip{position:fixed;z-index:1001;min-width:220px;max-width:min(92vw,380px);background:#1f1b18;color:#fff;padding:14px 16px;border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,0.35);opacity:0;visibility:hidden;transition:opacity .2s ease, transform .2s ease;line-height:1.55;font-size:0.95rem;pointer-events:none;transform:translateY(8px);}
+    .chip-tip.show{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0);}
+    .chip-tip .arrow{position:absolute;width:14px;height:14px;background:#1f1b18;transform:rotate(45deg);z-index:-1;}
+    .chip-tip.tip-top .arrow{bottom:-7px;}
+    .chip-tip.tip-bottom .arrow{top:-7px;}
+    .chip-tip .tip-content{position:relative;z-index:1;}
+
+    /* ================= MOBILE RESPONSIVE - THE 13 COMMANDMENTS ================= */
+    /* 
+      Commandment #11: Thou shalt not miniaturize desktop layouts.
+      Commandment #12: Thou shalt place interactive elements in thumb zones.
+      Commandment #13: Thou shalt eliminate vertical wastelands.
+    */
+
+    /* --- Mobile First: Small Screens (max-width: 600px) --- */
+    @media (max-width: 600px) {
+      /* ROOT SPACING - Commandment #1: Honour the Invisible Grid */
+      :root {
+        --mobile-padding: 16px;
+        --touch-target-min: 48px;
+      }
+      
+      /* CONTAINER - Commandment #13: Eliminate vertical wastelands */
+      .container {
+        padding: 16px var(--mobile-padding);
+        max-width: 100%;
+      }
+      
+      /* HEADER - Commandment #12: Thumb zone navigation */
+      .site-header {
+        padding: 12px 16px;
+        position: sticky;
+        top: 0;
+        gap: 8px;
+      }
+      .logo {
+        font-size: 1.1rem;
+      }
+      .site-header nav {
+        font-size: 0.9rem;
+        gap: 8px;
+      }
+      
+      /* TYPOGRAPHY - Commandment #5: Mobile typography = proximity typography */
+      h1 {
+        font-size: 1.75rem;
+        line-height: 1.25;
+        margin-bottom: 12px;
+        letter-spacing: 0.5px;
+      }
+      .byline {
+        font-size: 1rem;
+        margin-bottom: 16px;
+      }
+      h2 {
+        font-size: 1.4rem;
+        margin: 32px 0 12px;
+        padding-bottom: 8px;
+      }
+      h3 {
+        font-size: 1.15rem;
+        margin-top: 24px;
+        margin-bottom: 10px;
+      }
+      h4 {
+        font-size: 1rem;
+        margin-bottom: 8px;
+      }
+      p {
+        font-size: 1rem;
+        line-height: 1.65;
+        margin-bottom: 14px;
+      }
+      
+      /* BREADCRUMBS - Compact but touchable */
+      .breadcrumbs {
+        font-size: 0.85rem;
+        margin-bottom: 16px;
+        padding: 8px 0;
+      }
+      .breadcrumbs a {
+        padding: 4px 0;
+        display: inline-block;
+      }
+      
+      /* ARTICLE META - Commandment #7: Icons cluster, don't disperse */
+      .article-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+      }
+      .author-emoji {
+        font-size: 28px;
+      }
+      
+      /* INTRO BOX - Commandment #2: Re-prioritize, not compress */
+      .intro {
+        font-size: 1rem;
+        line-height: 1.7;
+        padding: 16px;
+        margin: 16px 0;
+        border-radius: 10px;
+        border-left-width: 3px;
+      }
+      
+      /* IMAGE FRAMES - Expand height for mobile viewing */
+      .img-frame {
+        padding-top: 60%; /* Taller on mobile */
+        margin: 12px 0 20px;
+        border-radius: 10px;
+      }
+      
+      /* BUTTONS - Commandment #6 & #10: 48px minimum touch target */
+      .btn {
+        min-height: var(--touch-target-min);
+        min-width: var(--touch-target-min);
+        padding: 14px 20px;
+        font-size: 1rem;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      /* INTERACTIVE BOX - Commandment #2: Vertical space with intention */
+      .interactive-box {
+        padding: 16px;
+        margin: 20px 0;
+        border-radius: 10px;
+      }
+      .interactive-box h3 {
+        font-size: 1.15rem;
+        margin-top: 0;
+        margin-bottom: 12px;
+      }
+      
+      /* LISTS - Adjusted for mobile reading */
+      ul {
+        margin-left: 16px;
+        margin-bottom: 20px;
+        padding-left: 0.8em;
+      }
+      li {
+        margin-bottom: 10px;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+      
+      /* DO/DON'T GRID - Commandment #11: Reflow, don't shrink */
+      .do-dont-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .do-col, .dont-col {
+        padding-left: 12px;
+        padding-bottom: 16px;
+      }
+      .do-col h5, .dont-col h5 {
+        font-size: 1rem;
+        margin-bottom: 10px;
+      }
+      
+      /* CODE BLOCKS - Scroll horizontally, don't shrink text */
+      .code-block {
+        font-size: 0.85rem;
+        padding: 12px;
+        border-radius: 8px;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      
+      /* TABLE - Commandment #11: Transform, don't miniaturize */
+      .table-wrap {
+        margin: 16px 0;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      table.data-table {
+        min-width: 600px; /* Force horizontal scroll */
+        font-size: 0.9rem;
+      }
+      table.data-table th,
+      table.data-table td {
+        padding: 12px;
+        min-width: 150px;
+      }
+      /* Alternative: Stacked table for very small screens */
+      .table-wrap::before {
+        content: '← Swipe to see more →';
+        display: block;
+        text-align: center;
+        font-size: 0.8rem;
+        color: #6d6660;
+        padding: 8px;
+        background: var(--surface-soft);
+        border-radius: 8px 8px 0 0;
+      }
+      
+      /* ACCORDION - Commandment #6: Controls feel intentional */
+      .accordion {
+        gap: 6px;
+      }
+      .accordion-header {
+        min-height: var(--touch-target-min);
+        padding: 14px 16px;
+        font-size: 1rem;
+        border-radius: 10px;
+      }
+      .accordion-header .accordion-title {
+        padding-right: 0.75rem;
+        line-height: 1.4;
+      }
+      .accordion-header::after {
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+      .accordion-content {
+        padding: 14px 16px;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+      
+      /* PROMPT SHOWCASE - Commandment #12: Thumb-zone navigation */
+      .prompt-showcase {
+        padding: 12px;
+        border-radius: 10px;
+        position: relative;
+      }
+      .showcase-image-wrapper {
+        padding-top: 65%; /* Taller aspect ratio on mobile */
+        margin-bottom: 16px;
+        border-radius: 8px;
+      }
+      .showcase-prompt-area {
+        padding: 12px;
+        border-radius: 8px;
+      }
+      .showcase-prompt-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      .showcase-prompt-header h5 {
+        font-size: 1rem;
+      }
+      /* SHOWCASE NAV - Move to bottom thumb zone */
+      .showcase-nav-desktop {
+        display: none !important;
+      }
+      .showcase-nav-mobile {
+        display: flex !important;
+        position: static;
+        transform: none;
+        width: var(--touch-target-min);
+        height: var(--touch-target-min);
+        font-size: 28px;
+        background-color: var(--accent);
+        flex-shrink: 0;
+      }
+      .showcase-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+      }
+      #showcase-counter {
+        flex: 1;
+        text-align: center;
+      }
+      /* Commandment #6: Copy button is explicit action */
+      .showcase-copy-btn {
+        min-height: 44px;
+        padding: 10px 16px;
+        font-size: 0.95rem;
+        border-radius: 8px;
+      }
+      .showcase-prompt-text {
+        font-size: 0.9rem;
+        line-height: 1.55;
+      }
+      
+      /* WIZARD - Commandment #11: Stack, don't squeeze */
+      .wizard-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .wizard-step {
+        margin-bottom: 0;
+      }
+      .wizard-step label {
+        font-size: 0.95rem;
+        margin-bottom: 6px;
+      }
+      .wizard-step select,
+      .wizard-step input {
+        min-height: var(--touch-target-min);
+        padding: 12px;
+        font-size: 1rem;
+        border-radius: 10px;
+      }
+      #wizard-output {
+        padding: 14px;
+        font-size: 0.9rem;
+        border-radius: 10px;
+        margin-top: 12px;
+      }
+      #wizard-output pre {
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      
+      /* POLL - Commandment #6 & #10: Touch-first interactions */
+      .poll-container {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .poll-question {
+        font-size: 1rem;
+        margin-bottom: 12px;
+      }
+      .poll-option {
+        min-height: var(--touch-target-min);
+        padding: 14px 16px;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .poll-option .poll-label {
+        font-size: 1rem;
+      }
+      .poll-result-bar {
+        height: 8px;
+      }
+      
+      /* QUIZ - Commandment #6 & #12: Intentional, thumb-accessible controls */
+      .quiz-container {
+        padding: 16px;
+        border-radius: 10px;
+      }
+      .quiz-navigation {
+        padding-bottom: 16px;
+        margin-bottom: 16px;
+        gap: 12px;
+      }
+      .quiz-navigation .btn {
+        min-width: 50px;
+        min-height: var(--touch-target-min);
+        font-size: 1.1rem;
+      }
+      .question-counter {
+        font-size: 0.95rem;
+        font-weight: 600;
+      }
+      .quiz-body p {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 16px;
+      }
+      .quiz-options {
+        gap: 10px;
+      }
+      .quiz-option label {
+        min-height: var(--touch-target-min);
+        padding: 14px;
+        gap: 10px;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        line-height: 1.45;
+      }
+      .quiz-option input[type="radio"] {
+        width: 22px;
+        height: 22px;
+        margin: 0;
+      }
+      .quiz-option .explanation {
+        margin-top: 12px;
+        padding: 14px;
+        font-size: 0.9rem;
+        line-height: 1.55;
+        border-radius: 8px;
+      }
+      
+      /* RTC QUIZ - Contextual challenges mobile */
+      .rtc-quiz-block {
+        margin-bottom: 20px;
+      }
+      .rtc-context {
+        font-size: 0.95rem;
+        padding: 12px 14px;
+        margin-bottom: 14px;
+        border-radius: 8px;
+        line-height: 1.55;
+      }
+      .rtc-sub-question {
+        margin-left: 0;
+        margin-bottom: 14px;
+        padding: 12px;
+        background: var(--surface-soft);
+        border-radius: 8px;
+      }
+      .rtc-sub-question p {
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+      }
+      .rtc-sub-question input[type="text"] {
+        min-height: var(--touch-target-min);
+        padding: 12px;
+        font-size: 1rem;
+        border-radius: 8px;
+      }
+      .btn-submit-rtc {
+        width: 100%;
+        margin-top: 8px;
+      }
+      
+      /* GLOSSARY - Commandment #8 & #10: Touch-explicit, clustered */
+      .glossary-cloud {
+        gap: 10px;
+        margin-top: 20px;
+        justify-content: flex-start;
+      }
+      .glossary-chip {
+        min-height: 48px;
+        padding: 12px 18px;
+        font-size: 0.95rem;
+        border-radius: 24px;
+        /* Commandment #10: Touch is explicit */
+        -webkit-tap-highlight-color: rgba(239,125,85,0.3);
+      }
+      .glossary-chip .chip-term {
+        font-size: 0.95rem;
+      }
+      /* Mobile: Show tooltip on tap, not hover */
+      .chip-tip {
+        max-width: calc(100vw - 32px);
+        font-size: 0.92rem;
+        padding: 16px;
+        line-height: 1.5;
+      }
+      .chip-tip .arrow {
+        width: 12px;
+        height: 12px;
+      }
+      
+      /* GAME MINI-GAME */
+      #game-image-container {
+        height: 180px;
+        margin-bottom: 12px;
+        border-radius: 10px;
+      }
+      #game-options {
+        gap: 8px;
+      }
+      .game-option-btn {
+        min-height: var(--touch-target-min);
+        padding: 12px 18px;
+        font-size: 0.95rem;
+        border-radius: 10px;
+      }
+      
+      /* FOOTER */
+      .site-footer {
+        margin-top: 40px;
+        padding: 28px 16px;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* --- Medium Screens (601px to 900px) --- */
+    @media (min-width: 601px) and (max-width: 900px) {
+      .container {
+        padding: 20px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      h2 {
+        font-size: 1.6rem;
+        margin: 40px 0 14px;
+      }
+      
+      .do-dont-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      
+      .wizard-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .showcase-nav {
+        width: 44px;
+        height: 44px;
+      }
+      #showcase-prev { left: -10px; }
+      #showcase-next { right: -10px; }
+      
+      .accordion-header {
+        min-height: 52px;
+        padding: 14px 18px;
+      }
+      
+      .btn {
+        min-height: 44px;
+        padding: 12px 18px;
+      }
+      
+      .quiz-option label {
+        padding: 14px 16px;
+      }
+      
+      .glossary-chip {
+        min-height: 42px;
+        padding: 10px 14px;
+      }
+    }
+
+    /* --- Touch Device Optimizations --- */
+    @media (hover: none) and (pointer: coarse) {
+      /* Remove hover states, make tap states explicit */
+      .btn:hover,
+      .poll-option:hover,
+      .accordion-header:hover,
+      .game-option-btn:hover,
+      .glossary-chip:hover {
+        background-color: inherit;
+      }
+      
+      /* Active states for touch feedback */
+      .btn:active {
+        background-color: var(--accent-2);
+        transform: scale(0.98);
+      }
+      .poll-option:active,
+      .accordion-header:active,
+      .glossary-chip:active {
+        background-color: var(--border);
+        transform: scale(0.99);
+      }
+      .game-option-btn:active {
+        background-color: var(--surface-soft);
+        transform: scale(0.98);
+      }
+      
+      /* Larger touch targets */
+      .quiz-option label,
+      .poll-option,
+      .accordion-header {
+        cursor: pointer;
+        -webkit-tap-highlight-color: rgba(239,125,85,0.15);
+      }
+    }
+
+    /* --- Landscape Phone --- */
+    @media (max-width: 900px) and (orientation: landscape) {
+      .container {
+        padding: 16px 24px;
+      }
+      
+      .showcase-image-wrapper {
+        padding-top: 45%;
+      }
+      
+      .img-frame {
+        padding-top: 45%;
+      }
+      
+      h1 {
+        font-size: 1.6rem;
+      }
+    }
+
+    /* --- Print Styles --- */
+    @media print {
+      .site-header,
+      .site-footer,
+      .showcase-nav,
+      .btn,
+      .quiz-navigation {
+        display: none;
+      }
+      
+      .container {
+        max-width: 100%;
+        padding: 0;
+      }
+      
+      .interactive-box {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+    }
   </style>
 </head>
 <body>
@@ -315,11 +917,13 @@
                     </div>
                     <p id="showcase-prompt-text" class="showcase-prompt-text"></p>
                 </div>
-                <button id="showcase-prev" class="showcase-nav">‹</button>
-                <button id="showcase-next" class="showcase-nav">›</button>
+                <button id="showcase-prev" class="showcase-nav showcase-nav-desktop">‹</button>
+                <button id="showcase-next" class="showcase-nav showcase-nav-desktop">›</button>
             </div>
              <div class="showcase-footer">
+                <button id="showcase-prev-mobile" class="showcase-nav showcase-nav-mobile">‹</button>
                 <span id="showcase-counter">1 / 20</span>
+                <button id="showcase-next-mobile" class="showcase-nav showcase-nav-mobile">›</button>
             </div>
         </div>
     </section>
@@ -466,6 +1070,33 @@
           { image: "https://placehold.co/600x300/ef7d55/ffffff?text=Painted+Joker", effect: "Watercolor" }
       ];
       let gameCurrentIndex = 0;
+      
+      const rtcQuizzes = [
+        {
+          context: "An art director needs to create a new game character that matches the specific, stylized 'painted' look of their existing game, 'Mystic Cards'. To ensure consistency, they upload a piece of the original game's key art into Firefly's <strong>Style Reference</strong> slot. After generating a character they like, they notice the background is a simple grey, but they need a 'magical forest' setting. They take the image into Photoshop to finish the asset.",
+          questions: [
+            { type: "MCQ", text: "Which Firefly feature was most important for matching the 'Mystic Cards' art style?", options: ["Composition Reference", "Style Reference", "Effects Panel", "Visual Intensity"], correct: 1 },
+            { type: "FTB", text: "To add the 'magical forest' in Photoshop, the artist would select the grey background and use the _______________ tool.", answer: "Generative Fill" },
+            { type: "TF", text: "Using a high 'Visual Intensity' would be the best way to make the character look photorealistic.", correct: false },
+          ]
+        },
+        {
+          context: "A designer is creating a promotional banner for a new slot game. They start with a square (1:1) character portrait but need a widescreen (16:9) banner. Inside Photoshop, they use the Crop Tool to expand the canvas to the new aspect ratio. They leave the prompt field blank and confirm the change.",
+          questions: [
+            { type: "FTB", text: "The specific tool used to intelligently fill the new, empty space on the banner is called Generative ____________.", answer: "Expand" },
+            { type: "TF", text: "Leaving the prompt field blank was a mistake; the tool requires a text prompt to function.", correct: false },
+            { type: "MCQ", text: "To add dramatic, high-contrast lighting to the final banner, which 'Lighting' effect would be most suitable?", options: ["Studio Light", "Golden Hour", "Dramatic Light", "Backlighting"], correct: 2 },
+          ]
+        },
+        {
+          context: "A visual artist is experimenting to create a unique UI button. They want to combine two distinct styles. In the Firefly web UI, they select 'Steampunk' from the 'Movements' category in the Effects panel, and 'Layered Paper' from the 'Techniques' category. They find the result interesting but a bit too chaotic.",
+          questions: [
+            { type: "MCQ", text: "Which slider should the artist lower to make the final image less chaotic and more faithful to their prompt?", options: ["Aspect Ratio", "Model Version", "Visual Intensity", "Camera Angle"], correct: 2 },
+            { type: "FTB", text: "The 'Steampunk' and 'Layered Paper' options are both found in the main ____________ panel.", answer: "Effects" },
+            { type: "TF", text: "To make the button look like it was photographed on a professional product stage, the artist should add the 'Studio Light' effect.", correct: true },
+          ]
+        }
+      ];
 
       // --- INITIALIZATION ---
       function initializeAll() {
@@ -476,6 +1107,7 @@
         setupPromptWizard();
         setupMiniGame();
         setupPoll();
+        setupRTCQuizzes();
       }
       
       // --- INTERACTIVE COMPONENT SETUP ---
@@ -575,6 +1207,8 @@
          const promptEl = document.getElementById('showcase-prompt-text');
          const prevBtn = document.getElementById('showcase-prev');
          const nextBtn = document.getElementById('showcase-next');
+         const prevBtnMobile = document.getElementById('showcase-prev-mobile');
+         const nextBtnMobile = document.getElementById('showcase-next-mobile');
          const counterEl = document.getElementById('showcase-counter');
          const copyBtn = document.getElementById('showcase-copy-btn');
          let currentIndex = 0;
@@ -591,8 +1225,12 @@
             }, 300);
         }
 
+        // Desktop nav
         prevBtn.addEventListener('click', () => { currentIndex = (currentIndex - 1 + showcaseCards.length) % showcaseCards.length; showCard(currentIndex); });
         nextBtn.addEventListener('click', () => { currentIndex = (currentIndex + 1) % showcaseCards.length; showCard(currentIndex); });
+        // Mobile nav - Commandment #12: Thumb zone navigation
+        prevBtnMobile.addEventListener('click', () => { currentIndex = (currentIndex - 1 + showcaseCards.length) % showcaseCards.length; showCard(currentIndex); });
+        nextBtnMobile.addEventListener('click', () => { currentIndex = (currentIndex + 1) % showcaseCards.length; showCard(currentIndex); });
         
         copyBtn.addEventListener('click', () => {
             navigator.clipboard.writeText(showcaseCards[currentIndex].prompt).then(() => {
@@ -600,6 +1238,33 @@
                 setTimeout(() => { copyBtn.innerHTML = '📋 Copy'; }, 2000);
             });
         });
+        
+        // Mobile swipe support - Commandment #10: Touch must be explicit
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const showcase = document.querySelector('.prompt-showcase');
+        
+        showcase.addEventListener('touchstart', (e) => {
+          touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        
+        showcase.addEventListener('touchend', (e) => {
+          touchEndX = e.changedTouches[0].screenX;
+          const swipeThreshold = 50;
+          const diff = touchStartX - touchEndX;
+          
+          if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+              // Swipe left - next
+              currentIndex = (currentIndex + 1) % showcaseCards.length;
+            } else {
+              // Swipe right - prev
+              currentIndex = (currentIndex - 1 + showcaseCards.length) % showcaseCards.length;
+            }
+            showCard(currentIndex);
+          }
+        }, { passive: true });
+        
         showCard(0);
        }
 
@@ -677,7 +1342,14 @@
       function setupGlossary() {
         const cloud = document.getElementById('glossaryCloud');
         if (!cloud) return;
-        cloud.innerHTML = glossaryTerms.map(kw => `<button class="glossary-chip" type="button"><span>${kw.term}</span></button>`).join('');
+        
+        // Create glossary chips with term display
+        cloud.innerHTML = glossaryTerms.map(kw => `
+          <button class="glossary-chip" type="button">
+            <span class="chip-term">${kw.term}</span>
+          </button>`).join('');
+        
+        // Create tooltip element
         const tip = document.createElement('div');
         tip.className = 'chip-tip';
         tip.innerHTML = '<div class="arrow" aria-hidden="true"></div><div class="tip-content"></div>';
@@ -685,62 +1357,109 @@
         const tipContent = tip.querySelector('.tip-content');
         const tipArrow = tip.querySelector('.arrow');
         
-        function positionTipFor(btn){
+        let openBtn = null;
+        const isTouch = window.matchMedia('(pointer: coarse)').matches;
+        
+        // Helper functions
+        function clamp(n, min, max) { return Math.max(min, Math.min(n, max)); }
+        
+        function positionTipFor(btn) {
           const rect = btn.getBoundingClientRect();
+          const vw = window.innerWidth;
+          const vh = window.innerHeight;
+          const pad = 12;
+          
+          // Set max-width first so we can measure properly
+          tip.style.maxWidth = Math.min(vw - pad * 2, 380) + 'px';
+          
+          // Force reflow to get accurate dimensions
           const tipRect = tip.getBoundingClientRect();
-          const top = rect.top - tipRect.height - 12;
-          const left = rect.left + rect.width/2 - tipRect.width/2;
-          tip.style.top = Math.max(8, top) + 'px';
-          tip.style.left = Math.max(8, left) + 'px';
-          tipArrow.style.top = (tipRect.height - 6) + 'px';
-          tipArrow.style.left = (tipRect.width / 2 - 6) + 'px';
+          
+          // Decide whether to show above or below
+          const spaceAbove = rect.top;
+          const spaceBelow = vh - rect.bottom;
+          const preferTop = spaceAbove > spaceBelow && spaceAbove > tipRect.height + 20;
+          
+          // Calculate position
+          let top, arrowTop;
+          if (preferTop) {
+            top = rect.top - tipRect.height - 14;
+            arrowTop = tipRect.height - 6;
+            tip.classList.add('tip-top');
+            tip.classList.remove('tip-bottom');
+          } else {
+            top = rect.bottom + 14;
+            arrowTop = -6;
+            tip.classList.remove('tip-top');
+            tip.classList.add('tip-bottom');
+          }
+          
+          // Horizontal centering with edge clamping
+          const idealLeft = rect.left + rect.width / 2 - tipRect.width / 2;
+          const left = clamp(idealLeft, pad, vw - tipRect.width - pad);
+          
+          // Apply positions
+          tip.style.top = Math.max(pad, top) + 'px';
+          tip.style.left = left + 'px';
+          
+          // Position arrow to point at button center
+          const arrowLeft = clamp(rect.left + rect.width / 2 - left - 6, 12, tipRect.width - 24);
+          tipArrow.style.top = arrowTop + 'px';
+          tipArrow.style.left = arrowLeft + 'px';
         }
-        cloud.querySelectorAll('.glossary-chip').forEach((btn,i)=>{
+        
+        function openTip(btn, text) {
+          tipContent.innerHTML = `<strong style="color:#ffd700;display:block;margin-bottom:6px;">${btn.querySelector('.chip-term').textContent}</strong>${text}`;
+          tip.classList.add('show');
+          // Use requestAnimationFrame to ensure DOM is updated before positioning
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              positionTipFor(btn);
+            });
+          });
+          openBtn = btn;
+        }
+        
+        function closeTip() {
+          tip.classList.remove('show');
+          openBtn = null;
+        }
+        
+        // Attach event listeners to each chip
+        cloud.querySelectorAll('.glossary-chip').forEach((btn, i) => {
           const def = glossaryTerms[i].def;
-          btn.addEventListener('mouseover', () => { tipContent.innerHTML = def; tip.classList.add('show'); positionTipFor(btn); });
-          btn.addEventListener('focus', () => { tipContent.innerHTML = def; tip.classList.add('show'); positionTipFor(btn); });
-          btn.addEventListener('mouseout', () => tip.classList.remove('show'));
-          btn.addEventListener('blur', () => tip.classList.remove('show'));
+          
+          if (!isTouch) {
+            // Desktop: hover behavior
+            btn.addEventListener('mouseenter', () => openTip(btn, def));
+            btn.addEventListener('mouseleave', closeTip);
+            btn.addEventListener('focus', () => openTip(btn, def));
+            btn.addEventListener('blur', closeTip);
+          }
+          
+          // Both touch and desktop: click/tap toggle
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (openBtn === btn && tip.classList.contains('show')) {
+              closeTip();
+            } else {
+              openTip(btn, def);
+            }
+          });
         });
+        
+        // Close tooltip when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('.glossary-chip') && !e.target.closest('.chip-tip')) {
+            closeTip();
+          }
+        });
+        
+        // Reposition on scroll/resize
+        window.addEventListener('scroll', () => { if (openBtn) positionTipFor(openBtn); }, { passive: true });
+        window.addEventListener('resize', () => { if (openBtn) positionTipFor(openBtn); }, { passive: true });
       }
-
-      // --- RUN ---
-      initializeAll();
-    });
-  </script>
-</body>
-</html>
-" in the document, and I want to make some changes to it. Please make these changes for me.
-
-The changes I want to make are:
-Add the rtcquizzes.js file after line 1058
-and then add the following code after line 1111:
-const rtcQuizzes = [
-        {
-          context: "An art director needs to create a new game character that matches the specific, stylized 'painted' look of their existing game, 'Mystic Cards'. To ensure consistency, they upload a piece of the original game's key art into Firefly's <strong>Style Reference</strong> slot. After generating a character they like, they notice the background is a simple grey, but they need a 'magical forest' setting. They take the image into Photoshop to finish the asset.",
-          questions: [
-            { type: "MCQ", text: "Which Firefly feature was most important for matching the 'Mystic Cards' art style?", options: ["Composition Reference", "Style Reference", "Effects Panel", "Visual Intensity"], correct: 1 },
-            { type: "FTB", text: "To add the 'magical forest' in Photoshop, the artist would select the grey background and use the _______________ tool.", answer: "Generative Fill" },
-            { type: "TF", text: "Using a high 'Visual Intensity' would be the best way to make the character look photorealistic.", correct: false },
-          ]
-        },
-        {
-          context: "A designer is creating a promotional banner for a new slot game. They start with a square (1:1) character portrait but need a widescreen (16:9) banner. Inside Photoshop, they use the Crop Tool to expand the canvas to the new aspect ratio. They leave the prompt field blank and confirm the change.",
-          questions: [
-            { type: "FTB", text: "The specific tool used to intelligently fill the new, empty space on the banner is called Generative ____________.", answer: "Expand" },
-            { type: "TF", text: "Leaving the prompt field blank was a mistake; the tool requires a text prompt to function.", correct: false },
-            { type: "MCQ", text: "To add dramatic, high-contrast lighting to the final banner, which 'Lighting' effect would be most suitable?", options: ["Studio Light", "Golden Hour", "Dramatic Light", "Backlighting"], correct: 2 },
-          ]
-        },
-        {
-          context: "A visual artist is experimenting to create a unique UI button. They want to combine two distinct styles. In the Firefly web UI, they select 'Steampunk' from the 'Movements' category in the Effects panel, and 'Layered Paper' from the 'Techniques' category. They find the result interesting but a bit too chaotic.",
-          questions: [
-            { type: "MCQ", text: "Which slider should the artist lower to make the final image less chaotic and more faithful to their prompt?", options: ["Aspect Ratio", "Model Version", "Visual Intensity", "Camera Angle"], correct: 2 },
-            { type: "FTB", text: "The 'Steampunk' and 'Layered Paper' options are both found in the main ____________ panel.", answer: "Effects" },
-            { type: "TF", text: "To make the button look like it was photographed on a professional product stage, the artist should add the 'Studio Light' effect.", correct: true },
-          ]
-        }
-      ];
 
       function setupRTCQuizzes() {
         const container = document.getElementById('rtc-quiz-container');
@@ -750,6 +1469,7 @@ const rtcQuizzes = [
         rtcQuizzes.forEach((quiz, index) => {
           html += `
             <div class="interactive-box rtc-quiz-block" id="rtc-quiz-${index}">
+              <h4>Scenario ${index + 1}</h4>
               <div class="rtc-context">${quiz.context}</div>
               <form>
           `;
@@ -805,13 +1525,16 @@ const rtcQuizzes = [
               const inputs = form.elements[`rtc-${index}-q-${q_index}`];
               let isCorrect = false;
               if (q.type === 'MCQ') {
-                const selectedValue = parseInt(form.querySelector(`input[name="rtc-${index}-q-${q_index}"]:checked`)?.value);
+                const selectedInput = form.querySelector(`input[name="rtc-${index}-q-${q_index}"]:checked`);
+                const selectedValue = selectedInput ? parseInt(selectedInput.value) : -1;
                 isCorrect = selectedValue === q.correct;
-                const optionDivs = form.querySelectorAll(`.rtc-sub-question:nth-child(${q_index + 1}) .quiz-option`);
-                optionDivs.forEach((div, i) => {
-                    div.classList.remove('correct', 'wrong');
+                const optionDivs = form.querySelectorAll(`[name="rtc-${index}-q-${q_index}"]`);
+                optionDivs.forEach((input, i) => {
+                    const div = input.closest('.quiz-option');
+                    div.classList.remove('correct', 'wrong', 'selected');
                     if (i === q.correct) div.classList.add('correct');
-                    if (i === selectedValue && !isCorrect) div.classList.add('wrong');
+                    if (i === selectedValue && !isCorrect) div.classList.add('wrong', 'selected');
+                    if (i === selectedValue && isCorrect) div.classList.add('selected');
                 });
 
               } else if (q.type === 'FTB') {
@@ -819,21 +1542,28 @@ const rtcQuizzes = [
                 const correctAnswer = q.answer.toLowerCase();
                 isCorrect = userAnswer === correctAnswer;
                 inputs.style.borderColor = isCorrect ? 'var(--ok)' : 'var(--bad)';
+                inputs.style.borderWidth = '2px';
               } else if (q.type === 'TF') {
-                 const selectedValue = form.querySelector(`input[name="rtc-${index}-q-${q_index}"]:checked`)?.value;
+                 const selectedInput = form.querySelector(`input[name="rtc-${index}-q-${q_index}"]:checked`);
+                 const selectedValue = selectedInput ? selectedInput.value : null;
                  isCorrect = (selectedValue === 'true') === q.correct;
-                 const optionDivs = form.querySelectorAll(`.rtc-sub-question:nth-child(${q_index + 1}) .quiz-option`);
-                 optionDivs.forEach(div => {
-                     const val = div.querySelector('input').value === 'true';
-                     div.classList.remove('correct', 'wrong');
+                 const optionDivs = form.querySelectorAll(`[name="rtc-${index}-q-${q_index}"]`);
+                 optionDivs.forEach(input => {
+                     const div = input.closest('.quiz-option');
+                     const val = input.value === 'true';
+                     div.classList.remove('correct', 'wrong', 'selected');
                      if (val === q.correct) div.classList.add('correct');
-                     if (selectedValue && val === (selectedValue === 'true') && !isCorrect) div.classList.add('wrong');
+                     if (selectedValue && val === (selectedValue === 'true') && !isCorrect) div.classList.add('wrong', 'selected');
+                     if (selectedValue && val === (selectedValue === 'true') && isCorrect) div.classList.add('selected');
                  });
               }
               if (isCorrect) correctCount++;
             });
 
             feedbackEl.style.color = (correctCount === quizData.questions.length) ? 'var(--ok)' : 'var(--bad)';
+            feedbackEl.style.padding = '12px';
+            feedbackEl.style.borderRadius = '8px';
+            feedbackEl.style.background = (correctCount === quizData.questions.length) ? 'var(--ok-soft)' : 'var(--bad-soft)';
             feedbackEl.innerHTML = `<strong>Result: You got ${correctCount} out of ${quizData.questions.length} correct.</strong> Review the highlights above.`;
           });
         });
@@ -841,5 +1571,7 @@ const rtcQuizzes = [
 
       // --- RUN ---
       initializeAll();
-       setupRTCQuizzes();
-
+    });
+  </script>
+</body>
+</html>

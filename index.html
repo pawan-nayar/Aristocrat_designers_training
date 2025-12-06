@@ -9,6 +9,10 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
     /* CSS Reset and Base Styles */
+    * {
+      box-sizing: border-box;
+    }
+
     :root {
       --background-color: #f7faff;
       --text-color: #4a5568;
@@ -29,6 +33,8 @@
       padding: 40px 0; /* Vertical padding */
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      max-width: 100%;
+      overflow-x: hidden;
     }
 
     /* Main container for centered layout on desktops */
@@ -211,14 +217,163 @@
         }
     }
 
-    /* Mobile Responsive Tweaks */
+    /* Tablet Responsive Styles */
+    @media (max-width: 768px) {
+      body { 
+        padding: 30px 0; 
+      }
+      .container { 
+        padding: 0 18px; 
+      }
+      .hero-section {
+        margin-bottom: 40px;
+      }
+      .hero-section h1 { 
+        font-size: 2.2rem; 
+      }
+      .hero-section .top-byline {
+        font-size: 1rem;
+      }
+      .section-header { 
+        font-size: 1.6rem;
+        margin: 50px 0 12px;
+        padding-bottom: 12px;
+      }
+      .section-header svg {
+        width: 24px;
+        height: 24px;
+      }
+      .section-commentary {
+        font-size: 0.95rem;
+        margin-bottom: 25px;
+      }
+      .card-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .card { 
+        padding: 20px; 
+      }
+      .card h2 { 
+        font-size: 1.2rem; 
+      }
+      .exercise-buttons {
+        flex-direction: column;
+      }
+      .exercise-buttons a {
+        width: 100%;
+      }
+    }
+
+    /* Mobile Responsive Styles */
     @media (max-width: 600px) {
-      body { padding: 20px 0; }
-      .container { padding: 0 15px; }
-      .hero-section h1 { font-size: 2rem; }
-      .section-header { font-size: 1.5rem; }
-      .card { padding: 20px; }
-      .card h2 { font-size: 1.1rem; }
+      body { 
+        padding: 20px 0; 
+      }
+      .container { 
+        padding: 0 15px; 
+      }
+      .hero-section {
+        margin-bottom: 35px;
+      }
+      .hero-section h1 { 
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+      }
+      .hero-section .top-byline {
+        font-size: 0.9rem;
+      }
+      .section-header { 
+        font-size: 1.4rem;
+        margin: 40px 0 10px;
+        padding-bottom: 10px;
+        gap: 10px;
+      }
+      .section-header svg {
+        width: 22px;
+        height: 22px;
+      }
+      .section-commentary {
+        font-size: 0.88rem;
+        margin-bottom: 20px;
+      }
+      .card-grid {
+        gap: 16px;
+      }
+      .card { 
+        padding: 18px; 
+      }
+      .card h2 { 
+        font-size: 1.1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+      .card p.byline {
+        font-size: 0.85rem;
+        margin-bottom: 12px;
+      }
+      .card p.desc {
+        font-size: 0.88rem;
+        margin-bottom: 16px;
+      }
+      .card a {
+        padding: 9px 16px;
+        font-size: 0.85rem;
+      }
+      .tag {
+        padding: 3px 8px;
+        font-size: 0.7rem;
+        margin-left: 0;
+        margin-top: 4px;
+      }
+      .exercise-buttons a {
+        padding: 9px 10px !important;
+        font-size: 0.8rem !important;
+      }
+      footer {
+        margin-top: 50px;
+        padding-top: 25px;
+        font-size: 0.85rem;
+      }
+    }
+
+    /* Extra Small Mobile Styles */
+    @media (max-width: 480px) {
+      body { 
+        padding: 15px 0; 
+      }
+      .container { 
+        padding: 0 12px; 
+      }
+      .hero-section h1 { 
+        font-size: 1.5rem;
+      }
+      .hero-section .top-byline {
+        font-size: 0.85rem;
+      }
+      .section-header { 
+        font-size: 1.25rem;
+      }
+      .section-commentary {
+        font-size: 0.85rem;
+      }
+      .card { 
+        padding: 16px; 
+      }
+      .card h2 { 
+        font-size: 1.05rem;
+      }
+      .card p.byline {
+        font-size: 0.82rem;
+      }
+      .card p.desc {
+        font-size: 0.85rem;
+      }
+      .card a {
+        padding: 8px 14px;
+        font-size: 0.82rem;
+      }
     }
   </style>
 </head>
@@ -396,9 +551,10 @@
             <a href="https://pawan-nayar.github.io/software-content-demos/ai_art/confusion_pair_pan_versus_zoom.html" target="_blank">Open</a>
           </div>
           <div class="card">
-           <h2><a href="https://pawan-nayar.github.io/software-content-demos/ai_art/firefly_boards_for_midjourney_designers.html">Firefly Boards for Midjourney Designers</a></h2>
-           <p>Creative workflow for integrating Adobe Firefly references into Midjourney prompts.</p>
-           <span class="tag">Adobe</span><span class="tag">Midjourney</span>
+           <h2>Firefly Boards for Midjourney Designers<span class="tag html">HTML</span></h2>
+           <p class="byline">Creative workflow for integrating Adobe Firefly references into Midjourney prompts.</p>
+           <p class="desc">Learn how to leverage Adobe Firefly style boards and reference images to enhance your Midjourney prompting workflow.</p>
+           <a href="https://pawan-nayar.github.io/software-content-demos/ai_art/firefly_boards_for_midjourney_designers.html" target="_blank">Open</a>
       </div>
         </div>
       </section>
